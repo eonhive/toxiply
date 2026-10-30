@@ -1,0 +1,77 @@
+{
+  "notes": "Independently authored synthetic contract fixtures. Fixed scores are test data, not predictions or a classifier evaluation.",
+  "cases": [
+    {
+      "name": "no analyzer",
+      "mode": "none",
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1", "requestId": "fixture-1",
+        "content": { "kind": "text", "text": "Synthetic test message." },
+        "categories": ["harassment"], "context": { "languageHint": "en" }
+      },
+      "expected": {
+        "schemaVersion": "toxiply.analysis.v1", "taxonomyVersion": "toxiply.categories.v1", "engineVersion": "0.1.0",
+        "requestId": "fixture-1", "status": "unsupported",
+        "findings": [], "evidence": [], "confidence": { "calibrated": false }, "modelVersions": {},
+        "coverage": { "input": "none", "categories": [], "context": "not_requested", "language": null },
+        "missingCapabilities": [{ "capability": "text_analysis", "reason": "not_configured" }], "error": null
+      }
+    },
+    {
+      "name": "complete synthetic coverage",
+      "mode": "fixture",
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1", "requestId": "fixture-1",
+        "content": { "kind": "text", "text": "Synthetic test message." },
+        "categories": ["harassment"], "context": { "languageHint": "en" }
+      },
+      "expected": {
+        "schemaVersion": "toxiply.analysis.v1", "taxonomyVersion": "toxiply.categories.v1", "engineVersion": "0.1.0",
+        "requestId": "fixture-1", "status": "completed",
+        "findings": [{ "category": "harassment", "score": 0.75, "evidenceIds": ["e1"] }],
+        "evidence": [{ "id": "e1", "code": "fixture.synthetic", "source": "text", "start": 0, "end": 9 }],
+        "confidence": { "calibrated": false }, "modelVersions": { "fixture-only": "fixture-v1" },
+        "coverage": { "input": "text", "categories": ["harassment"], "context": "not_requested", "language": "en" },
+        "missingCapabilities": [], "error": null
+      }
+    },
+    {
+      "name": "partial categories and context",
+      "mode": "fixture",
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1", "requestId": "fixture-1",
+        "content": { "kind": "text", "text": "Synthetic test message." },
+        "categories": ["harassment", "hate"], "context": { "languageHint": "en", "parentText": "A synthetic parent." }
+      },
+      "expected": {
+        "schemaVersion": "toxiply.analysis.v1", "taxonomyVersion": "toxiply.categories.v1", "engineVersion": "0.1.0",
+        "requestId": "fixture-1", "status": "partial",
+        "findings": [{ "category": "harassment", "score": 0.75, "evidenceIds": ["e1"] }],
+        "evidence": [{ "id": "e1", "code": "fixture.synthetic", "source": "text", "start": 0, "end": 9 }],
+        "confidence": { "calibrated": false }, "modelVersions": { "fixture-only": "fixture-v1" },
+        "coverage": { "input": "text", "categories": ["harassment"], "context": "unsupported", "language": "en" },
+        "missingCapabilities": [
+          { "capability": "category.hate", "reason": "not_supported" },
+          { "capability": "semantic_context", "reason": "not_supported" }
+        ], "error": null
+      }
+    },
+    {
+      "name": "analyzer execution failure",
+      "mode": "throws",
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1", "requestId": "fixture-1",
+        "content": { "kind": "text", "text": "Synthetic test message." },
+        "categories": ["harassment"], "context": { "languageHint": "en" }
+      },
+      "expected": {
+        "schemaVersion": "toxiply.analysis.v1", "taxonomyVersion": "toxiply.categories.v1", "engineVersion": "0.1.0",
+        "requestId": "fixture-1", "status": "failed",
+        "findings": [], "evidence": [], "confidence": { "calibrated": false }, "modelVersions": { "fixture-only": "fixture-v1" },
+        "coverage": { "input": "none", "categories": [], "context": "not_requested", "language": null },
+        "missingCapabilities": [{ "capability": "text_analysis", "reason": "execution_failed" }],
+        "error": { "code": "analyzer_failed", "issues": [] }
+      }
+    }
+  ]
+}

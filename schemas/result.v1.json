@@ -1,0 +1,294 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "toxiply.analysis.v1"
+    },
+    "taxonomyVersion": {
+      "type": "string",
+      "const": "toxiply.categories.v1"
+    },
+    "engineVersion": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._+-]*$"
+    },
+    "requestId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]{0,127}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "completed",
+        "partial",
+        "unsupported",
+        "failed"
+      ]
+    },
+    "findings": {
+      "maxItems": 7,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "toxicity",
+              "harassment",
+              "hate",
+              "threat",
+              "sexual_risk",
+              "profanity",
+              "spam_scam"
+            ]
+          },
+          "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "evidenceIds": {
+            "maxItems": 64,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]{0,127}$"
+            }
+          }
+        },
+        "required": [
+          "category",
+          "score",
+          "evidenceIds"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "evidence": {
+      "maxItems": 64,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._:-]{0,127}$"
+          },
+          "code": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_.-]{0,127}$"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "text",
+              "parentText",
+              "quotedText"
+            ]
+          },
+          "start": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 32000
+          },
+          "end": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 32000
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "source",
+          "start",
+          "end"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "confidence": {
+      "type": "object",
+      "properties": {
+        "calibrated": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "calibrated"
+      ],
+      "additionalProperties": false
+    },
+    "modelVersions": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_.-]{0,127}$"
+      },
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 64,
+        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._+-]*$"
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "properties": {
+        "input": {
+          "type": "string",
+          "enum": [
+            "text",
+            "none"
+          ]
+        },
+        "categories": {
+          "maxItems": 7,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "toxicity",
+              "harassment",
+              "hate",
+              "threat",
+              "sexual_risk",
+              "profanity",
+              "spam_scam"
+            ]
+          }
+        },
+        "context": {
+          "type": "string",
+          "enum": [
+            "not_requested",
+            "analyzed",
+            "unsupported",
+            "not_analyzed"
+          ]
+        },
+        "language": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 35,
+              "pattern": "^[a-z]{2,8}(-[a-z0-9]{1,8})*$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "input",
+        "categories",
+        "context",
+        "language"
+      ],
+      "additionalProperties": false
+    },
+    "missingCapabilities": {
+      "maxItems": 16,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "capability": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_.-]{0,127}$"
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "not_configured",
+              "not_supported",
+              "execution_failed"
+            ]
+          }
+        },
+        "required": [
+          "capability",
+          "reason"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "error": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "enum": [
+                "invalid_request",
+                "invalid_analyzer",
+                "analyzer_failed",
+                "invalid_analyzer_output"
+              ]
+            },
+            "issues": {
+              "maxItems": 16,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "maxLength": 256
+                  },
+                  "code": {
+                    "type": "string",
+                    "maxLength": 64
+                  }
+                },
+                "required": [
+                  "path",
+                  "code"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "code",
+            "issues"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "taxonomyVersion",
+    "engineVersion",
+    "requestId",
+    "status",
+    "findings",
+    "evidence",
+    "confidence",
+    "modelVersions",
+    "coverage",
+    "missingCapabilities",
+    "error"
+  ],
+  "additionalProperties": false
+}
