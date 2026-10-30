@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "allowJs": true,
+    "checkJs": true,
+    "paths": {
+      "@eonhive/toxiply": ["./src/index.ts"]
+    },
+    "noEmit": true
+  },
+  "include": ["src/**/*.ts", "examples/**/*.mjs"]
+}
