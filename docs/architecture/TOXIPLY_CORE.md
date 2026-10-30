@@ -1,12 +1,14 @@
 # Independent Toxiply core
 
 Updated: 2026-10-30 · Status: Phase 2 implementation specification
+Updated: 2026-10-30 · Status: Phase 1 foundation plus opt-in Phase 2 native extraction
 
 This document describes the standalone `@eonhive/toxiply` package. It supersedes older local reference material that placed platform history and routing inside Toxiply. The reusable core accepts current text and bounded semantic context. Applications own persistent identity/history, tenant policy, workflow, and actions.
 
 ## Package boundary
 
 One TypeScript library executes in the caller's process. It has no platform imports, storage, service endpoints, required network access, or mandatory inference provider. Zod is the only runtime dependency. Phase 2 adds one opt-in literal English profanity analyzer; it is a deterministic lexical algorithm, not a trained model. There is no claim of legacy behavior parity.
+One TypeScript library executes in the caller's process. It has no platform imports, storage, service endpoints, required network access, or mandatory inference provider. Zod is the only runtime dependency. Phase 1 shipped no classifier; Phase 2 adds the optional frozen native heuristic implementation described below. It does not replace Flaggr's runtime.
 
 ```text
 unknown request
@@ -24,6 +26,14 @@ The public API is `analyze()` for the unconfigured core and `createAnalyzer()` f
 `src/text/english-profanity.ts` owns a small, independently authored vocabulary, Unicode-aware token boundaries, ASCII case matching, and a binary presence signal. The result contains one witness span for the first matching token. It never counts matches, interprets quotes/intent, normalizes evasions, or analyzes semantic context. Its descriptor advertises only `profanity`, exact `en`, and `supportsContext: false`; `literal-en-v1` versions vocabulary, matching, scoring, and evidence selection together. Capability declarations are frozen to prevent accidental changes.
 
 The default core stays unconfigured. Adding this implementation changes no V1 request/result schema or orchestration behavior. See [the capability specification](../ENGLISH_PROFANITY.md) for exact matching semantics and limitations.
+
+## Native content implementation
+
+`nativeTextAnalyzer` implements the existing optional interface over `src/native/` text, conversation, language preparation and fusion. All types are local content-only shapes. Five category scores map to the V1 findings; unsupported profanity/spam/language requests retain explicit missing coverage. The default engine is not enabled automatically.
+
+The native composition preserves the legacy content assessment for compatibility measurement. Its additional escalation/subtype/severity/heuristic-confidence details remain internal, with no new platform data in the result contract. The adapter reports composite version provenance; individual frozen lane versions and source hashes are recorded in [PROVENANCE.md](../PROVENANCE.md).
+
+Optional `context.replyTarget` supplies one of four bounded semantic targets. It participates in context support/stripping like parent/quoted text. Evidence uses original full-field UTF-16 spans because these heuristics do not produce precise token localization. Working-copy normalization never changes the request or source-relative spans.
 
 ## Contract and status
 
@@ -51,3 +61,4 @@ Input size uses Unicode code points; evidence offsets use UTF-16 string indices.
 The Phase 2 diagnostic records real lexical outputs against a separate synthetic 36-case dataset with provisional labels. It records dataset/analyzer provenance and reports known misses. Human review of those labels remains pending, and it is not a production quality gate. See [the evaluation method](../EVALUATION.md).
 
 This phase ends when the opt-in analyzer, diagnostic runner, docs, and existing foundation pass their checks. Semantic classifiers, new media/language capabilities, platform adapters, legacy extraction/parity, and deployments are separate work.
+The native regression suite additionally covers fixed harm-category scores, unchanged criticism errors, context targeting, source evidence spans, unsupported categories/languages, independent calls and default opt-in behavior. The private 40-case parity run has zero content differences and unchanged provisional-label errors. Independent realistic held-out evaluation, quality improvements, media/language expansion, Flaggr compatibility/shadow adapters and deployments remain separate work.

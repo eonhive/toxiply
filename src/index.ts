@@ -6,6 +6,7 @@
  */
 export { analyze, createAnalyzer } from './analyze.js';
 export { createEnglishProfanityAnalyzer } from './text/english-profanity.js';
+export { nativeTextAnalyzer } from './native-text-analyzer.js';
 export {
   analysisRequestSchema, analysisResultSchema, categorySchema,
   ENGINE_VERSION, LIMITS, requestJsonSchema, resultJsonSchema, SCHEMA_VERSION, TAXONOMY_VERSION,

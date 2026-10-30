@@ -3,6 +3,9 @@
 Toxiply is an independent TypeScript content-intelligence library. It provides versioned contracts, strict validation, bounded text/context input, an optional local text-analyzer interface, and explicit execution coverage. It runs in process without a database, HTTP server, Python, Flaggr, credentials, or an external AI provider.
 
 **Phase 2 adds an opt-in literal English profanity analyzer, not a trained model.** It recognizes a documented 12-token vocabulary and returns binary presence evidence. The default `analyze()` still returns `unsupported` with `text_analysis: not_configured`. Empty findings mean no assessment was made. Phase 1 fixture scores remain synthetic test data.
+Toxiply is an independent TypeScript content-intelligence library. The Phase 1 foundation provides versioned contracts, strict validation, bounded text/context input, an optional local text-analyzer interface, and explicit execution coverage. Phase 2 adds an opt-in extraction of the existing deterministic native content heuristics. It runs in process without a database, HTTP server, Python, Flaggr, credentials, or an external AI provider.
+
+**No trained model ships here.** The default `analyze()` still returns `unsupported` with `text_analysis: not_configured`. Empty findings mean no assessment was made. Explicitly selecting `nativeTextAnalyzer` runs frozen heuristics with known errors; it does not establish production accuracy, calibration, or correct quote attribution. The Phase 1 contract fixtures use fixed synthetic scores.
 
 ## Run locally
 
@@ -14,6 +17,7 @@ npm run check
 ```
 
 `check` typechecks the source and usage examples, builds the library, runs contract/error/analyzer/evaluation tests, executes both examples, and runs the diagnostic evaluation. CI runs the same command on Node 22 and 24. Individual commands include `npm run build`, `npm test`, `npm run example`, `npm run example:profanity`, and `npm run eval:text`.
+`check` typechecks source/examples, builds the library, runs contract/error/native regression tests, and executes the unconfigured and native examples. CI runs the same command on Node 22 and 24. Individual commands include `npm run build`, `npm test`, `npm run example`, and `npm run example:native`.
 
 ## Minimal usage
 
@@ -58,6 +62,30 @@ console.log(result.modelVersions);          // { 'english-literal-profanity': 'l
 Only `profanity` with the exact caller-supplied `en` hint is supported. Quotes and reports count as surface profanity without implying author endorsement, harassment, severity, or a policy violation. A score of `0` means no documented token matched; it does not establish that text contains no profanity. Censored/obfuscated forms and unlisted words can be missed. Parent/quoted context fields are unsupported and produce partial coverage when supplied. The analyzer returns only the first matching token as a witness, not an occurrence count or exhaustive evidence list.
 
 See the [capability specification](docs/ENGLISH_PROFANITY.md) for the exact vocabulary, token boundaries, and algorithm version. Run the [example](examples/profanity.mjs) with `npm run example:profanity`.
+## Optional native extraction
+
+```js
+import { createAnalyzer, nativeTextAnalyzer, SCHEMA_VERSION } from '@eonhive/toxiply';
+
+const native = createAnalyzer(nativeTextAnalyzer);
+const result = await native.analyze({
+  schemaVersion: SCHEMA_VERSION,
+  requestId: 'native-1',
+  content: { kind: 'text', text: 'I will hurt you.' },
+  categories: ['threat', 'harassment'],
+  context: { languageHint: 'en' },
+});
+```
+
+The adapter supports `toxicity`, `harassment`, `hate`, `threat`, and `sexual_risk`. It does not implement `profanity` or `spam_scam`; mixed requests return partial coverage, and unsupported-only requests return no scores. Explicit supported hints are `en` and `und`. Accepting `und` preserves opt-in English heuristic execution when language is unknown; it is not language detection. Other hints, including region tags, remain unsupported under the core's exact-match rule.
+
+`context.replyTarget` optionally accepts `parent_author`, `group`, `self`, or `unknown`. This is a bounded semantic hint about the message's target, not an actor identifier or trusted role. The native adapter uses parent/quote/target context as the extracted heuristics did. Known criticism, quoting, sarcasm, and evasion weaknesses are retained rather than tuned during extraction.
+
+The optional reply-target field requires core `0.2.0` or later. Older strict V1 validators do not accept that new property; existing request shapes remain valid without it.
+
+Evidence spans identify whole assessed input fields because the legacy algorithm does not provide exact token attribution. They do not assert that every character in a span is harmful or that quoting implies endorsement. Positive findings reference those assessment spans; assessed zero scores have no invented evidence.
+
+Public provenance records the composite `native_content` analyzer at `native-content-heuristic-v2`. Its frozen lanes are `lexical-heuristic-v2`, `semantic-heuristic-v2`, `conversation-heuristic-v2`, and `toxiply-aggregator-v2`. Internal compatibility assessment retains subtype, severity, heuristic confidence, escalation and lane versions for parity checks; those extra fields are not a new public result contract. Flaggr compatibility mapping remains Phase 3 work. See [provenance and parity](docs/PROVENANCE.md).
 
 ## API and coverage
 
@@ -92,10 +120,11 @@ interface TextAnalyzer {
 ```
 
 The descriptor declares `id`, `version`, supported `categories`, supported `languages`, and `supportsContext`. The core passes only supported requested categories. The analyzer must return exactly one finding for each passed category, plus evidence. It must throw on execution failure; it cannot silently omit an advertised category. Invalid output becomes `failed: invalid_analyzer_output`. The English lexical analyzer is included; external provider plugins and trained inference models are not.
+The descriptor declares `id`, `version`, supported `categories`, supported `languages`, and `supportsContext`. The core passes only supported requested categories. The analyzer must return exactly one finding for each passed category, plus evidence. It must throw on execution failure; it cannot silently omit an advertised category. Invalid output becomes `failed: invalid_analyzer_output`. No provider plugins are included. The optional native implementation uses the same local interface as caller-supplied analyzers.
 
 Language tags use lowercase BCP 47 style syntax and match exactly, without region fallback. `languageHint` is caller supplied; the core does not detect or verify language. An absent hint becomes `und` (unknown), and an analyzer must explicitly declare `und` to accept it. Coverage language describes the accepted hint, never detected language or measured language quality.
 
-When semantic context is supplied to an analyzer that does not support it, the core removes `parentText` and `quotedText` from that analyzer's input, returns partial coverage, and reports `semantic_context` as missing. Supported context is passed unchanged. The analyzer owns semantic interpretation, including quote/author attribution; the core only checks structural provenance.
+When semantic context is supplied to an analyzer that does not support it, the core removes `parentText`, `quotedText`, and `replyTarget` from that analyzer's input, returns partial coverage, and reports `semantic_context` as missing. Supported context is passed unchanged. The analyzer owns semantic interpretation, including quote/author attribution; the core only checks structural provenance.
 
 Analyzers receive a detached request. They return:
 
@@ -127,15 +156,16 @@ Unknown properties, wrong versions, non-text kinds, coercions, empty/whitespace-
 | `context.quotedText` | 4,000 |
 | Combined parent and quoted text | 6,000 |
 
-Input is never truncated, fetched, normalized, persisted, or logged by the core. Context is limited to parent text, quoted text, and a language hint. Request IDs are bounded ASCII correlation identifiers. Workspace identity, actor history, enforcement, routing, and tenant policy do not belong in this contract.
+Input is never truncated, fetched, normalized, persisted, or logged by the core. Context is limited to parent text, quoted text, an optional reply-target enum, and a language hint. The native adapter normalizes its own working copy as its frozen algorithm requires; the original input/evidence fields remain unchanged. Request IDs are bounded ASCII correlation identifiers. Workspace identity, actor history, enforcement, routing, and tenant policy do not belong in this contract.
 
 The JSON Schemas cover structural and per-field constraints. Runtime validation additionally enforces unique categories, combined context bounds, evidence references, and status/coverage consistency. Source-relative spans and requested-versus-assessed coverage are checked by the execution core because they require the original request. Other language implementations must enforce these documented semantic checks too.
 
 ## Scope and provenance
 
 All source, vocabulary, fixtures, and diagnostic cases were authored independently for this repository. No private Flaggr implementation, third-party profanity list, or private diagnostic dataset was copied. There is no Flaggr parity claim. The only runtime dependency remains Zod; TypeScript and the independent JSON Schema validator are development tools.
+Phase 1 source and fixtures were authored independently. Phase 2 adapts the specifically audited EonHive native content modules listed in [the provenance record](docs/PROVENANCE.md); no private dataset, customer state, credentials, deployment files, provider implementation or platform modules were copied. A private 40-case comparison establishes native diagnostic parity only, not Flaggr runtime/decision/action parity or quality improvement. The only runtime dependency is Zod; TypeScript and the independent JSON Schema validator are development tools.
 
-Image/pixel analysis, OCR, speech recognition, acoustic analysis, video, semantic classifiers, multilingual quality claims, platform context engines, storage, network services, and enforcement are outside this foundation. Text supplied by a caller is only text; its presence does not establish that audio or pixels were analyzed.
+Image/pixel analysis, OCR, speech recognition, acoustic analysis, video, learned semantic classifiers, multilingual quality claims, platform context engines, storage, network services, and enforcement remain outside this package. Text supplied by a caller is only text; its presence does not establish that audio or pixels were analyzed.
 
 Licensing and publication rights remain undecided. `private: true` prevents accidental npm publication, and `UNLICENSED` does not grant an open-source license. Any future reuse of private source requires provenance, licensing, and publication-rights review first.
 
@@ -146,3 +176,4 @@ Licensing and publication rights remain undecided. `private: true` prevents acci
 The [36-case dataset](eval/english-profanity.v1.json) is Codex-authored, synthetic, developed alongside the analyzer, and **pending human label review**. It deliberately includes unlisted and obfuscated profanity to expose misses. It is not held-out validation, representative production data, or evidence of model calibration. The initial diagnostic has 14 true positives, 10 true negatives, 0 false positives, and 12 false negatives against these provisional labels. See [evaluation methods and findings](docs/EVALUATION.md) before interpreting the numbers.
 
 See the [core architecture](docs/architecture/TOXIPLY_CORE.md) and [accepted decisions](docs/DECISIONS.md). Phase 2 stops at this independently tested lexical analyzer and its diagnostic baseline; platform integration and broader classifiers remain separate work.
+See the [core architecture](docs/architecture/TOXIPLY_CORE.md), [decisions](docs/DECISIONS.md), [build status](BUILD_STATUS.md), and [next steps](NEXT_STEPS.md). No Flaggr runtime has been switched to this library.

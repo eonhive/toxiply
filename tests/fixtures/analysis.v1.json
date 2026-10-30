@@ -10,7 +10,7 @@
         "categories": ["harassment"], "context": { "languageHint": "en" }
       },
       "expected": {
-        "schemaVersion": "toxiply.analysis.v1", "taxonomyVersion": "toxiply.categories.v1", "engineVersion": "0.1.0",
+        "schemaVersion": "toxiply.analysis.v1", "taxonomyVersion": "toxiply.categories.v1", "engineVersion": "0.2.0",
         "requestId": "fixture-1", "status": "unsupported",
         "findings": [], "evidence": [], "confidence": { "calibrated": false }, "modelVersions": {},
         "coverage": { "input": "none", "categories": [], "context": "not_requested", "language": null },
@@ -26,7 +26,7 @@
         "categories": ["harassment"], "context": { "languageHint": "en" }
       },
       "expected": {
-        "schemaVersion": "toxiply.analysis.v1", "taxonomyVersion": "toxiply.categories.v1", "engineVersion": "0.1.0",
+        "schemaVersion": "toxiply.analysis.v1", "taxonomyVersion": "toxiply.categories.v1", "engineVersion": "0.2.0",
         "requestId": "fixture-1", "status": "completed",
         "findings": [{ "category": "harassment", "score": 0.75, "evidenceIds": ["e1"] }],
         "evidence": [{ "id": "e1", "code": "fixture.synthetic", "source": "text", "start": 0, "end": 9 }],
@@ -44,7 +44,7 @@
         "categories": ["harassment", "hate"], "context": { "languageHint": "en", "parentText": "A synthetic parent." }
       },
       "expected": {
-        "schemaVersion": "toxiply.analysis.v1", "taxonomyVersion": "toxiply.categories.v1", "engineVersion": "0.1.0",
+        "schemaVersion": "toxiply.analysis.v1", "taxonomyVersion": "toxiply.categories.v1", "engineVersion": "0.2.0",
         "requestId": "fixture-1", "status": "partial",
         "findings": [{ "category": "harassment", "score": 0.75, "evidenceIds": ["e1"] }],
         "evidence": [{ "id": "e1", "code": "fixture.synthetic", "source": "text", "start": 0, "end": 9 }],
@@ -65,7 +65,7 @@
         "categories": ["harassment"], "context": { "languageHint": "en" }
       },
       "expected": {
-        "schemaVersion": "toxiply.analysis.v1", "taxonomyVersion": "toxiply.categories.v1", "engineVersion": "0.1.0",
+        "schemaVersion": "toxiply.analysis.v1", "taxonomyVersion": "toxiply.categories.v1", "engineVersion": "0.2.0",
         "requestId": "fixture-1", "status": "failed",
         "findings": [], "evidence": [], "confidence": { "calibrated": false }, "modelVersions": { "fixture-only": "fixture-v1" },
         "coverage": { "input": "none", "categories": [], "context": "not_requested", "language": null },
