@@ -13,7 +13,7 @@ Toxiply is a reusable content-intelligence library. Consumers own tenant/workspa
 ## T-014 — One TypeScript package
 
 **Status:** accepted · **Date:** 2026-10-30
-
+https://github.com/eonhive/toxiply/pull/2/conflict?name=docs%252FDECISIONS.md&ancestor_oid=dc8b92b194078ce9ec9b4161ebb3255ad47c128d&base_oid=28ab160876e7cbed8d87be482d4060850790e6b1&head_oid=7a5e318a8039ca8144450008647bea69cc63cb29
 Ship one in-process ESM library with no required database, HTTP server, Python runtime, Flaggr dependency, or external AI provider. One optional local analyzer interface is sufficient for Phase 1.
 
 **Reason:** Establish a small, independently testable boundary before adding inference implementations or deployment infrastructure.
@@ -34,6 +34,21 @@ Author the foundation and fixtures independently. Do not copy private implementa
 
 **Reason:** Repository visibility does not grant redistribution rights to private material or settle the new package's license.
 
+## T-017 — First native capability is opt-in literal English profanity
+
+**Status:** accepted · **Date:** 2026-10-30
+
+Add `createEnglishProfanityAnalyzer()` using independently authored exact-token vocabulary. Support only the existing `profanity` category and exact `en` hint, without a mandatory provider or new dependency. Keep the default `analyze()` unconfigured and preserve the V1 contracts. A binary score reports presence of one documented token, not severity, safety, or calibrated probability. The first token supplies one source-relative witness. Quotes/reports count literally, with no author-intent claim. Semantic context, evasion interpretation, unlisted words, and other categories remain outside this algorithm's stated coverage.
+
+**Reason:** Exercise the independent contract with real, bounded, reviewable behavior before introducing broad moderation semantics or model assets.
+
+## T-018 — Diagnostic labels and production evidence remain distinct
+
+**Status:** accepted · **Date:** 2026-10-30
+
+Add an offline, versioned synthetic diagnostic with explicit labels/rationales, data hash, review status, analyzer versions, per-group confusion metrics, and evidence. Include deliberately unsupported forms without changing their labels to fit the implementation. Unavailable/failed analysis fails the harness rather than becoming a benign zero. Mismatches remain diagnostic findings, separate from test failures. Codex-authored labels remain pending human review until an attributed human review actually occurs.
+
+**Reason:** Make limitations measurable without claiming independent validation, calibration, or production accuracy from a development diagnostic.
 ## T-017 — Opt-in native extraction with preserved behavior
 
 **Status:** implemented for review · **Date:** 2026-10-30

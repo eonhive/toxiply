@@ -5,6 +5,7 @@
  * Notes: Vibe coded with Codex.
  */
 export { analyze, createAnalyzer } from './analyze.js';
+export { createEnglishProfanityAnalyzer } from './text/english-profanity.js';
 export { nativeTextAnalyzer } from './native-text-analyzer.js';
 export {
   analysisRequestSchema, analysisResultSchema, categorySchema,
