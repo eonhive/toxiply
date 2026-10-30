@@ -27,7 +27,9 @@
     "schemas:write": "npm run build && node scripts/export-schemas.mjs",
     "test": "npm run build && node --test tests/*.test.mjs",
     "example": "npm run build && node examples/text.mjs",
-    "check": "npm run typecheck && npm test && npm run example"
+    "example:profanity": "npm run build && node examples/profanity.mjs",
+    "eval:text": "npm run build && node eval/run.mjs",
+    "check": "npm run typecheck && npm test && npm run example && npm run example:profanity && npm run eval:text"
   },
   "repository": {
     "type": "git",

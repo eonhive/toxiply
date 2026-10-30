@@ -1,8 +1,8 @@
 # Toxiply
 
-Toxiply is an independent TypeScript content-intelligence library. Phase 1 provides versioned contracts, strict validation, bounded text/context input, an optional local text-analyzer interface, and explicit execution coverage. It runs in process without a database, HTTP server, Python, Flaggr, credentials, or an external AI provider.
+Toxiply is an independent TypeScript content-intelligence library. It provides versioned contracts, strict validation, bounded text/context input, an optional local text-analyzer interface, and explicit execution coverage. It runs in process without a database, HTTP server, Python, Flaggr, credentials, or an external AI provider.
 
-**No classifier or trained model ships in Phase 1.** The default `analyze()` validates text requests and returns `unsupported` with `text_analysis: not_configured`. Empty findings mean no assessment was made. Scores in the test fixtures are fixed synthetic data, not model predictions or evidence of accuracy.
+**Phase 2 adds an opt-in literal English profanity analyzer, not a trained model.** It recognizes a documented 12-token vocabulary and returns binary presence evidence. The default `analyze()` still returns `unsupported` with `text_analysis: not_configured`. Empty findings mean no assessment was made. Phase 1 fixture scores remain synthetic test data.
 
 ## Run locally
 
@@ -13,7 +13,7 @@ npm ci
 npm run check
 ```
 
-`check` typechecks the source and usage example, builds the library, runs contract/error tests, and executes the example. CI runs the same command on Node 22 and 24. Individual commands are `npm run build`, `npm test`, and `npm run example`.
+`check` typechecks the source and usage examples, builds the library, runs contract/error/analyzer/evaluation tests, executes both examples, and runs the diagnostic evaluation. CI runs the same command on Node 22 and 24. Individual commands include `npm run build`, `npm test`, `npm run example`, `npm run example:profanity`, and `npm run eval:text`.
 
 ## Minimal usage
 
@@ -35,10 +35,35 @@ console.log(result.findings);            // []
 console.log(result.missingCapabilities); // [{ capability: 'text_analysis', reason: 'not_configured' }]
 ```
 
+## Opt-in English profanity analysis
+
+```js
+import { createAnalyzer, createEnglishProfanityAnalyzer, SCHEMA_VERSION } from '@eonhive/toxiply';
+
+const engine = createAnalyzer(createEnglishProfanityAnalyzer());
+const result = await engine.analyze({
+  schemaVersion: SCHEMA_VERSION,
+  requestId: 'profanity-example-1',
+  content: { kind: 'text', text: 'The report quotes the word "shit".' },
+  categories: ['profanity'],
+  context: { languageHint: 'en' },
+});
+
+console.log(result.status);                  // completed
+console.log(result.findings[0].score);       // 1: one documented literal token was found
+console.log(result.evidence[0].source);      // text
+console.log(result.modelVersions);          // { 'english-literal-profanity': 'literal-en-v1' }
+```
+
+Only `profanity` with the exact caller-supplied `en` hint is supported. Quotes and reports count as surface profanity without implying author endorsement, harassment, severity, or a policy violation. A score of `0` means no documented token matched; it does not establish that text contains no profanity. Censored/obfuscated forms and unlisted words can be missed. Parent/quoted context fields are unsupported and produce partial coverage when supplied. The analyzer returns only the first matching token as a witness, not an occurrence count or exhaustive evidence list.
+
+See the [capability specification](docs/ENGLISH_PROFANITY.md) for the exact vocabulary, token boundaries, and algorithm version. Run the [example](examples/profanity.mjs) with `npm run example:profanity`.
+
 ## API and coverage
 
 - `analyze(request: unknown): Promise<AnalysisResult>` validates a request without configuring an analyzer.
 - `createAnalyzer(textAnalyzer?: TextAnalyzer): ContentAnalyzer` creates an independent instance with one optional local analyzer.
+- `createEnglishProfanityAnalyzer(): TextAnalyzer` creates the built-in offline lexical analyzer for use with `createAnalyzer()`.
 - `analysisRequestSchema` and `analysisResultSchema` expose runtime validation. Public TypeScript types are inferred from these contracts.
 - `requestJsonSchema` and `resultJsonSchema`, also shipped as `schemas/request.v1.json` and `schemas/result.v1.json`, expose portable JSON Schema Draft 2020-12 structure. Run `npm run schemas:write` after intentional contract changes. Tests detect stale exports and validate fixtures with an independent JSON Schema validator.
 
@@ -51,7 +76,7 @@ console.log(result.missingCapabilities); // [{ capability: 'text_analysis', reas
 
 Each result includes schema/taxonomy/engine versions, the correlation ID, findings, evidence, coverage, missing capabilities, and a structured error or `null`. Invalid requests preserve a valid correlation ID; otherwise it is `null`. Error codes and bounded issue paths are returned without content or exception messages.
 
-The `toxiply.categories.v1` taxonomy contains `toxicity`, `harassment`, `hate`, `threat`, `sexual_risk`, `profanity`, and `spam_scam`. These are request vocabulary, not shipped capabilities. Requested categories must be explicit and unique. Only assessed categories appear in findings; an unavailable category is never represented by a zero score.
+The `toxiply.categories.v1` taxonomy contains `toxicity`, `harassment`, `hate`, `threat`, `sexual_risk`, `profanity`, and `spam_scam`. Only the narrow lexical `profanity` capability ships in Phase 2; the others remain request vocabulary. Requested categories must be explicit and unique. Only assessed categories appear in findings; an unavailable category is never represented by a zero score.
 
 Scores are finite analyzer signals in `[0, 1]`, not calibrated probabilities. `confidence.calibrated` is always `false`. Each invoked analyzer supplies its own ID and version in `modelVersions`; an entry records invocation even if it failed. A descriptor can identify a deterministic algorithm without implying it is a trained model. The core has a separate `engineVersion`.
 
@@ -66,7 +91,7 @@ interface TextAnalyzer {
 }
 ```
 
-The descriptor declares `id`, `version`, supported `categories`, supported `languages`, and `supportsContext`. The core passes only supported requested categories. The analyzer must return exactly one finding for each passed category, plus evidence. It must throw on execution failure; it cannot silently omit an advertised category. Invalid output becomes `failed: invalid_analyzer_output`. No built-in provider plugins or inference implementations are included.
+The descriptor declares `id`, `version`, supported `categories`, supported `languages`, and `supportsContext`. The core passes only supported requested categories. The analyzer must return exactly one finding for each passed category, plus evidence. It must throw on execution failure; it cannot silently omit an advertised category. Invalid output becomes `failed: invalid_analyzer_output`. The English lexical analyzer is included; external provider plugins and trained inference models are not.
 
 Language tags use lowercase BCP 47 style syntax and match exactly, without region fallback. `languageHint` is caller supplied; the core does not detect or verify language. An absent hint becomes `und` (unknown), and an analyzer must explicitly declare `und` to accept it. Coverage language describes the accepted hint, never detected language or measured language quality.
 
@@ -108,10 +133,16 @@ The JSON Schemas cover structural and per-field constraints. Runtime validation 
 
 ## Scope and provenance
 
-All Phase 1 source and fixtures were authored independently for this repository. No private Flaggr implementation or diagnostic dataset was copied. There is no Flaggr parity claim. The only runtime dependency is Zod; TypeScript and the independent JSON Schema validator are development tools.
+All source, vocabulary, fixtures, and diagnostic cases were authored independently for this repository. No private Flaggr implementation, third-party profanity list, or private diagnostic dataset was copied. There is no Flaggr parity claim. The only runtime dependency remains Zod; TypeScript and the independent JSON Schema validator are development tools.
 
 Image/pixel analysis, OCR, speech recognition, acoustic analysis, video, semantic classifiers, multilingual quality claims, platform context engines, storage, network services, and enforcement are outside this foundation. Text supplied by a caller is only text; its presence does not establish that audio or pixels were analyzed.
 
 Licensing and publication rights remain undecided. `private: true` prevents accidental npm publication, and `UNLICENSED` does not grant an open-source license. Any future reuse of private source requires provenance, licensing, and publication-rights review first.
 
-See the [core architecture](docs/architecture/TOXIPLY_CORE.md) and [accepted Phase 1 decisions](docs/DECISIONS.md). Phase 1 stops at the independently building, tested foundation.
+## Diagnostic evaluation
+
+`npm run eval:text` prints deterministic JSON with a dataset hash, review provenance, analyzer versions, confusion counts, group metrics, mismatch IDs, and per-case evidence. Failed/unavailable analysis aborts evaluation instead of counting as a benign prediction. Label mismatches are reported findings; they do not make the diagnostic command fail. Test failures and malformed data do fail checks.
+
+The [36-case dataset](eval/english-profanity.v1.json) is Codex-authored, synthetic, developed alongside the analyzer, and **pending human label review**. It deliberately includes unlisted and obfuscated profanity to expose misses. It is not held-out validation, representative production data, or evidence of model calibration. The initial diagnostic has 14 true positives, 10 true negatives, 0 false positives, and 12 false negatives against these provisional labels. See [evaluation methods and findings](docs/EVALUATION.md) before interpreting the numbers.
+
+See the [core architecture](docs/architecture/TOXIPLY_CORE.md) and [accepted decisions](docs/DECISIONS.md). Phase 2 stops at this independently tested lexical analyzer and its diagnostic baseline; platform integration and broader classifiers remain separate work.
