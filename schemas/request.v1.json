@@ -62,6 +62,15 @@
           "maxLength": 4000,
           "pattern": "\\S"
         },
+        "replyTarget": {
+          "type": "string",
+          "enum": [
+            "parent_author",
+            "group",
+            "self",
+            "unknown"
+          ]
+        },
         "languageHint": {
           "type": "string",
           "maxLength": 35,

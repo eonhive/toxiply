@@ -1,6 +1,6 @@
 # Toxiply core decisions
 
-Updated: 2026-10-30 · Scope: independent repository, Phase 1
+Updated: 2026-10-30 · Scope: independent repository, Phases 1–2
 
 ## T-013 — Independent content boundary
 
@@ -33,3 +33,19 @@ Phase 1 ships no classifier. Unconfigured analysis is explicitly unsupported. Co
 Author the foundation and fixtures independently. Do not copy private implementations or datasets until provenance, licensing, and publication rights are reviewed. Keep the npm package private and UNLICENSED until an explicit licensing/publication decision. Local research/reference documents are not publication inputs.
 
 **Reason:** Repository visibility does not grant redistribution rights to private material or settle the new package's license.
+
+## T-017 — Opt-in native extraction with preserved behavior
+
+**Status:** implemented for review · **Date:** 2026-10-30
+
+Port only the audited EonHive native text, bounded conversation, pass-through language preparation and native fusion modules listed in [PROVENANCE.md](PROVENANCE.md). Replace platform imports with local content types and remove provider-only branches; do not change native scoring to improve diagnostic results. `createAnalyzer(nativeTextAnalyzer)` explicitly enables the legacy heuristics. Default `analyze()` remains unconfigured. No Flaggr adapter, provider, store, service, action or deployment is added.
+
+The public adapter supports five content categories and English/unknown hints; unavailable categories/languages remain explicit. Composite analyzer version `native-content-heuristic-v2` identifies the frozen lane versions. Full internal content assessment is retained for parity checks but does not extend the public result with platform fields. Whole-field evidence spans describe assessed inputs, not precise harmful-phrase localization or calibrated probabilities.
+
+**Reason:** Establish independent deterministic behavior before changing inference quality or wiring a platform consumer. Private baseline examples remain private; matched synthetic results do not establish production accuracy. Licensing/publication metadata remains unchanged and npm publication stays disabled.
+
+## T-018 — Bounded reply-target context
+
+**Status:** implemented for review · **Date:** 2026-10-30
+
+V1 text context additionally accepts optional `replyTarget: parent_author | group | self | unknown`. This is additive bounded semantic context, required to preserve the extracted targeting/escalation behavior; it is not a persistent actor ID, workspace role or policy. Engines without context support have it stripped and return partial coverage. Unknown values fail validation. Engine/package version is `0.2.0`; existing request/result schema identifiers remain V1 and existing request shapes remain valid.

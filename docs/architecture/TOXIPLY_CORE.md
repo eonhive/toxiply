@@ -1,12 +1,12 @@
 # Independent Toxiply core
 
-Updated: 2026-10-30 · Status: Phase 1 implementation specification
+Updated: 2026-10-30 · Status: Phase 1 foundation plus opt-in Phase 2 native extraction
 
 This document describes the standalone `@eonhive/toxiply` package. It supersedes older local reference material that placed platform history and routing inside Toxiply. The reusable core accepts current text and bounded semantic context. Applications own persistent identity/history, tenant policy, workflow, and actions.
 
 ## Package boundary
 
-One TypeScript library executes in the caller's process. It has no platform imports, storage, service endpoints, required network access, or mandatory inference provider. Zod is the only runtime dependency. There is no built-in classifier in Phase 1 and no claim of legacy behavior parity.
+One TypeScript library executes in the caller's process. It has no platform imports, storage, service endpoints, required network access, or mandatory inference provider. Zod is the only runtime dependency. Phase 1 shipped no classifier; Phase 2 adds the optional frozen native heuristic implementation described below. It does not replace Flaggr's runtime.
 
 ```text
 unknown request
@@ -18,6 +18,14 @@ unknown request
 ```
 
 The public API is `analyze()` for the unconfigured core and `createAnalyzer()` for one caller-supplied `TextAnalyzer`. No plugin registry, multi-provider orchestration, networking layer, or persistent state is needed. An adapter is trusted local code, not a security sandbox; hosts own its execution limits.
+
+## Native content implementation
+
+`nativeTextAnalyzer` implements the existing optional interface over `src/native/` text, conversation, language preparation and fusion. All types are local content-only shapes. Five category scores map to the V1 findings; unsupported profanity/spam/language requests retain explicit missing coverage. The default engine is not enabled automatically.
+
+The native composition preserves the legacy content assessment for compatibility measurement. Its additional escalation/subtype/severity/heuristic-confidence details remain internal, with no new platform data in the result contract. The adapter reports composite version provenance; individual frozen lane versions and source hashes are recorded in [PROVENANCE.md](../PROVENANCE.md).
+
+Optional `context.replyTarget` supplies one of four bounded semantic targets. It participates in context support/stripping like parent/quoted text. Evidence uses original full-field UTF-16 spans because these heuristics do not produce precise token localization. Working-copy normalization never changes the request or source-relative spans.
 
 ## Contract and status
 
@@ -42,4 +50,4 @@ Input size uses Unicode code points; evidence offsets use UTF-16 string indices.
 
 `npm run check` typechecks, builds, runs frozen contract fixtures and error tests, checks JSON Schema drift and package independence, and executes the public usage example. GitHub Actions repeats this on Node 22 and 24. Fixtures are synthetic contract examples with fixed scores; they establish interface behavior only.
 
-Real classifier evaluation, new media/language capabilities, platform adapters, legacy extraction/parity, and deployments are separate work. This phase ends when the independent foundation builds and passes its checks.
+The native regression suite additionally covers fixed harm-category scores, unchanged criticism errors, context targeting, source evidence spans, unsupported categories/languages, independent calls and default opt-in behavior. The private 40-case parity run has zero content differences and unchanged provisional-label errors. Independent realistic held-out evaluation, quality improvements, media/language expansion, Flaggr compatibility/shadow adapters and deployments remain separate work.

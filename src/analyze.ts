@@ -133,7 +133,8 @@ function splitsSurrogatePair(text: string, offset: number): boolean {
 }
 
 function hasSemanticContext(request: AnalysisRequest): boolean {
-  return request.context?.parentText !== undefined || request.context?.quotedText !== undefined;
+  return request.context?.parentText !== undefined || request.context?.quotedText !== undefined
+    || request.context?.replyTarget !== undefined;
 }
 
 function emptyResult(requestId: string | null, request?: AnalysisRequest): AnalysisResult {
