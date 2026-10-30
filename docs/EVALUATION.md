@@ -94,3 +94,28 @@ This dataset asks about surface profanity, including quoted/reporting text, not 
 ## Remaining evidence
 
 Human reviewers must check category definitions, criticism, reported/quoted abuse, implied threats, protected-group targeting, solicitation and evasion examples. Record attribution and corrections only after actual review; version label changes and rerun hashes/reports. A separately collected and independently labeled held-out corpus, calibration and any production action policy remain unimplemented. No production integration is authorized by diagnostic parity.
+
+## Paired contextual attribution experiment
+
+Run `npm run eval:quality` or the full `npm run eval:all`. The paired runner applies the frozen native baseline and opt-in `contextual_content` / `contextual-attribution-v1` to the same dataset text, labels and category definitions. It reports both models' complete group/category metrics, fixed/new false positives and negatives, category-label improvements/regressions, and changed per-case scores and evidence. Failed or incomplete execution aborts comparison. The baseline native and lexical datasets and their labels remain unchanged.
+
+The user explicitly chose to keep labels provisional for this PR. All results below are development observations only. The new challenge was created alongside the candidate and is not independently labeled, blind or held-out. The earlier native/legacy sets were already known during development and cannot serve as independent validation either.
+
+| Dataset / analyzer | Cases | TP | TN | FP | FN |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Frozen native / baseline | 32 | 13 | 7 | 5 | 7 |
+| Frozen native / candidate | 32 | 13 | 12 | 0 | 7 |
+| Attribution challenge / baseline | 35 | 19 | 0 | 16 | 0 |
+| Attribution challenge / candidate | 35 | 19 | 14 | 2 | 0 |
+
+Against these provisional labels, the candidate fixes 5 overall false positives on the original diagnostic and 14 on the challenge. Neither set has a new overall false positive, false negative or category-label regression. Category-label improvements number 12 and 32 respectively; these are not independently validated improvements. Existing implied-threat/evasion/unlisted-semantic misses remain on the original set.
+
+The [35-case challenge](../eval/context-attribution.v1.json) has 19 provisional positive and 16 negative labels. It probes reporting, product criticism, explicit endorsement, mixed independent author abuse, direct attacks and quotation ambiguity. Its remaining false positives are `reporting-7` (an unquoted victim report) and `reporting-8` (an unmatched quotation). Endorsement, direct-author and mixed-abuse probes retain their detections. The absent broader grammar is an explicit limitation, not evidence that all reporting is understood.
+
+Challenge SHA-256: `52b18106a2473d2001168069795c716fd8827fff8430ebf6e89f9986e382f4c7`.
+
+The original native hash remains `9d8f5dcd196a565b03c618af00cc5f4f5d4f658666183c612248b3f577eb3a34`. Tests assert that identity and retain known misses rather than modifying labels to fit predictions. To save paired JSON after building, run `node eval/run-quality.mjs > /tmp/toxiply-attribution-comparison.json`.
+
+An additional local paired run on the same frozen private 40-case legacy fixtures records baseline 12 TP / 10 TN / 10 FP / 8 FN and candidate 12 TP / 13 TN / 7 FP / 8 FN, with no new overall false positives or false negatives. Only binary legacy labels were used as truth; category ground truth and public severity were not fabricated. The original native compatibility comparator still matches all 40 raw legacy content results. Full private paired results remain ignored under `.local/contextual-quality/` and are not published or packaged.
+
+The candidate remains opt-in; baseline behavior is unchanged. Reviewers must assess finite reporting/endorsement grammar, ambiguous product/person nouns, unrecognized endorsement, long/multiline/nested quotations and nonlocal references using a separately labeled corpus before drawing general quality conclusions. No default promotion, deployment, Flaggr integration, calibration or production safety claim follows from these diagnostics.

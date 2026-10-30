@@ -11,3 +11,13 @@ Local frozen comparison: 40/40 legacy content and five-category-score matches; z
 Validation: clean `npm ci`, `npm run check` (137 tests, source/example typecheck, build, three examples and both public diagnostics), explicit `npm run eval:all`, private frozen-fixture comparison, package-content preview, whitespace and local Markdown links pass locally on Node 22.22.2. CI repeats installation/check/package verification on Node 22 and 24; the final task report records its actual outcome. Source provenance, rights boundary and compatibility method are documented in [PROVENANCE.md](docs/PROVENANCE.md) and [EVALUATION.md](docs/EVALUATION.md).
 
 NOT_RUN: independent human label review, held-out evaluation, calibration, Flaggr workflow/action parity or production integration, media inference, deployment and package publication.
+
+## Attribution quality candidate
+
+Updated: 2026-10-30. Added separate opt-in `contextualTextAnalyzer` / `contextual-attribution-v1`, a bounded report/product attribution helper, example, category/context/endorsement/mixed-abuse regressions, 35-case synthetic challenge and paired comparison tool. The frozen native analyzer, existing diagnostic labels and V1 contracts remain unchanged. No new dependency, external model, private source transfer or platform integration was introduced.
+
+Provisional paired observations: original 32-case diagnostic changes 13 TP/7 TN/5 FP/7 FN to 13 TP/12 TN/0 FP/7 FN; new 35-case challenge changes 19 TP/0 TN/16 FP/0 FN to 19 TP/14 TN/2 FP/0 FN. Both have no new overall false positives, false negatives or category-label regressions. The private 40-case binary comparison fixes three false positives and retains the same positives/misses; native legacy parity remains intact.
+
+Human label review was explicitly deferred by user direction for this PR. The challenge is same-author development evidence, not held-out validation. The candidate remains experimental and opt-in; default analysis and compatibility consumers retain their earlier behavior.
+
+Local validation passes: clean generated build directory, `npm ci`, `npm run check` (179 tests, source/example typecheck, build, four examples and all public diagnostics), explicit `npm run eval:all`, original native frozen legacy comparison, candidate/private binary comparison, package preview and whitespace checks. CI repeats installation/check/package verification on Node 22 and 24; the PR/final report records its actual outcome.
