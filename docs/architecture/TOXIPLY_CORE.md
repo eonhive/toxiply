@@ -1,64 +1,42 @@
 # Independent Toxiply core
 
-Updated: 2026-10-30 · Status: Phase 2 implementation specification
-Updated: 2026-10-30 · Status: Phase 1 foundation plus opt-in Phase 2 native extraction
+Updated: 2026-10-30 · Status: Phase 2 text/conversation analysis
 
-This document describes the standalone `@eonhive/toxiply` package. It supersedes older local reference material that placed platform history and routing inside Toxiply. The reusable core accepts current text and bounded semantic context. Applications own persistent identity/history, tenant policy, workflow, and actions.
+## Boundary and execution
 
-## Package boundary
+One TypeScript library runs in process with no Flaggr runtime imports, database, additional server, Python, or required model/provider. Applications own persistent history, tenant policy, review, routing and actions. Zod is the only runtime dependency. No Flaggr production integration is performed here.
 
-One TypeScript library executes in the caller's process. It has no platform imports, storage, service endpoints, required network access, or mandatory inference provider. Zod is the only runtime dependency. Phase 2 adds one opt-in literal English profanity analyzer; it is a deterministic lexical algorithm, not a trained model. There is no claim of legacy behavior parity.
-One TypeScript library executes in the caller's process. It has no platform imports, storage, service endpoints, required network access, or mandatory inference provider. Zod is the only runtime dependency. Phase 1 shipped no classifier; Phase 2 adds the optional frozen native heuristic implementation described below. It does not replace Flaggr's runtime.
+`analyze()` remains unconfigured. `createAnalyzer(nativeTextAnalyzer)` selects the already-audited text/conversation/language/fusion extraction. A separate `createEnglishProfanityAnalyzer()` supplies narrowly specified lexical presence, without implying that the native analyzer supports profanity. Custom analyzers use the same local interface.
 
 ```text
-unknown request
-  -> strict versioned request validation
-  -> select declared category/language/context capabilities
-  -> optional local text analyzer
-  -> validate category completeness and source-relative evidence
-  -> versioned result with coverage, provenance, and missing capabilities
+strict bounded V1 request
+  -> declared language/category/context selection
+  -> local text/conversation heuristics
+  -> normalized-match to original-source evidence mapping
+  -> exact category coverage and evidence validation
+  -> portable V1 status/findings/provenance result
 ```
 
-The public API is `analyze()` for the unconfigured core and `createAnalyzer()` for one `TextAnalyzer`. `createEnglishProfanityAnalyzer()` supplies the optional built-in implementation. No plugin registry, multi-provider orchestration, networking layer, or persistent state is needed. An adapter is trusted local code, not a security sandbox; hosts own its execution limits.
+## Native categories and bounded conversation
 
-## First native analyzer
+Native categories are `toxicity`, `harassment`, `hate`, `threat`, and `sexual_risk`. Scores are deterministic rule signals, not calibrated probabilities or validated universal semantics. `profanity` and `spam_scam` remain unsupported by this adapter. Language hints match exact `en` or `und` (explicitly unknown); no detection/translation/region fallback is claimed.
 
-`src/text/english-profanity.ts` owns a small, independently authored vocabulary, Unicode-aware token boundaries, ASCII case matching, and a binary presence signal. The result contains one witness span for the first matching token. It never counts matches, interprets quotes/intent, normalizes evasions, or analyzes semantic context. Its descriptor advertises only `profanity`, exact `en`, and `supportsContext: false`; `literal-en-v1` versions vocabulary, matching, scoring, and evidence selection together. Capability declarations are frozen to prevent accidental changes.
+The native lanes preserve parent text, quotations and bounded `replyTarget`. Parent hostility can enable a warning rule; direct address, group/self/reply hints, quote presence and continuity affect the internal legacy assessment. Quotes inside the current text can still cause false positives. Preserved context does not imply reliable attribution or author-intent understanding.
 
-The default core stays unconfigured. Adding this implementation changes no V1 request/result schema or orchestration behavior. See [the capability specification](../ENGLISH_PROFANITY.md) for exact matching semantics and limitations.
+The core enforces 16,000 text code points, 4,000 per context field and 6,000 combined parent/quote code points. Content is never silently truncated. Exact context fields, including optional `replyTarget`, are part of the already-merged core 0.2.0 V1 extension; this change makes no further contract changes. Older strict V1 validators cannot accept that added property.
 
-## Native content implementation
+## Evidence and compatibility
 
-`nativeTextAnalyzer` implements the existing optional interface over `src/native/` text, conversation, language preparation and fusion. All types are local content-only shapes. Five category scores map to the V1 findings; unsupported profanity/spam/language requests retain explicit missing coverage. The default engine is not enabled automatically.
+`src/native/text.ts` retains the frozen rules and scores while recording the first actual match of each contributing rule. `src/native/evidence.ts` maps normalized UTF-16 indices to original source code points across trimming and lowercase expansion. `src/native-text-analyzer.ts` assigns trace items only to relevant positive categories. Contextual threat evidence includes the matched current warning and the hostile parent phrase. Unrelated quotes or enum values do not become invented source spans.
 
-The native composition preserves the legacy content assessment for compatibility measurement. Its additional escalation/subtype/severity/heuristic-confidence details remain internal, with no new platform data in the result contract. The adapter reports composite version provenance; individual frozen lane versions and source hashes are recorded in [PROVENANCE.md](../PROVENANCE.md).
+A positive finding without a valid contributing trace fails execution. The finite rule set remains below the public 64-item evidence bound; repeated matches are not occurrence counts. Actual spans can still support a mistaken heuristic classification, so quote/criticism false positives remain diagnostic findings.
 
-Optional `context.replyTarget` supplies one of four bounded semantic targets. It participates in context support/stripping like parent/quoted text. Evidence uses original full-field UTF-16 spans because these heuristics do not produce precise token localization. Working-copy normalization never changes the request or source-relative spans.
+`analyzeNativeContent()` preserves the internal legacy content envelope for private compatibility measurement. `analyzeNativeContentWithEvidence()` returns the same signals plus traces to the adapter. Subtype, severity, targeting, escalation and heuristic-confidence labels remain internal. They are not silently added to or inferred from the public V1 result. Composite analyzer version is `native-content-heuristic-v2.evidence-v1`; scoring lane versions remain frozen. See [provenance](../PROVENANCE.md).
 
-## Contract and status
+## Validation and stopping point
 
-The schema identifier is `toxiply.analysis.v1`. Category vocabulary has its own `toxiply.categories.v1` identifier. Engine and analyzer versions are independent of those identifiers. Breaking contract changes require a new schema version; a newer engine revision can still emit a compatible V1 result.
+Runtime request/result schemas, generated Draft 2020-12 artifacts and inferred types remain the contract source of truth. Structural schemas are portable; runtime refinements enforce aggregate context, uniqueness, reference/status consistency and original-request span/category checks.
 
-Categories are explicitly requested. The core computes coverage from valid output and never inserts missing-category zeros. Missing analyzers/categories/languages/context have machine-readable metadata. A declared language hint is not language detection. Missing hints are `und`; matching is exact. Unsupported semantic context is excluded from the adapter input and reported.
+`npm run check` typechecks, builds, runs contract/category/context/error/evaluation regressions, executes three examples and runs both public diagnostics on CI's Node 22/24 matrix. `npm run eval:all` runs public native and lexical diagnostics. `eval/compare-legacy.mjs` reads caller-authorized frozen legacy reports locally; no private fixture or runtime dependency is shipped.
 
-- `completed`: valid findings for every requested category and supplied semantic context.
-- `partial`: valid findings with explicit unavailable categories or semantic context.
-- `unsupported`: valid input but no applicable analyzer execution.
-- `failed`: request/configuration validation, execution, or output-validation error.
-
-Unsupported and failed results carry no findings or evidence. Provenance records only invoked analyzers, including failed invocations. Invalid input never invokes an analyzer. Exception messages and content are not echoed in error results.
-
-## Validation ownership
-
-`src/contracts/schemas.ts` defines runtime schemas and inferred types. Checked-in Draft 2020-12 artifacts under `schemas/` are deterministic structural exports, validated with Ajv in tests. Runtime refinements cover aggregate context size, uniqueness, evidence references, and status/coverage consistency. Execution validates spans against the retained input and exact requested-category coverage.
-
-Input size uses Unicode code points; evidence offsets use UTF-16 string indices. See the README for exact bounds and evidence rules. The core never silently truncates or normalizes content. No request/result includes policy actions or persistent platform history.
-
-## Verification and stopping point
-
-`npm run check` typechecks, builds, runs contract/error/analyzer/evaluation tests, checks JSON Schema drift and package independence, executes both public usage examples, and runs the text diagnostic. GitHub Actions repeats this on Node 22 and 24. Original Phase 1 fixtures are synthetic contract examples with fixed scores; they establish interface behavior only.
-
-The Phase 2 diagnostic records real lexical outputs against a separate synthetic 36-case dataset with provisional labels. It records dataset/analyzer provenance and reports known misses. Human review of those labels remains pending, and it is not a production quality gate. See [the evaluation method](../EVALUATION.md).
-
-This phase ends when the opt-in analyzer, diagnostic runner, docs, and existing foundation pass their checks. Semantic classifiers, new media/language capabilities, platform adapters, legacy extraction/parity, and deployments are separate work.
-The native regression suite additionally covers fixed harm-category scores, unchanged criticism errors, context targeting, source evidence spans, unsupported categories/languages, independent calls and default opt-in behavior. The private 40-case parity run has zero content differences and unchanged provisional-label errors. Independent realistic held-out evaluation, quality improvements, media/language expansion, Flaggr compatibility/shadow adapters and deployments remain separate work.
+The 40-case private comparison preserves content/category/severity behavior and records known attribution warnings. The new 32-case public diagnostic reports measured errors with pending human labels. Compatibility, regression correctness and production accuracy are distinct. Held-out independent quality evaluation, calibration, media/language expansion, Flaggr integration, deployment and publication remain outside this task.

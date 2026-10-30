@@ -9,8 +9,16 @@ import { aggregateToxiplySignals } from './fusion.js';
 import { prepareMultilingualInput } from './language.js';
 import { analyzeNativeText } from './text.js';
 import type { NativeInput, ToxiplySignals } from './types.js';
+import type { RuleEvidence } from './evidence.js';
 
 export function analyzeNativeContent(input: NativeInput): ToxiplySignals {
+  return analyzeNativeContentWithEvidence(input).signals;
+}
+
+export function analyzeNativeContentWithEvidence(input: NativeInput): {
+  signals: ToxiplySignals;
+  evidence: RuleEvidence[];
+} {
   const prepared = prepareMultilingualInput({
     text: input.text,
     ...(input.language === undefined ? {} : { language: input.language }),
@@ -26,10 +34,12 @@ export function analyzeNativeContent(input: NativeInput): ToxiplySignals {
   if (prepared.externalEscalationRecommended) sourceModalities.push('multilingual');
 
   // Direct-address cues are assessed even without an explicit parent message.
-  return aggregateToxiplySignals({
-    textResult: analyzeNativeText(laneInput),
+  const textResult = analyzeNativeText(laneInput);
+  const signals = aggregateToxiplySignals({
+    textResult,
     conversationResult: analyzeConversationEvidence(laneInput),
     sourceModalities,
     routerVersion: 'native-content-heuristic-v2',
   });
+  return { signals, evidence: textResult.evidence };
 }

@@ -32,7 +32,7 @@ test('native threat scores and lane provenance preserve the deterministic assess
   assert.deepEqual(Object.fromEntries(result.findings.map((f) => [f.category, f.score])), {
     toxicity: 0.82, harassment: 0.78, hate: 0, threat: 0.98, sexual_risk: 0,
   });
-  assert.deepEqual(result.modelVersions, { native_content: 'native-content-heuristic-v2' });
+  assert.deepEqual(result.modelVersions, { native_content: 'native-content-heuristic-v2.evidence-v1' });
   assert.equal(result.confidence.calibrated, false);
   assert.equal(analysisResultSchema.safeParse(result).success, true);
   const internal = analyzeNativeContent({ text: 'I will hurt you.' });
@@ -75,7 +75,7 @@ test('extraction retains known criticism false positives instead of tuning the c
   assert.equal(result.findings.find((f) => f.category === 'toxicity').score, 0.58);
 });
 
-test('evidence spans cover assessed fields without claiming precise phrase attribution', async () => {
+test('evidence identifies matched rules without attributing unrelated quoted fields', async () => {
   const input = request('😀 You are a moron.', {
     context: { languageHint: 'en', quotedText: 'A quoted remark 😀' },
   });
@@ -84,12 +84,13 @@ test('evidence spans cover assessed fields without claiming precise phrase attri
   assert.equal(result.status, 'completed');
   assert.deepEqual(input, original);
   assert.deepEqual(result.evidence.map(({ source, start, end }) => ({ source, start, end })), [
-    { source: 'text', start: 0, end: input.content.text.length },
-    { source: 'quotedText', start: 0, end: input.context.quotedText.length },
+    { source: 'text', start: 3, end: 6 },
+    { source: 'text', start: 13, end: 18 },
   ]);
-  assert.ok(result.evidence.every((e) => e.code.startsWith('native_text.')));
+  assert.deepEqual(result.evidence.map((e) => input.content.text.slice(e.start, e.end)), ['You', 'moron']);
+  assert.ok(result.evidence.every((e) => e.code.startsWith('lexical.')));
   for (const finding of result.findings.filter((f) => f.score > 0)) {
-    assert.deepEqual(finding.evidenceIds, result.evidence.map((e) => e.id));
+    assert.ok(finding.evidenceIds.includes(result.evidence[1].id));
   }
 });
 
