@@ -13,7 +13,7 @@ Toxiply is a reusable content-intelligence library. Consumers own tenant/workspa
 ## T-014 — One TypeScript package
 
 **Status:** accepted · **Date:** 2026-10-30
-https://github.com/eonhive/toxiply/pull/2/conflict?name=docs%252FDECISIONS.md&ancestor_oid=dc8b92b194078ce9ec9b4161ebb3255ad47c128d&base_oid=28ab160876e7cbed8d87be482d4060850790e6b1&head_oid=7a5e318a8039ca8144450008647bea69cc63cb29
+
 Ship one in-process ESM library with no required database, HTTP server, Python runtime, Flaggr dependency, or external AI provider. One optional local analyzer interface is sufficient for Phase 1.
 
 **Reason:** Establish a small, independently testable boundary before adding inference implementations or deployment infrastructure.
@@ -49,7 +49,8 @@ Add `createEnglishProfanityAnalyzer()` using independently authored exact-token 
 Add an offline, versioned synthetic diagnostic with explicit labels/rationales, data hash, review status, analyzer versions, per-group confusion metrics, and evidence. Include deliberately unsupported forms without changing their labels to fit the implementation. Unavailable/failed analysis fails the harness rather than becoming a benign zero. Mismatches remain diagnostic findings, separate from test failures. Codex-authored labels remain pending human review until an attributed human review actually occurs.
 
 **Reason:** Make limitations measurable without claiming independent validation, calibration, or production accuracy from a development diagnostic.
-## T-017 — Opt-in native extraction with preserved behavior
+
+## T-019 — Opt-in native extraction with preserved behavior
 
 **Status:** implemented for review · **Date:** 2026-10-30
 
@@ -59,8 +60,20 @@ The public adapter supports five content categories and English/unknown hints; u
 
 **Reason:** Establish independent deterministic behavior before changing inference quality or wiring a platform consumer. Private baseline examples remain private; matched synthetic results do not establish production accuracy. Licensing/publication metadata remains unchanged and npm publication stays disabled.
 
-## T-018 — Bounded reply-target context
+## T-020 — Bounded reply-target context
 
 **Status:** implemented for review · **Date:** 2026-10-30
 
 V1 text context additionally accepts optional `replyTarget: parent_author | group | self | unknown`. This is additive bounded semantic context, required to preserve the extracted targeting/escalation behavior; it is not a persistent actor ID, workspace role or policy. Engines without context support have it stripped and return partial coverage. Unknown values fail validation. Engine/package version is `0.2.0`; existing request/result schema identifiers remain V1 and existing request shapes remain valid.
+
+## T-021 — Actual rule evidence with unchanged scoring
+
+**Status:** accepted · **Date:** 2026-10-30
+
+Replace the native adapter's whole-field assessment witnesses with the actual first match of each contributing rule and category-specific references. Map normalized offsets to unchanged UTF-16 source fields, including Unicode case expansion. Never attach unrelated quoted/parent fields or invent a span for enum targeting metadata. Preserve scoring, internal subtype/severity/targeting, uncalibrated confidence and the current V1 contracts. Composite version `native-content-heuristic-v2.evidence-v1` identifies this evidence change without pretending that classification quality improved.
+
+The local 40-case legacy comparison and public native/lexical diagnostics are separate checks. Private fixtures/reports remain private, and the public comparison harness requires caller-authorized local inputs. Full public evaluation runs through `npm run eval:all` and CI. Human labels remain pending review.
+
+**Reason:** A positive finding needs a real contributing witness; valid structural offsets alone are insufficient. Compatibility and quality must be measured and reported separately.
+
+**Decision-log maintenance:** Two merged PRs both used T-017/T-018. The extraction and bounded-target entries are now uniquely identified as T-019/T-020. Their earlier behavior remains historical; T-021 replaces whole-field evidence only.

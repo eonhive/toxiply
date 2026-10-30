@@ -6,7 +6,7 @@
  */
 import type { TextAnalyzer } from './contracts/analyzer.js';
 import type { AnalysisRequest, Category, TextAnalysis } from './contracts/schemas.js';
-import { analyzeNativeContent } from './native/analyze-native-content.js';
+import { analyzeNativeContentWithEvidence } from './native/analyze-native-content.js';
 import type { ToxiplySignals } from './native/types.js';
 
 const SCORE_KEYS: Partial<Record<Category, keyof ToxiplySignals['scores']>> = {
@@ -16,7 +16,7 @@ const SCORE_KEYS: Partial<Record<Category, keyof ToxiplySignals['scores']>> = {
 
 function assess(request: AnalysisRequest): TextAnalysis {
   const context = request.context;
-  const signals = analyzeNativeContent({
+  const { signals, evidence: traces } = analyzeNativeContentWithEvidence({
     text: request.content.text,
     ...(context?.parentText === undefined ? {} : { parentText: context.parentText }),
     ...(context?.quotedText === undefined ? {} : { quotedText: context.quotedText }),
@@ -30,30 +30,31 @@ function assess(request: AnalysisRequest): TextAnalysis {
   });
   if (!findings.some((finding) => finding.score > 0)) return { findings, evidence: [] };
 
-  // Legacy heuristics have no token-level attribution. These spans identify
-  // whole assessed fields, not precise harmful phrases or calibrated evidence.
-  const evidence: TextAnalysis['evidence'] = [{
-    id: 'native-text', code: 'native_text.heuristic_assessment',
-    source: 'text', start: 0, end: request.content.text.length,
-  }];
-  for (const source of ['parentText', 'quotedText'] as const) {
-    const text = context?.[source];
-    if (text !== undefined) evidence.push({
-      id: `native-${source}`, code: 'native_text.semantic_context',
-      source, start: 0, end: text.length,
-    });
+  const evidence: TextAnalysis['evidence'] = [];
+  for (const trace of traces) {
+    const supported = findings.filter((finding) => finding.score > 0 && trace.categories.includes(finding.category));
+    if (supported.length === 0) continue;
+    const id = `native-${evidence.length + 1}`;
+    const { categories: _categories, ...span } = trace;
+    evidence.push({ id, ...span });
+    for (const finding of supported) finding.evidenceIds.push(id);
   }
-  for (const finding of findings) {
-    if (finding.score > 0) finding.evidenceIds = evidence.map((item) => item.id);
+  // A positive score without its actual matched rule is a programming error;
+  // never invent a whole-field span merely to satisfy the public contract.
+  if (findings.some((finding) => finding.score > 0 && finding.evidenceIds.length === 0)) {
+    throw new Error('Native positive finding has no supporting rule evidence.');
   }
   return { findings, evidence };
 }
 
 export const nativeTextAnalyzer: TextAnalyzer = {
   descriptor: {
-    id: 'native_content', version: 'native-content-heuristic-v2',
+    id: 'native_content', version: 'native-content-heuristic-v2.evidence-v1',
     categories: ['toxicity', 'harassment', 'hate', 'threat', 'sexual_risk'],
     languages: ['en', 'und'], supportsContext: true,
   },
   analyze: assess,
 };
+Object.freeze(nativeTextAnalyzer.descriptor.categories);
+Object.freeze(nativeTextAnalyzer.descriptor.languages);
+Object.freeze(nativeTextAnalyzer.descriptor);

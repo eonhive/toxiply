@@ -5,6 +5,9 @@
  * Notes: Vibe coded with Codex.
  */
 import type { ConversationReplyTarget, ToxiplySignals } from "./types.js";
+import { evidenceText } from './evidence.js';
+import type { EvidenceText, RuleEvidence } from './evidence.js';
+import type { Category } from '../contracts/schemas.js';
 
 export type ToxiplySubtype =
   | "explicit_threat"
@@ -20,6 +23,7 @@ export interface AnalyzeNativeTextInput {
 }
 
 export interface ToxiplyTextLaneResult {
+  evidence: RuleEvidence[];
   modelVersions: {
     lexical: string;
     semantic: string;
@@ -262,13 +266,15 @@ function includeSubtype(
 
 function anyPatternMatched(
   rules: readonly PatternRule[],
-  normalizedText: string,
+  text: EvidenceText,
   matchedSignals: string[],
+  categories: readonly Category[],
+  evidence: RuleEvidence[],
 ): boolean {
   let matched = false;
 
   for (const rule of rules) {
-    if (!rule.pattern.test(normalizedText)) {
+    if (!text.record(rule.pattern, rule.signal, categories, evidence)) {
       continue;
     }
 
@@ -301,23 +307,27 @@ function mergeScores(
 }
 
 function detectLexicalSignals(text: string): {
+  evidence: RuleEvidence[];
   scores: ToxiplySignals["scores"];
   matchedSignals: string[];
   subtypeCandidates: ToxiplySubtype[];
 } {
-  const normalizedText = text.trim().toLowerCase();
+  const view = evidenceText(text, 'text');
+  const evidence: RuleEvidence[] = [];
   const scores = { ...EMPTY_SCORES };
   const matchedSignals: string[] = [];
   const subtypeCandidates: ToxiplySubtype[] = [];
   const targetedByLexicalCue = anyPatternMatched(
     DIRECT_ADDRESS_PATTERNS,
-    normalizedText,
+    view,
     matchedSignals,
+    ['harassment'],
+    evidence,
   );
   let harmfulCueMatched = false;
 
   for (const insultTerm of INSULT_TERMS) {
-    if (new RegExp(`\\b${insultTerm}\\b`, "i").test(normalizedText)) {
+    if (view.record(new RegExp(`\\b${insultTerm}\\b`, "i"), `lexical:insult:${insultTerm}`, ['toxicity', 'harassment'], evidence)) {
       harmfulCueMatched = true;
       scores.toxicity = Math.max(scores.toxicity, 0.58);
       scores.harassment = Math.max(
@@ -329,7 +339,7 @@ function detectLexicalSignals(text: string): {
     }
   }
 
-  if (anyPatternMatched(THREAT_PATTERNS, normalizedText, matchedSignals)) {
+  if (anyPatternMatched(THREAT_PATTERNS, view, matchedSignals, ['threat', 'toxicity', 'harassment'], evidence)) {
     harmfulCueMatched = true;
     scores.threat = Math.max(scores.threat, 0.96);
     scores.toxicity = Math.max(scores.toxicity, 0.78);
@@ -341,7 +351,7 @@ function detectLexicalSignals(text: string): {
     includeSubtype(subtypeCandidates, "explicit_threat");
   }
 
-  if (anyPatternMatched(HATE_PATTERNS, normalizedText, matchedSignals)) {
+  if (anyPatternMatched(HATE_PATTERNS, view, matchedSignals, ['hate', 'toxicity', 'harassment'], evidence)) {
     harmfulCueMatched = true;
     scores.hate = Math.max(scores.hate, 0.88);
     scores.harassment = Math.max(scores.harassment, 0.72);
@@ -353,7 +363,7 @@ function detectLexicalSignals(text: string): {
     includeSubtype(subtypeCandidates, "hate_or_slur");
   }
 
-  if (anyPatternMatched(SEXUAL_RISK_PATTERNS, normalizedText, matchedSignals)) {
+  if (anyPatternMatched(SEXUAL_RISK_PATTERNS, view, matchedSignals, ['sexual_risk', 'toxicity', 'harassment'], evidence)) {
     harmfulCueMatched = true;
     scores.sexualRisk = Math.max(scores.sexualRisk, 0.83);
     scores.toxicity = Math.max(scores.toxicity, 0.32);
@@ -369,6 +379,7 @@ function detectLexicalSignals(text: string): {
   }
 
   return {
+    evidence,
     scores,
     matchedSignals,
     subtypeCandidates,
@@ -380,11 +391,15 @@ function analyzeSemanticSignals({
   parentText,
   replyTarget,
 }: AnalyzeNativeTextInput): {
+  evidence: RuleEvidence[];
   scores: ToxiplySignals["scores"];
   matchedSignals: string[];
   subtypeCandidates: ToxiplySubtype[];
 } {
-  const normalizedText = text.trim().toLowerCase();
+  const view = evidenceText(text, 'text');
+  const parent = parentText === undefined ? undefined : evidenceText(parentText, 'parentText');
+  const evidence: RuleEvidence[] = [];
+  const normalizedText = view.normalized;
   const normalizedParent = parentText?.trim().toLowerCase();
   const scores = { ...EMPTY_SCORES };
   const matchedSignals: string[] = [];
@@ -394,7 +409,7 @@ function analyzeSemanticSignals({
   const hostileParent =
     normalizedParent !== undefined && HOSTILITY_PATTERN.test(normalizedParent);
 
-  if (anyPatternMatched(SEMANTIC_INSULT_PATTERNS, normalizedText, matchedSignals)) {
+  if (anyPatternMatched(SEMANTIC_INSULT_PATTERNS, view, matchedSignals, ['toxicity', 'harassment'], evidence)) {
     scores.toxicity = Math.max(scores.toxicity, 0.68);
     scores.harassment = Math.max(
       scores.harassment,
@@ -406,7 +421,7 @@ function analyzeSemanticSignals({
     includeSubtype(subtypeCandidates, "insult");
   }
 
-  if (anyPatternMatched(SEMANTIC_THREAT_PATTERNS, normalizedText, matchedSignals)) {
+  if (anyPatternMatched(SEMANTIC_THREAT_PATTERNS, view, matchedSignals, ['threat', 'toxicity', 'harassment'], evidence)) {
     scores.threat = Math.max(scores.threat, 0.98);
     scores.toxicity = Math.max(scores.toxicity, 0.82);
     scores.harassment = Math.max(scores.harassment, 0.78);
@@ -420,8 +435,9 @@ function analyzeSemanticSignals({
   if (
     normalizedParent !== undefined &&
     hostileParent &&
-    anyPatternMatched(CONTEXTUAL_THREAT_PATTERNS, normalizedText, matchedSignals)
+    anyPatternMatched(CONTEXTUAL_THREAT_PATTERNS, view, matchedSignals, ['threat', 'toxicity', 'harassment'], evidence)
   ) {
+    parent?.record(HOSTILITY_PATTERN, 'semantic:threat:hostile_parent', ['threat', 'toxicity', 'harassment'], evidence);
     scores.threat = Math.max(scores.threat, 0.94);
     scores.toxicity = Math.max(scores.toxicity, 0.78);
     scores.harassment = Math.max(scores.harassment, 0.74);
@@ -429,7 +445,7 @@ function analyzeSemanticSignals({
     includeSubtype(subtypeCandidates, "explicit_threat");
   }
 
-  if (anyPatternMatched(SEMANTIC_HATE_PATTERNS, normalizedText, matchedSignals)) {
+  if (anyPatternMatched(SEMANTIC_HATE_PATTERNS, view, matchedSignals, ['hate', 'toxicity', 'harassment'], evidence)) {
     scores.hate = Math.max(scores.hate, 0.91);
     scores.harassment = Math.max(scores.harassment, 0.74);
     scores.toxicity = Math.max(scores.toxicity, 0.78);
@@ -440,7 +456,7 @@ function analyzeSemanticSignals({
     includeSubtype(subtypeCandidates, "hate_or_slur");
   }
 
-  if (anyPatternMatched(SEMANTIC_SEXUAL_PATTERNS, normalizedText, matchedSignals)) {
+  if (anyPatternMatched(SEMANTIC_SEXUAL_PATTERNS, view, matchedSignals, ['sexual_risk', 'toxicity', 'harassment'], evidence)) {
     scores.sexualRisk = Math.max(scores.sexualRisk, 0.86);
     scores.toxicity = Math.max(scores.toxicity, 0.34);
     scores.harassment = Math.max(
@@ -455,7 +471,7 @@ function analyzeSemanticSignals({
 
   if (
     contextualReply &&
-    anyPatternMatched(QUOTED_HARASSMENT_PATTERNS, normalizedText, matchedSignals)
+    anyPatternMatched(QUOTED_HARASSMENT_PATTERNS, view, matchedSignals, ['toxicity', 'harassment'], evidence)
   ) {
     scores.toxicity = Math.max(scores.toxicity, 0.62);
     scores.harassment = Math.max(scores.harassment, 0.64);
@@ -468,7 +484,7 @@ function analyzeSemanticSignals({
 
   if (
     contextualReply &&
-    anyPatternMatched(SARCASM_PATTERNS, normalizedText, matchedSignals)
+    anyPatternMatched(SARCASM_PATTERNS, view, matchedSignals, ['toxicity', 'harassment'], evidence)
   ) {
     scores.toxicity = Math.max(scores.toxicity, 0.58);
     scores.harassment = Math.max(scores.harassment, 0.6);
@@ -480,6 +496,7 @@ function analyzeSemanticSignals({
   }
 
   return {
+    evidence,
     scores,
     matchedSignals,
     subtypeCandidates,
@@ -497,6 +514,7 @@ export function analyzeNativeText(
   mergeScores(scores, semanticSignals.scores);
 
   return {
+    evidence: [...lexicalSignals.evidence, ...semanticSignals.evidence],
     modelVersions: {
       lexical: "lexical-heuristic-v2",
       semantic: "semantic-heuristic-v2",

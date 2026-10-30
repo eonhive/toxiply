@@ -30,9 +30,11 @@
     "example": "npm run build && node examples/text.mjs",
     "example:profanity": "npm run build && node examples/profanity.mjs",
     "eval:text": "npm run build && node eval/run.mjs",
-    "check": "npm run typecheck && npm test && npm run example && npm run example:profanity && npm run eval:text"
     "example:native": "npm run build && node examples/native-text.mjs",
-    "check": "npm run typecheck && npm test && npm run example && npm run example:native"
+    "eval:native": "npm run build && node eval/run-native.mjs",
+    "eval:legacy": "npm run build && node eval/compare-legacy.mjs",
+    "eval:all": "npm run eval:text && npm run eval:native",
+    "check": "npm run typecheck && npm test && npm run example && npm run example:native && npm run example:profanity && npm run eval:all"
   },
   "repository": {
     "type": "git",

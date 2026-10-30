@@ -6,6 +6,7 @@
  */
 import { createHash } from 'node:crypto';
 import { z } from 'zod';
+import { summarize } from './metrics.mjs';
 import {
   analysisResultSchema, createAnalyzer, createEnglishProfanityAnalyzer, LIMITS, SCHEMA_VERSION,
 } from '@eonhive/toxiply';
@@ -80,26 +81,5 @@ export async function evaluateDataset(
     groups: Object.fromEntries(groups.map((group) => [group, summarize(outcomes.filter((item) => item.group === group))])),
     mismatches: outcomes.filter((item) => item.expectedPresent !== item.actualPresent).map((item) => item.id),
     cases: outcomes,
-  };
-}
-
-function summarize(outcomes) {
-  let truePositives = 0;
-  let trueNegatives = 0;
-  let falsePositives = 0;
-  let falseNegatives = 0;
-  for (const item of outcomes) {
-    if (item.expectedPresent && item.actualPresent) truePositives++;
-    else if (!item.expectedPresent && !item.actualPresent) trueNegatives++;
-    else if (item.actualPresent) falsePositives++;
-    else falseNegatives++;
-  }
-  const ratio = (numerator, denominator) => denominator === 0 ? null : numerator / denominator;
-  return {
-    cases: outcomes.length, truePositives, trueNegatives, falsePositives, falseNegatives,
-    precision: ratio(truePositives, truePositives + falsePositives),
-    recall: ratio(truePositives, truePositives + falseNegatives),
-    falsePositiveRate: ratio(falsePositives, falsePositives + trueNegatives),
-    falseNegativeRate: ratio(falseNegatives, falseNegatives + truePositives),
   };
 }
