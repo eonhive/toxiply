@@ -8,7 +8,7 @@ import { z } from 'zod';
 
 export const SCHEMA_VERSION = 'toxiply.analysis.v1';
 export const TAXONOMY_VERSION = 'toxiply.categories.v1';
-export const ENGINE_VERSION = '0.1.0';
+export const ENGINE_VERSION = '0.2.0';
 export const LIMITS = Object.freeze({
   text: 16_000,
   contextField: 4_000,
@@ -35,6 +35,7 @@ const requestShape = z.strictObject({
   context: z.strictObject({
     parentText: contextTextSchema.optional(),
     quotedText: contextTextSchema.optional(),
+    replyTarget: z.enum(['parent_author', 'group', 'self', 'unknown']).optional(),
     languageHint: languageSchema.optional(),
   }).optional(),
 });
