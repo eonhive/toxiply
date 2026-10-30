@@ -8,6 +8,8 @@ One TypeScript library runs in process with no Flaggr runtime imports, database,
 
 `analyze()` remains unconfigured. `createAnalyzer(nativeTextAnalyzer)` selects the already-audited text/conversation/language/fusion extraction. A separate `createEnglishProfanityAnalyzer()` supplies narrowly specified lexical presence, without implying that the native analyzer supports profanity. Custom analyzers use the same local interface.
 
+`createAnalyzer(contextualTextAnalyzer)` selects a separately versioned attribution experiment. `src/contextual/attribution.ts` recognizes narrow reporting/product syntax and produces a length-preserving working copy for the frozen scoring rules. `src/contextual-text-analyzer.ts` checks returned witnesses against excluded ranges and falls back to the baseline for an artificial cross-mask match. Original input and the existing native algorithm remain unchanged. This candidate does not provide new categories, language support, calibrated confidence or a new public schema. See [its bounded grammar and limitations](../CONTEXTUAL_ATTRIBUTION.md).
+
 ```text
 strict bounded V1 request
   -> declared language/category/context selection
@@ -37,6 +39,8 @@ A positive finding without a valid contributing trace fails execution. The finit
 
 Runtime request/result schemas, generated Draft 2020-12 artifacts and inferred types remain the contract source of truth. Structural schemas are portable; runtime refinements enforce aggregate context, uniqueness, reference/status consistency and original-request span/category checks.
 
-`npm run check` typechecks, builds, runs contract/category/context/error/evaluation regressions, executes three examples and runs both public diagnostics on CI's Node 22/24 matrix. `npm run eval:all` runs public native and lexical diagnostics. `eval/compare-legacy.mjs` reads caller-authorized frozen legacy reports locally; no private fixture or runtime dependency is shipped.
+`npm run check` typechecks, builds, runs contract/category/context/error/evaluation regressions, executes four examples and runs public diagnostics on CI's Node 22/24 matrix. `npm run eval:all` runs native, lexical and paired attribution diagnostics. `eval/compare-legacy.mjs` reads caller-authorized frozen legacy reports locally; no private fixture or runtime dependency is shipped.
 
 The 40-case private comparison preserves content/category/severity behavior and records known attribution warnings. The new 32-case public diagnostic reports measured errors with pending human labels. Compatibility, regression correctness and production accuracy are distinct. Held-out independent quality evaluation, calibration, media/language expansion, Flaggr integration, deployment and publication remain outside this task.
+
+The quality candidate is measured against that unchanged native diagnostic and a separate 35-case synthetic attribution challenge. The paired harness reports both fixes and new errors, with changed per-case score/evidence records. Tests retain positive detections and known misses, and explicitly test endorsement and independent author abuse. All labels remain provisional by user direction; this is development validation, not held-out proof or a model-quality certification.

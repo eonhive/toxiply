@@ -12,7 +12,7 @@ npm run check
 npm run eval:all
 ```
 
-`check` typechecks source/examples, builds, runs all tests, executes the unconfigured/native/lexical examples, and runs both public diagnostics. CI repeats it on Node 22 and 24. `eval:all` runs the 36-case lexical profanity diagnostic and the 32-case native text diagnostic; mismatches are reported findings, while failed/incomplete execution fails the harness.
+`check` typechecks source/examples, builds, runs all tests, executes the unconfigured/native/lexical/contextual examples, and runs all public diagnostics. CI repeats it on Node 22 and 24. `eval:all` includes the lexical diagnostic, frozen native diagnostic, and paired quality comparisons; mismatches are reported findings, while failed/incomplete execution fails the harness.
 
 ```js
 import { createAnalyzer, nativeTextAnalyzer, SCHEMA_VERSION } from '@eonhive/toxiply';
@@ -43,11 +43,27 @@ Run `npm run example:native` for a complete result. The default `analyze(request
 | Analyzer | Coverage | Limits |
 | --- | --- | --- |
 | `nativeTextAnalyzer` | Deterministic heuristic `toxicity`, `harassment`, `hate`, `threat`, `sexual_risk`; parent/quote/target context | Exact `en` or explicitly unknown `und`; no translation or language detection; known quote/criticism/evasion errors |
+| `contextualTextAnalyzer` | Separate opt-in candidate using the same five categories with narrow report/criticism attribution | Provisional development evidence only; no general author-intent understanding or default replacement |
 | `createEnglishProfanityAnalyzer()` | Separate, opt-in 12-token English literal-presence signal | Exact `en`; no semantic context, severity, author-intent, obfuscation, or comprehensive profanity classification |
 
 The native analyzer does **not** advertise `profanity` or `spam_scam`. Mixed requests return `partial` with unavailable categories omitted and listed in `missingCapabilities`; unsupported-only requests produce no findings. The separate literal detector is implemented and has its own diagnostic; see [its exact specification](docs/ENGLISH_PROFANITY.md). Neither adapter implements spam/scam, pixels, OCR, speech recognition, audio, video, persistent actor history, policy, routing, or enforcement.
 
 Native content scoring is the audited extraction already present in this repository, with rule-level evidence instrumentation. Its scores and internal subtype/severity/targeting behavior remain compatible with the frozen legacy diagnostic. This is functional heuristic analysis, not a trained semantic model or a production-accuracy claim. Product criticism, literal animals, reported abuse, sarcasm, implied threats and obfuscation remain known error areas.
+
+## Opt-in attribution candidate
+
+```js
+import { createAnalyzer, contextualTextAnalyzer } from '@eonhive/toxiply';
+
+const candidate = createAnalyzer(contextualTextAnalyzer);
+// Use the same V1 request shape as the native analyzer.
+```
+
+The separately versioned `contextual-attribution-v1` candidate excludes narrowly recognized third-party/report quotations and product-directed insult tokens before running the frozen scoring rules again. Nearby explicit endorsement and personal comparisons preserve baseline behavior. Independent author threats, insults, hate and sexual requests remain assessed, with evidence pointing to their actual remaining occurrences. It applies the same narrow attribution to parent text and preserves other bounded context.
+
+Quotation marks, a report keyword elsewhere, and equality with `context.quotedText` are not blanket exemptions. Unmatched/multiline quotes, unquoted reports, ambiguous product/person nouns, implicit endorsement, nonlocal references and unrecognized grammar remain limitations. A non-whitespace internal mask preserves UTF-16 offsets without joining words; a witness crossing a masked range causes fallback to the baseline. The original request is unchanged, and excluded text is never returned as harmful evidence merely to satisfy validation.
+
+Run `npm run example:contextual` or `npm run eval:quality`. The frozen `nativeTextAnalyzer` is unchanged and the default `analyze()` remains unconfigured. No schema, language/category coverage, confidence-calibration or Flaggr integration change is introduced. See [the exact attribution specification](docs/CONTEXTUAL_ATTRIBUTION.md).
 
 ## Contract and status
 
@@ -90,6 +106,8 @@ The core never truncates, persists, fetches or logs input. Native heuristics nor
 ## Evaluation and provenance
 
 The native public diagnostic records **13 TP, 7 TN, 5 FP, 7 FN** across 32 independently authored synthetic cases. Its labels are provisional and pending human review. The separate lexical diagnostic records **14 TP, 10 TN, 0 FP, 12 FN** across 36 cases. Neither set is representative, held-out, calibrated, or independently validated.
+
+Paired evaluation of the contextual candidate on the unchanged 32-case diagnostic records **13 TP, 12 TN, 0 FP, 7 FN**. The new 35-case provisional attribution challenge changes **19 TP / 0 TN / 16 FP / 0 FN** for the baseline to **19 TP / 14 TN / 2 FP / 0 FN** for the candidate. No new overall false positives, false negatives or category-label regressions appear on these two development sets. This is observed development behavior, not proof of generalization or production quality. The user explicitly chose to keep labels provisional for this PR; independent human review and a genuinely held-out corpus remain unperformed.
 
 A local comparison against 40 frozen private legacy fixtures matches all content fields and all five public scores, with zero category or severity differences. Four quoted-report attribution warnings remain. These compatibility results are separate from accuracy. Private examples/reports are not committed or needed for installation/public CI. Use `npm run eval:legacy -- /absolute/path/to/authorized-frozen-report.json` to reproduce locally with authorized fixtures; incomplete/out-of-scope fixtures are reported explicitly and make the CLI fail.
 

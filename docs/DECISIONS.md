@@ -77,3 +77,19 @@ The local 40-case legacy comparison and public native/lexical diagnostics are se
 **Reason:** A positive finding needs a real contributing witness; valid structural offsets alone are insufficient. Compatibility and quality must be measured and reported separately.
 
 **Decision-log maintenance:** Two merged PRs both used T-017/T-018. The extraction and bounded-target entries are now uniquely identified as T-019/T-020. Their earlier behavior remains historical; T-021 replaces whole-field evidence only.
+
+## T-022 — Separately versioned attribution candidate
+
+**Status:** accepted as an opt-in experimental candidate · **Date:** 2026-10-30
+
+Add `contextualTextAnalyzer` / `contextual-attribution-v1` without changing the frozen native analyzer or public V1 contracts. Recognize a narrow local grammar of reported/third-party balanced quotations and product-directed insult terms. Explicit nearby endorsement and personal comparisons keep baseline behavior. Rescore remaining current/parent text with length-preserving non-whitespace barriers, retain other context, and reject artificial cross-mask witnesses by falling back to the baseline. Do not introduce general quote/keyword exemptions or claim reliable author-intent classification.
+
+**Reason:** Make a focused, reversible quality experiment with real source evidence and measured regressions while preserving compatibility consumers' baseline.
+
+## T-023 — Paired development evidence, provisional labels
+
+**Status:** accepted · **Date:** 2026-10-30
+
+Keep the original native diagnostic and labels unchanged. Add a separate synthetic attribution challenge and deterministic paired comparison reporting fixed/new false positives and negatives, category-label improvements/regressions, score changes and evidence. Include explicit endorsement, mixed independent abuse, known unsupported reporting grammar, and personal comparisons. The user explicitly chose to keep labels provisional for this PR. Neither same-author development set is an independently reviewed or held-out corpus, and the candidate is not a default promotion or production-integration change.
+
+**Reason:** Observed improvements must remain distinguishable from independent quality validation, and labels must not be silently tuned to candidate predictions.
