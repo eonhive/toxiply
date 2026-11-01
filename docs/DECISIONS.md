@@ -1,6 +1,6 @@
 # Toxiply core decisions
 
-Updated: 2026-10-30 · Scope: independent repository, Phases 1–2
+Updated: 2026-10-31 · Scope: independent repository, Phases 1–2 and Phase T3 evaluation
 
 ## T-013 — Independent content boundary
 
@@ -93,3 +93,35 @@ Add `contextualTextAnalyzer` / `contextual-attribution-v1` without changing the 
 Keep the original native diagnostic and labels unchanged. Add a separate synthetic attribution challenge and deterministic paired comparison reporting fixed/new false positives and negatives, category-label improvements/regressions, score changes and evidence. Include explicit endorsement, mixed independent abuse, known unsupported reporting grammar, and personal comparisons. The user explicitly chose to keep labels provisional for this PR. Neither same-author development set is an independently reviewed or held-out corpus, and the candidate is not a default promotion or production-integration change.
 
 **Reason:** Observed improvements must remain distinguishable from independent quality validation, and labels must not be silently tuned to candidate predictions.
+
+## T-024 — Versioned offline review datasets
+
+**Status:** accepted for Phase T3 infrastructure · **Date:** 2026-10-31
+
+Add repository-only `toxiply.text-eval.v1` datasets with explicit version, taxonomy,
+label meaning, provenance, per-request category labels and review declarations.
+Distinguish development, human-reviewed and held-out splits. Held-out declarations
+require independent collection/freeze metadata and normalized text separation from
+known reference material. Metadata is an attestation, not proof of human review,
+rights or independence. Import exact bytes immutably into ignored/private locations.
+Do not relabel exposed diagnostics as held-out or silently correct existing labels.
+
+**Reason:** Make future independent review auditable without pretending that a model
+or validation script can perform it. No Flaggr data or new dependencies are needed.
+
+## T-025 — Coverage-aware quality and evidence denominators
+
+**Status:** accepted · **Date:** 2026-10-31
+
+Preserve the old frozen diagnostics. Add side-by-side review reports using the same
+score-greater-than-zero metric, existing confusion helper and current analyzer exports.
+Unassessed category/context requests never become negatives. Pair only mutually
+assessed labels. Report actual status, missing capabilities, versions, dataset and
+reference hashes, source-span validity and optional annotation alignment separately.
+Failed/invalid execution is an error; version drift aborts aggregation. Structural
+span correctness is not semantic accuracy. Keep default analysis and candidate opt-in
+behavior, public 0.2.0 contracts and uncalibrated confidence unchanged.
+
+**Reason:** Avoid inflated quality claims from unsupported requests, mixed versions,
+invented witnesses or exposed synthetic examples. Real reviewed/held-out results and
+candidate promotion require a separately bounded task with actual human evidence.

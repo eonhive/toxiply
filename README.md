@@ -12,7 +12,7 @@ npm run check
 npm run eval:all
 ```
 
-`check` typechecks source/examples, builds, runs all tests, executes the unconfigured/native/lexical/contextual examples, and runs all public diagnostics. CI repeats it on Node 22 and 24. `eval:all` includes the lexical diagnostic, frozen native diagnostic, and paired quality comparisons; mismatches are reported findings, while failed/incomplete execution fails the harness.
+`check` typechecks source/examples, builds, runs all tests, executes the unconfigured/native/lexical/contextual examples, and runs all public diagnostics. CI repeats it on Node 22 and 24. `eval:all` includes the lexical/native diagnostics, paired comparisons and the review workflow. Legacy diagnostics require complete coverage; the review workflow explicitly reports intentional partial/unsupported coverage without counting it benign. Failed/invalid execution fails the harness; classification mismatches remain findings.
 
 ```js
 import { createAnalyzer, nativeTextAnalyzer, SCHEMA_VERSION } from '@eonhive/toxiply';
@@ -37,6 +37,36 @@ console.log(result.confidence);       // { calibrated: false }
 ```
 
 Run `npm run example:native` for a complete result. The default `analyze(request)` stays unconfigured and returns `unsupported`, rather than inventing findings. `createAnalyzer()` accepts one optional local `TextAnalyzer`; no provider framework or service is required.
+
+## Review text quality
+
+```sh
+npm run build
+mkdir -p .local/reports .local/datasets
+node eval/run-review.mjs compare > .local/reports/text-quality.json
+node eval/run-review.mjs validate /absolute/path/to/approved-reviewed.json
+node eval/run-review.mjs import /absolute/path/to/approved-reviewed.json .local/datasets
+node eval/run-review.mjs compare .local/datasets/corpus-id@1.0.0.json \
+  --reference /absolute/path/to/known-development.json \
+  > .local/reports/reviewed-quality.json
+```
+
+The [versioned dataset format](docs/TEXT_EVALUATION_DATASETS.md) separates development,
+human-reviewed and held-out declarations, requires explicit provenance/category labels,
+and checks held-out text overlap against bundled and supplied reference data. Imports
+preserve bytes and refuse overwrites. Human identity, rights and independence still
+require actual review; filling metadata cannot create independent validation.
+
+Review per-category confusion/precision/recall, FP/FN IDs, criticism/reporting/threat/evasion
+slices, unsupported coverage and source-span audits for **both** analyzers. Inspect cases
+against the original hashed dataset; structural span validity is not semantic correctness.
+Keep nonpublic datasets/reports ignored or outside Git. Nothing uploads content.
+
+[T3 baseline and remaining gaps](docs/T3_BASELINE.md) records public development results
+and exact verification. No reviewed/held-out corpus is claimed, labels/scoring remain
+unchanged, and the contextual candidate remains opt-in. Convenience commands are
+`dataset:validate`, `dataset:import`, and `eval:review`; use the direct Node commands
+above when saving machine-readable JSON because npm wrappers also print build logs.
 
 ## Actual capabilities
 
@@ -113,4 +143,4 @@ A local comparison against 40 frozen private legacy fixtures matches all content
 
 See [evaluation methods and findings](docs/EVALUATION.md), [source provenance and compatibility](docs/PROVENANCE.md), [architecture](docs/architecture/TOXIPLY_CORE.md), and [decisions](docs/DECISIONS.md). This change transfers no further private implementation, fixture, customer data, credential, or operational report. Source provenance for the existing extraction is recorded separately; public repository visibility and a private npm package do not grant a redistribution license.
 
-Phase 2 stops at independently functional, tested text/conversation analysis. Flaggr runtime integration, shadow cutover, broader quality work, media, deployment and publication are separate tasks.
+The Phase 2 engine and opt-in candidate are preserved. Phase T3 adds evaluation infrastructure only; real independent review, analyzer changes/promotion, Flaggr integration, media, deployment and publication remain separate tasks.
