@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "toxiply.text-eval.v1",
+  "datasetId": "text-review-workflow-example",
+  "datasetVersion": "1.0.0",
+  "taxonomyVersion": "toxiply.categories.v1",
+  "labelDefinition": "Provisional current-author harm labels for schema/coverage probes; quoted material is not automatically endorsed. These are development fixtures, not independent quality validation.",
+  "split": "development",
+  "reviewStatus": "provisional",
+  "provenance": {
+    "source": "Codex-authored schema and coverage probes. The implied-threat probe reuses known public development text. No independent human review or held-out evaluation has occurred.",
+    "sourceKind": "synthetic_development",
+    "rights": "Authored for this repository; existing private/UNLICENSED publication boundary remains unchanged.",
+    "visibility": "public",
+    "authors": ["codex"]
+  },
+  "cases": [
+    {
+      "id": "supported-en", "group": "coverage", "tags": ["supported_language"],
+      "request": { "schemaVersion": "toxiply.analysis.v1", "requestId": "supported-en", "content": { "kind": "text", "text": "Thanks for the explanation." }, "categories": ["harassment"], "context": { "languageHint": "en" } },
+      "labels": { "harassment": false }, "rationale": "Synthetic neutral coverage probe.", "review": { "status": "provisional" }
+    },
+    {
+      "id": "explicit-und", "group": "coverage", "tags": ["unknown_language"],
+      "request": { "schemaVersion": "toxiply.analysis.v1", "requestId": "explicit-und", "content": { "kind": "text", "text": "A routine update." }, "categories": ["harassment"], "context": { "languageHint": "und" } },
+      "labels": { "harassment": false }, "rationale": "Execution with an explicit unknown-language hint is not language detection.", "review": { "status": "provisional" }
+    },
+    {
+      "id": "unsupported-fr", "group": "coverage", "tags": ["unsupported_language"],
+      "request": { "schemaVersion": "toxiply.analysis.v1", "requestId": "unsupported-fr", "content": { "kind": "text", "text": "Bonjour." }, "categories": ["harassment"], "context": { "languageHint": "fr" } },
+      "labels": { "harassment": false }, "rationale": "Coverage-only probe: unsupported analysis must not count as a correct negative.", "review": { "status": "provisional" }
+    },
+    {
+      "id": "unsupported-categories", "group": "coverage", "tags": ["unsupported_category"],
+      "request": { "schemaVersion": "toxiply.analysis.v1", "requestId": "unsupported-categories", "content": { "kind": "text", "text": "Meeting notes are available." }, "categories": ["profanity", "spam_scam"], "context": { "languageHint": "en" } },
+      "labels": { "profanity": false, "spam_scam": false }, "rationale": "Native and contextual analyzers do not implement these categories.", "review": { "status": "provisional" }
+    },
+    {
+      "id": "partial-categories", "group": "coverage", "tags": ["unsupported_category"],
+      "request": { "schemaVersion": "toxiply.analysis.v1", "requestId": "partial-categories", "content": { "kind": "text", "text": "The meeting starts at noon." }, "categories": ["harassment", "spam_scam"], "context": { "languageHint": "en" } },
+      "labels": { "harassment": false, "spam_scam": false }, "rationale": "Only assessed harassment may enter category metrics; the whole request remains partial.", "review": { "status": "provisional" }
+    },
+    {
+      "id": "parent-witness", "group": "evidence", "tags": ["threat", "source_spans"],
+      "request": { "schemaVersion": "toxiply.analysis.v1", "requestId": "parent-witness", "content": { "kind": "text", "text": "Try me." }, "categories": ["threat"], "context": { "languageHint": "en", "parentText": "😀 I will hurt you.", "replyTarget": "parent_author" } },
+      "labels": { "threat": true }, "rationale": "Known development warning/parent pattern with explicit provisional UTF-16 annotations.", "review": { "status": "provisional" },
+      "evidenceSpans": [ { "category": "threat", "source": "text", "start": 0, "end": 6 }, { "category": "threat", "source": "parentText", "start": 3, "end": 18 } ]
+    },
+    {
+      "id": "implied-threat-probe", "group": "known_gap", "tags": ["threat", "implied_threat"],
+      "request": { "schemaVersion": "toxiply.analysis.v1", "requestId": "implied-threat-probe", "content": { "kind": "text", "text": "I know where you live; the knife is ready." }, "categories": ["toxicity", "harassment", "threat"], "context": { "languageHint": "en" } },
+      "labels": { "toxicity": true, "harassment": true, "threat": true }, "rationale": "Reused native-text threat-4 development case with unchanged positive labels; explicitly not held-out evidence.", "review": { "status": "provisional" }
+    }
+  ]
+}

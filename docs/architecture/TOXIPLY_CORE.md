@@ -1,6 +1,6 @@
 # Independent Toxiply core
 
-Updated: 2026-10-30 · Status: Phase 2 text/conversation analysis
+Updated: 2026-10-31 · Status: Phase 2 text engine; Phase T3 evaluation infrastructure
 
 ## Boundary and execution
 
@@ -44,3 +44,19 @@ Runtime request/result schemas, generated Draft 2020-12 artifacts and inferred t
 The 40-case private comparison preserves content/category/severity behavior and records known attribution warnings. The new 32-case public diagnostic reports measured errors with pending human labels. Compatibility, regression correctness and production accuracy are distinct. Held-out independent quality evaluation, calibration, media/language expansion, Flaggr integration, deployment and publication remain outside this task.
 
 The quality candidate is measured against that unchanged native diagnostic and a separate 35-case synthetic attribution challenge. The paired harness reports both fixes and new errors, with changed per-case score/evidence records. Tests retain positive detections and known misses, and explicitly test endorsement and independent author abuse. All labels remain provisional by user direction; this is development validation, not held-out proof or a model-quality certification.
+
+## Phase T3 evaluation boundary
+
+Repository-only `eval/review-dataset.mjs`, `evaluate-reviewed.mjs` and `run-review.mjs`
+add explicit provenance/review/versioned dataset import, held-out reference checks and
+coverage-aware comparative reports. They reuse public analyzers and existing metrics;
+no runtime/public export or schema change is introduced. Review declarations and files
+belong to evaluation tooling, not persistent content-analysis state. No database,
+network model or Flaggr dependency is added. Nonpublic inputs/reports remain local.
+
+The legacy diagnostic harness stays complete-coverage-only. The new review harness
+supports explicit unsupported/partial probes, excludes missing context/category scores
+from quality denominators, rejects invalid source witnesses, and distinguishes span
+structure from optional annotation alignment. Actual independent human review and a
+separately collected held-out corpus are still unperformed. See the [dataset specification](../TEXT_EVALUATION_DATASETS.md)
+and [public T3 findings](../T3_BASELINE.md).

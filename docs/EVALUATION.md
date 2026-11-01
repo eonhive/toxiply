@@ -10,7 +10,7 @@ npm run check
 npm run eval:all
 ```
 
-`eval:native` runs the 32-case native diagnostic; `eval:text` retains the existing 36-case lexical-profanity diagnostic. `eval:all` runs both. Reports contain exact UTF-8 dataset SHA-256, provenance, algorithm versions, confusion counts, per-group metrics, mismatch IDs and evidence. Native reports also contain per-category metrics. Rates with zero denominators are `null`.
+`eval:native` runs the 32-case native diagnostic; `eval:text` retains the existing 36-case lexical-profanity diagnostic. `eval:all` also runs paired attribution and coverage-aware review reports. Reports contain exact UTF-8 dataset SHA-256, provenance, algorithm versions, confusion counts, per-group metrics, mismatch IDs and evidence. Native reports also contain per-category metrics. Rates with zero denominators are `null`.
 
 Mismatches are diagnostic findings, not command failures. Incomplete, unsupported, failed, malformed, wrong-coverage or version-inconsistent execution fails the harness instead of being counted benign. Tests verify metric/error handling separately from algorithm behavior. No examples, labels or rules were retuned to produce a quality pass.
 
@@ -92,6 +92,21 @@ Algorithm: `english-literal-profanity` / `literal-en-v1`.
 This dataset asks about surface profanity, including quoted/reporting text, not author endorsement. It has 26 provisional positives / 10 negatives; precision 100%, recall 53.8%, false-positive rate 0%, false-negative rate 46.2% on these labels only. A zero lexical signal does not establish profanity-free text. The absence of false positives in this development set establishes no production precision. Do not compare this label definition directly to the native harm-attribution labels.
 
 ## Remaining evidence
+
+Phase T3 adds [versioned review/import infrastructure](TEXT_EVALUATION_DATASETS.md)
+and a [baseline-versus-candidate audit report](T3_BASELINE.md). Existing diagnostic
+files, labels and scorers remain frozen. `node eval/run-review.mjs compare` adds
+explicit unassessed denominators, language/category coverage, per-category FP/FN IDs,
+paired comparable-category deltas and independent source-span checks. Optional span
+annotations measure alignment only where supplied, under their stated review status.
+Current public annotations are provisional; independent semantic adjudication remains
+unperformed. Nonpublic approved corpora and reports must remain ignored/outside Git.
+
+The new review runner records expected partial/unsupported coverage separately and
+excludes missing analysis from quality denominators. It reports failed/invalid
+executions and exits nonzero; inconsistent analyzer versions abort evaluation. These
+rules do not relax the older native/paired diagnostic harnesses' complete-coverage
+requirements. No collected or human-reviewed dataset is bundled or invented.
 
 Human reviewers must check category definitions, criticism, reported/quoted abuse, implied threats, protected-group targeting, solicitation and evasion examples. Record attribution and corrections only after actual review; version label changes and rerun hashes/reports. A separately collected and independently labeled held-out corpus, calibration and any production action policy remain unimplemented. No production integration is authorized by diagnostic parity.
 

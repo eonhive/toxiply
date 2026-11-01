@@ -57,3 +57,22 @@ The new contextual attribution grammar, candidate wrapper, tests and 35-case cha
 `contextual_content` / `contextual-attribution-v1` intentionally changes classification on narrowly recognized reports and product criticism. It does not claim raw legacy parity, new severity metadata or a legacy-shape mapping. The existing native comparator still matches all 40 frozen legacy cases. A separate private paired run on those same provisional legacy labels records baseline TP 12/TN 10/FP 10/FN 8 and candidate TP 12/TN 13/FP 7/FN 8, with no new false positives or false negatives. Complete private comparison output remains ignored under `.local/contextual-quality/`; category ground truth was not invented from binary legacy labels.
 
 The existing 32-case diagnostic and new 35-case challenge are development evidence only. Same-author challenge creation and prior exposure to development/legacy examples preclude a held-out or independent-evaluation claim. The user chose to keep labels provisional for this PR; human review, a separately labeled held-out corpus and production calibration remain NOT_RUN. Existing ownership/publication metadata stays private/UNLICENSED.
+
+## Phase T3 quality infrastructure
+
+The review-dataset validator/importer, coverage-aware evaluator, CLI, tests and
+development format example are independently authored for this repository. They reuse
+the current public analyzers, Zod and Node built-ins. No Flaggr package, private customer
+data, fixture, source or operational report was accessed or transferred for this task.
+The example's implied-threat text intentionally reuses an already exposed public
+development case with the same positive labels. It is not a fresh or held-out corpus.
+Human-review declarations in tests are fictional schema probes, not real evaluation.
+
+Existing diagnostic/challenge bytes, source heuristics, analyzer versions and analysis
+schemas remain unchanged. The new tooling maps old diagnostic metadata conservatively
+in memory without modifying original labels or hashes; unrecorded legacy visibility
+defaults to private. Nonpublic imports/raw reports remain ignored or outside Git.
+No independently reviewed or held-out result is asserted. [Dataset workflow](TEXT_EVALUATION_DATASETS.md)
+and [T3 public baseline](T3_BASELINE.md) distinguish declarations, structural evidence,
+development findings and remaining quality gates. The package remains private and
+UNLICENSED, with no publication, visibility or licensing change.

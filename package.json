@@ -35,7 +35,10 @@
     "eval:native": "npm run build && node eval/run-native.mjs",
     "eval:legacy": "npm run build && node eval/compare-legacy.mjs",
     "eval:quality": "npm run build && node eval/run-quality.mjs",
-    "eval:all": "npm run eval:text && npm run eval:native && npm run eval:quality",
+    "eval:review": "npm run build && node eval/run-review.mjs compare",
+    "dataset:validate": "npm run build && node eval/run-review.mjs validate",
+    "dataset:import": "npm run build && node eval/run-review.mjs import",
+    "eval:all": "npm run eval:text && npm run eval:native && npm run eval:quality && npm run eval:review",
     "check": "npm run typecheck && npm test && npm run example && npm run example:native && npm run example:profanity && npm run example:contextual && npm run eval:all"
   },
   "repository": {

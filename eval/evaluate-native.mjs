@@ -25,6 +25,9 @@ const datasetSchema = z.strictObject({
   }
 });
 
+// Evaluation tooling may validate legacy diagnostic inputs without changing them.
+export const nativeDatasetSchema = datasetSchema;
+
 export async function evaluateNativeDataset(datasetText, engine = createAnalyzer(nativeTextAnalyzer)) {
   const dataset = datasetSchema.parse(JSON.parse(datasetText));
   const outcomes = [];
