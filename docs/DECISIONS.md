@@ -1,6 +1,6 @@
 # Toxiply core decisions
 
-Updated: 2026-11-01 · Scope: independent repository, Phases 1–2 and T3/T4 evaluation
+Updated: 2026-11-01 · Scope: independent repository, Phases 1–2 and T3–T5 evaluation
 
 ## T-013 — Independent content boundary
 
@@ -143,3 +143,21 @@ rights, independence or blinding. Guidance remains a versioned provisional draft
 **Reason:** The user selected workflow implementation with labels kept provisional.
 An approved corpus/reviewer is not available; implement a useful offline prerequisite
 without inventing review results or changing heuristics, public contracts or defaults.
+
+## T-027 — Independent validation requires real onboarding evidence
+
+**Status:** preparation complete; independent validation pending · **Date:** 2026-11-01
+
+Reuse T3/T4 tools without adding another review layer. Require actual owner permission,
+private source/reviewer records, agreed versioned guidance, separately collected/frozen
+held-out data and all known exposed references before independent quality claims. Raw
+unlabeled collections require initial human annotation before creating complete V1;
+do not invent labels or review declarations to use the packet validator. Record manual
+leakage checks for incompatible reference formats, contexts and paraphrases, beyond
+the CLI's normalized main-text comparison. Keep development observations distinct.
+
+**Reason:** No approved corpus/reviewer/rights/freeze records were supplied for T5.
+Complete the [readiness/onboarding report](T5_VALIDATION_READINESS.md), verify unchanged
+baseline behavior and stop. The single proposed victim-report experiment requires later
+independent contrast review and a separate implementation decision; no analyzer change
+or promotion follows from this preparation task.

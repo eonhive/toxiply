@@ -4,6 +4,12 @@ Updated: 2026-11-01 · Native/lexical diagnostics and review tooling; human revi
 
 ## Commands and interpretation
 
+[Phase T5 readiness](T5_VALIDATION_READINESS.md) records a fresh unchanged-baseline
+verification, existing-tool audit, initial-annotation/onboarding procedure and the exact
+missing corpus/reviewer/rights/freeze records. Independent reviewed/held-out results are
+NOT_RUN. Its one future heuristic proposal is based only on measured provisional errors;
+neither analyzer nor existing labels are changed.
+
 ```sh
 npm ci
 npm run check

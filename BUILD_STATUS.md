@@ -1,5 +1,23 @@
 # Build status
 
+## Phase T5: independent validation readiness — 2026-11-01
+
+Based on merged T4 `ba8d08b`. `npm ci`, `npm run check` and explicit `npm run eval:all`
+PASS (exit 0) on Node 22.22.2 / npm 10.9.7: 249/249 tests, typecheck/build, four examples
+and all public evaluations. Existing review regressions PASS 70/70; focused evaluator/
+dataset/packet/CLI coverage is 100% lines, 95.79% branches, 98.91% functions combined,
+not full-library coverage or accuracy. Public paired output is byte-identical to T4;
+package preview remains 65 files. No code, labels, schemas, dependencies or tests change.
+
+[T5 report](docs/T5_VALIDATION_READINESS.md) audits existing tools, defines private
+corpus/reviewer/rights/freeze/reference onboarding and records exact missing inputs.
+No approved data or independent reviewer records were supplied; reviewed import,
+independent/held-out comparison and calibration are NOT_RUN. Existing synthetic results
+remain provisional and separate. One unquoted victim-report attribution experiment is
+proposed from measured development errors, not implemented. Native and opt-in contextual
+behavior, V1 contracts and Flaggr remain unchanged. Local evidence is ignored in `.local/t5/`.
+Stop at the focused preparation PR; no automatic merge, release or production changes.
+
 ## Phase T4: offline annotation handoff — 2026-11-01
 
 Based on merged Phase T3 `49ada64`. Baseline `npm ci` and `npm run check` PASS on

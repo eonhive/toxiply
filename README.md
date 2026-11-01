@@ -76,6 +76,12 @@ Development splits stay development. [T4 scope and verification](docs/T4_REVIEW_
 keep existing labels provisional; no approved reviewer/corpus or independent result
 is supplied by this workflow.
 
+[Phase T5 readiness](docs/T5_VALIDATION_READINESS.md) audits these existing tools and
+defines source/rights, reviewer, split-freeze and annotation onboarding gates. Verification
+passes; no approved corpus or actual independent reviewer was supplied, so reviewed and
+held-out evaluation remain NOT_RUN. The report keeps synthetic findings separate and
+proposes one future attribution experiment without implementing or promoting it.
+
 ## Actual capabilities
 
 | Analyzer | Coverage | Limits |
