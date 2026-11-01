@@ -76,3 +76,14 @@ No independently reviewed or held-out result is asserted. [Dataset workflow](TEX
 and [T3 public baseline](T3_BASELINE.md) distinguish declarations, structural evidence,
 development findings and remaining quality gates. The package remains private and
 UNLICENSED, with no publication, visibility or licensing change.
+
+## Phase T4 annotation workflow
+
+The prediction-free packet/template generator, hash-bound response reconciler, tests
+and provisional guidance are independently authored here using current evaluation
+contracts, Zod and Node built-ins. No private Flaggr source, fixtures, customer content
+or report was accessed or transferred. No new corpus or real reviewer is supplied.
+Tests use explicitly fictional declarations in temporary files, not actual human labels.
+Original datasets, heuristics, contracts, dependencies and licensing are unchanged.
+See [handoff rules](TEXT_ANNOTATION_REVIEW.md) for permission/independence obligations
+and [verification](T4_REVIEW_WORKFLOW.md) for actual checks and remaining NOT_RUN gates.

@@ -1,10 +1,14 @@
 # Next steps
 
-Updated: 2026-10-31
+Updated: 2026-11-01
 
-Phase T3 adds [review-dataset infrastructure](docs/TEXT_EVALUATION_DATASETS.md) and a
-[public paired baseline](docs/T3_BASELINE.md), preserving the engine and candidate.
-Stop after its focused PR is ready for review; do not merge, publish or promote it.
+Phase T3 is merged with [review-dataset infrastructure](docs/TEXT_EVALUATION_DATASETS.md)
+and a [public paired baseline](docs/T3_BASELINE.md). Phase T4 adds the [offline annotation
+handoff and draft guidance](docs/TEXT_ANNOTATION_REVIEW.md), preserving the engine and
+candidate. The user chose workflow implementation with existing labels kept provisional;
+no approved corpus/reviewer is on record. [T4 verification](docs/T4_REVIEW_WORKFLOW.md)
+separates tooling checks from actual review. Stop after its focused PR is ready for
+review; do not merge, publish or promote it.
 The next bounded PR should onboard an owner-approved independently reviewed corpus
 and separately collected/frozen held-out split, with permission/reviewer records,
 versioned category/span guidance and all known development references. Keep nonpublic

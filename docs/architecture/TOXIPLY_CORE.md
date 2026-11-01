@@ -1,6 +1,6 @@
 # Independent Toxiply core
 
-Updated: 2026-10-31 · Status: Phase 2 text engine; Phase T3 evaluation infrastructure
+Updated: 2026-11-01 · Status: Phase 2 text engine; T3/T4 offline evaluation infrastructure
 
 ## Boundary and execution
 
@@ -60,3 +60,14 @@ from quality denominators, rejects invalid source witnesses, and distinguishes s
 structure from optional annotation alignment. Actual independent human review and a
 separately collected held-out corpus are still unperformed. See the [dataset specification](../TEXT_EVALUATION_DATASETS.md)
 and [public T3 findings](../T3_BASELINE.md).
+
+## Phase T4 annotation boundary
+
+`eval/review-packet.mjs` and the existing review CLI provide prediction-free packets,
+blank response templates and hash-bound submitted-label reconciliation. They reuse
+the dataset validator/private artifact writer without importing an analyzer or changing
+public exports. Split, source/context and provenance are retained; corrections create
+new versions with separate audit receipts. This is offline evaluation preparation,
+not Flaggr application review, routing, persistence or enforcement. No service/store,
+model, actual human review or held-out corpus is introduced. See [the workflow and
+draft guidance](../TEXT_ANNOTATION_REVIEW.md) and [T4 status](../T4_REVIEW_WORKFLOW.md).
