@@ -6,14 +6,18 @@
  */
 import { fileURLToPath } from 'node:url';
 import { compareReviewedDataset } from './evaluate-reviewed.mjs';
-import { DatasetError, importReviewDataset, loadReviewDataset, readDatasetText } from './review-dataset.mjs';
+import { DatasetError, importReviewDataset, loadReviewDataset, readDatasetText, sha256,
+  writePrivateArtifact } from './review-dataset.mjs';
+import { applyReviewResponse, prepareResponseTemplate, prepareReviewPacket, reviewJson } from './review-packet.mjs';
 
 const bundled = ['native-text.v1.json', 'context-attribution.v1.json', 'text-review.example.v1.json']
   .map((name) => fileURLToPath(new URL(name, import.meta.url)));
 
 function parseArgs(args) {
   const [command, ...rest] = args;
-  if (!['validate', 'import', 'compare'].includes(command)) throw new DatasetError('invalid_command');
+  const counts = { validate: 1, import: 2, compare: null,
+    'prepare-review': 2, 'review-template': 2, 'apply-review': 4 };
+  if (!Object.hasOwn(counts, command)) throw new DatasetError('invalid_command');
   const files = [];
   const references = [];
   for (let index = 0; index < rest.length; index++) {
@@ -22,8 +26,9 @@ function parseArgs(args) {
     } else if (rest[index].startsWith('--')) throw new DatasetError('invalid_arguments');
     else files.push(rest[index]);
   }
-  if ((command === 'validate' && files.length !== 1) || (command === 'import' && files.length !== 2)
-    || (command === 'compare' && files.length > 1)) throw new DatasetError('invalid_arguments');
+  if (command === 'compare' ? files.length > 1 : files.length !== counts[command]) {
+    throw new DatasetError('invalid_arguments');
+  }
   return { command, files, references };
 }
 
@@ -31,7 +36,22 @@ try {
   const { command, files, references } = parseArgs(process.argv.slice(2));
   // Always check held-out declarations against development material already exposed in this repository.
   const referenceTexts = await Promise.all([...bundled, ...references].map(readDatasetText));
-  if (command === 'import') {
+  if (command === 'prepare-review' || command === 'review-template') {
+    const input = await readDatasetText(files[0]);
+    const output = command === 'prepare-review'
+      ? prepareReviewPacket(input, referenceTexts) : prepareResponseTemplate(input);
+    const text = reviewJson(output);
+    const suffix = command === 'prepare-review' ? 'packet' : 'response-template';
+    const destination = await writePrivateArtifact(files[1], `review-${sha256(input)}.${suffix}.json`, text);
+    console.log(JSON.stringify({ destination, artifactSha256: sha256(text) }, null, 2));
+  } else if (command === 'apply-review') {
+    const [source, packet, response] = await Promise.all(files.slice(0, 3).map(readDatasetText));
+    const result = applyReviewResponse(source, packet, response, referenceTexts);
+    const destination = await writePrivateArtifact(files[3],
+      `${result.audit.datasetId}@${result.audit.datasetVersion}.json`, result.datasetText,
+      { existsCode: 'dataset_version_exists', failureCode: 'import_failed' });
+    console.log(JSON.stringify({ destination, ...result.audit }, null, 2));
+  } else if (command === 'import') {
     console.log(JSON.stringify(await importReviewDataset(files[0], files[1], referenceTexts), null, 2));
   } else if (command === 'validate') {
     const loaded = loadReviewDataset(await readDatasetText(files[0]), referenceTexts);

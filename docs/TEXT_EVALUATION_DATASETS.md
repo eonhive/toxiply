@@ -122,6 +122,17 @@ labels, scores, evidence coordinates and provenance, so nonpublic reports must r
 ignored/private even though raw request text is not echoed. Failure output uses
 bounded codes/paths without input or exception text.
 
+## Actual annotation handoff
+
+Phase T4 adds [prediction-free packets, blank templates and hash-bound response
+reconciliation](TEXT_ANNOTATION_REVIEW.md) to this same CLI. They do not change the
+dataset schema or replace source files. A submitted reviewer declaration can create a
+new immutable dataset version with a separate audit receipt; the original split and
+all source/context/provenance remain unchanged. Templates have null labels and cannot
+qualify as human review. Empty submitted spans remove old provisional annotations.
+Existing labels remain provisional by user direction; no actual independent review
+or held-out result is created by these commands or their fictional schema tests.
+
 ## Metrics and evidence interpretation
 
 `eval:review` compares native and contextual analyzers independently on each input.

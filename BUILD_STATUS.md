@@ -1,5 +1,28 @@
 # Build status
 
+## Phase T4: offline annotation handoff — 2026-11-01
+
+Based on merged Phase T3 `49ada64`. Baseline `npm ci` and `npm run check` PASS on
+Node 22.22.2 / npm 10.9.7, including 219 tests, typecheck/build, all four examples and
+the full public evaluation suite. The user chose to build review tools while keeping
+labels provisional; no approved corpus or independent reviewer was supplied.
+
+Added prediction-free opaque-ID packets, blank response templates, source/packet hash
+validation and submitted-label reconciliation into new immutable private versions.
+Original split, source/context, provenance, labels/data files, 0.2.0 library, analyzers,
+contracts, dependencies and default behavior remain unchanged. Audit receipts preserve
+lineage and label deltas; metadata cannot prove actual review. Draft annotation guidance
+requires owner/reviewer agreement. [Exact T4 validation and remaining gates](docs/T4_REVIEW_WORKFLOW.md)
+are recorded separately; actual independent review/held-out evaluation remain NOT_RUN.
+
+Final `npm ci`, `npm run check`, `npm run eval:all`, focused coverage and package
+preview PASS (exit 0). Check passes 249/249 tests, including 30 new regressions. The
+56-test focused run covers the new packet module at 100% lines/branches/functions;
+the reused dataset/CLI branches measure 93.26%/69.23%. The public paired report is
+byte-identical to T3; package preview still has 65 files with no evaluation/private
+artifacts. CLI smoke checks create only a packet/blank template and reject unfilled
+review. Logs/reports remain ignored under `.local/t4/`; no real annotation is claimed.
+
 ## Phase T3: text intelligence quality foundation — 2026-10-31
 
 Based on merged candidate `449f831`. Baseline `npm ci`, `npm run check` and `npm run eval:all` PASS on Node 22.22.2, including 179 existing tests and all four examples. No baseline failure was observed. Public diagnostic counts and all existing labels remain unchanged.

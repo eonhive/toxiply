@@ -68,6 +68,14 @@ unchanged, and the contextual candidate remains opt-in. Convenience commands are
 `dataset:validate`, `dataset:import`, and `eval:review`; use the direct Node commands
 above when saving machine-readable JSON because npm wrappers also print build logs.
 
+For actual human annotation, the [offline review handoff](docs/TEXT_ANNOTATION_REVIEW.md)
+provides `prepare-review`, `review-template` and `apply-review` through the same CLI.
+Packets omit old labels/predictions, templates remain blank, and responses must match
+source/packet hashes before creating a new immutable dataset version and audit receipt.
+Development splits stay development. [T4 scope and verification](docs/T4_REVIEW_WORKFLOW.md)
+keep existing labels provisional; no approved reviewer/corpus or independent result
+is supplied by this workflow.
+
 ## Actual capabilities
 
 | Analyzer | Coverage | Limits |
@@ -143,4 +151,4 @@ A local comparison against 40 frozen private legacy fixtures matches all content
 
 See [evaluation methods and findings](docs/EVALUATION.md), [source provenance and compatibility](docs/PROVENANCE.md), [architecture](docs/architecture/TOXIPLY_CORE.md), and [decisions](docs/DECISIONS.md). This change transfers no further private implementation, fixture, customer data, credential, or operational report. Source provenance for the existing extraction is recorded separately; public repository visibility and a private npm package do not grant a redistribution license.
 
-The Phase 2 engine and opt-in candidate are preserved. Phase T3 adds evaluation infrastructure only; real independent review, analyzer changes/promotion, Flaggr integration, media, deployment and publication remain separate tasks.
+The Phase 2 engine and opt-in candidate are preserved. Phases T3/T4 add evaluation and offline annotation infrastructure only; real independent review, analyzer changes/promotion, Flaggr integration, media, deployment and publication remain separate tasks.

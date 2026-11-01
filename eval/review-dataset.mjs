@@ -150,6 +150,17 @@ export async function importReviewDataset(source, directory, references = []) {
   const text = await readDatasetText(source);
   const loaded = loadReviewDataset(text, references);
   if (loaded.legacy) throw new DatasetError('import_requires_text_eval_v1');
+  const destination = await writePrivateArtifact(directory,
+    `${loaded.dataset.datasetId}@${loaded.dataset.datasetVersion}.json`, text,
+    { existsCode: 'dataset_version_exists', failureCode: 'import_failed' });
+  return { destination, datasetId: loaded.dataset.datasetId, datasetVersion: loaded.dataset.datasetVersion,
+    datasetSha256: loaded.datasetSha256 };
+}
+
+// Review packets and revisions must use the same private, immutable destination rules.
+export async function writePrivateArtifact(directory, filename, text,
+  { existsCode = 'review_artifact_exists', failureCode = 'review_write_failed' } = {}) {
+  if (!/^[a-z0-9][a-z0-9@._-]{0,279}$/u.test(filename)) throw new DatasetError('invalid_artifact_name');
   const root = await realpath(fileURLToPath(new URL('..', import.meta.url)));
   const destinationDirectory = await realpath(directory);
   const child = relative(root, destinationDirectory);
@@ -167,9 +178,8 @@ export async function importReviewDataset(source, directory, references = []) {
     }
     if (parent === dirname(parent)) break;
   }
-  const destination = resolve(destinationDirectory, `${loaded.dataset.datasetId}@${loaded.dataset.datasetVersion}.json`);
+  const destination = resolve(destinationDirectory, filename);
   try { await writeFile(destination, text, { flag: 'wx', mode: 0o600 }); }
-  catch (error) { throw new DatasetError(error.code === 'EEXIST' ? 'dataset_version_exists' : 'import_failed'); }
-  return { destination, datasetId: loaded.dataset.datasetId, datasetVersion: loaded.dataset.datasetVersion,
-    datasetSha256: loaded.datasetSha256 };
+  catch (error) { throw new DatasetError(error.code === 'EEXIST' ? existsCode : failureCode); }
+  return destination;
 }

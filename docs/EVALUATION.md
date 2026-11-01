@@ -1,6 +1,6 @@
 # Text evaluation and compatibility baseline
 
-Updated: 2026-10-30 · Native and lexical diagnostics; human label review pending
+Updated: 2026-11-01 · Native/lexical diagnostics and review tooling; human review pending
 
 ## Commands and interpretation
 
@@ -109,6 +109,17 @@ rules do not relax the older native/paired diagnostic harnesses' complete-covera
 requirements. No collected or human-reviewed dataset is bundled or invented.
 
 Human reviewers must check category definitions, criticism, reported/quoted abuse, implied threats, protected-group targeting, solicitation and evasion examples. Record attribution and corrections only after actual review; version label changes and rerun hashes/reports. A separately collected and independently labeled held-out corpus, calibration and any production action policy remain unimplemented. No production integration is authorized by diagnostic parity.
+
+## Offline annotation workflow
+
+Phase T4 adds [packets, response templates, reconciliation and draft guidance](TEXT_ANNOTATION_REVIEW.md).
+It omits old labels/predictions from the reviewer packet, validates submitted labels
+against exact source/packet hashes, and writes a new private immutable dataset version
+with an audit receipt. Original splits, text/context/provenance and existing dataset
+bytes remain unchanged. Blank annotations do not count as review; actual human records
+and an independently collected/frozen corpus are still required. All committed labels
+remain provisional by user direction. [T4 verification and limits](T4_REVIEW_WORKFLOW.md)
+report infrastructure tests separately from unchanged development quality metrics.
 
 ## Paired contextual attribution experiment
 

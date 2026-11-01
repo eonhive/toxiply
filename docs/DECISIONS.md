@@ -1,6 +1,6 @@
 # Toxiply core decisions
 
-Updated: 2026-10-31 · Scope: independent repository, Phases 1–2 and Phase T3 evaluation
+Updated: 2026-11-01 · Scope: independent repository, Phases 1–2 and T3/T4 evaluation
 
 ## T-013 — Independent content boundary
 
@@ -125,3 +125,21 @@ behavior, public 0.2.0 contracts and uncalibrated confidence unchanged.
 **Reason:** Avoid inflated quality claims from unsupported requests, mixed versions,
 invented witnesses or exposed synthetic examples. Real reviewed/held-out results and
 candidate promotion require a separately bounded task with actual human evidence.
+
+## T-026 — Prediction-free human annotation handoff
+
+**Status:** implemented for review · **Date:** 2026-11-01
+
+Extend the repository-only review CLI with opaque-ID packets omitting prior labels,
+rationales, spans and predictions; deliberately incomplete response templates; and
+hash-bound reconciliation of explicitly submitted human declarations. Reuse private
+immutable import rules and dataset/category/source validation. Require a new version,
+retain the original split, source/context/provenance and record label changes plus
+source/packet/response/revision hashes. Never infer review from generated templates,
+carry provisional spans into claimed human annotation, or upgrade exposed data to
+held-out. Reviewer attestations and prediction-free packets do not prove identity,
+rights, independence or blinding. Guidance remains a versioned provisional draft.
+
+**Reason:** The user selected workflow implementation with labels kept provisional.
+An approved corpus/reviewer is not available; implement a useful offline prerequisite
+without inventing review results or changing heuristics, public contracts or defaults.
