@@ -1,0 +1,426 @@
+{
+  "schemaVersion": "toxiply.text-eval.v1",
+  "datasetId": "model-adapter-synthetic-diagnostic",
+  "datasetVersion": "1.0.0",
+  "taxonomyVersion": "toxiply.categories.v1",
+  "labelDefinition": "Provisional current-author category labels for deterministic adapter plumbing. Canned response replay tests contracts and evidence handling, never model accuracy or independent human judgment.",
+  "split": "development",
+  "reviewStatus": "provisional",
+  "provenance": {
+    "source": "Codex-authored T7A synthetic inputs and canned model responses, 2026-11-11. No trained inference, external corpus, private content or independent review. Public development data.",
+    "sourceKind": "synthetic_development",
+    "rights": "Independently authored for EonHive Toxiply; existing private/UNLICENSED boundary retained.",
+    "visibility": "public",
+    "authors": [
+      "codex"
+    ]
+  },
+  "cases": [
+    {
+      "id": "direct-abuse",
+      "group": "personal_abuse",
+      "tags": [
+        "personal_abuse"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "direct-abuse",
+        "content": {
+          "kind": "text",
+          "text": "You are an idiot."
+        },
+        "categories": [
+          "toxicity",
+          "harassment"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "toxicity": true,
+        "harassment": true
+      },
+      "rationale": "Synthetic contract probe with explicit provisional labels; a fixture response is not model inference.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "quoted-report",
+      "group": "quoted_reporting",
+      "tags": [
+        "quoted_reporting"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "quoted-report",
+        "content": {
+          "kind": "text",
+          "text": "I reported the message \"You are an idiot\"."
+        },
+        "categories": [
+          "toxicity",
+          "harassment"
+        ],
+        "context": {
+          "languageHint": "en",
+          "quotedText": "You are an idiot.",
+          "replyTarget": "unknown"
+        }
+      },
+      "labels": {
+        "toxicity": false,
+        "harassment": false
+      },
+      "rationale": "Synthetic contract probe with explicit provisional labels; a fixture response is not model inference.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "criticism",
+      "group": "product_criticism",
+      "tags": [
+        "product_criticism"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "criticism",
+        "content": {
+          "kind": "text",
+          "text": "The app is garbage."
+        },
+        "categories": [
+          "toxicity",
+          "harassment"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "toxicity": false,
+        "harassment": false
+      },
+      "rationale": "Synthetic contract probe with explicit provisional labels; a fixture response is not model inference.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "direct-threat",
+      "group": "threat",
+      "tags": [
+        "threat"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "direct-threat",
+        "content": {
+          "kind": "text",
+          "text": "😀 I will hurt you."
+        },
+        "categories": [
+          "threat"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "threat": true
+      },
+      "rationale": "Synthetic contract probe with explicit provisional labels; a fixture response is not model inference.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "implied-threat",
+      "group": "implied_threat",
+      "tags": [
+        "implied_threat"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "implied-threat",
+        "content": {
+          "kind": "text",
+          "text": "Your front door is unlocked. The knife is ready."
+        },
+        "categories": [
+          "threat"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "threat": true
+      },
+      "rationale": "Synthetic contract probe with explicit provisional labels; a fixture response is not model inference.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "scam",
+      "group": "scam",
+      "tags": [
+        "scam"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "scam",
+        "content": {
+          "kind": "text",
+          "text": "I am your bank. Send me your password."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Synthetic contract probe with explicit provisional labels; a fixture response is not model inference.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "education",
+      "group": "educational_warning",
+      "tags": [
+        "educational_warning"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "education",
+        "content": {
+          "kind": "text",
+          "text": "Never send your password to strangers."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "Synthetic contract probe with explicit provisional labels; a fixture response is not model inference.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "endorsed",
+      "group": "endorsement",
+      "tags": [
+        "endorsement"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "endorsed",
+        "content": {
+          "kind": "text",
+          "text": "They said \"you are an idiot\", and I agree."
+        },
+        "categories": [
+          "toxicity",
+          "harassment"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "toxicity": true,
+        "harassment": true
+      },
+      "rationale": "Synthetic contract probe with explicit provisional labels; a fixture response is not model inference.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "sexual",
+      "group": "sexual_risk",
+      "tags": [
+        "sexual_risk"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "sexual",
+        "content": {
+          "kind": "text",
+          "text": "Send me nudes."
+        },
+        "categories": [
+          "sexual_risk"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "sexual_risk": true
+      },
+      "rationale": "Synthetic contract probe with explicit provisional labels; a fixture response is not model inference.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "hate",
+      "group": "hate",
+      "tags": [
+        "hate"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "hate",
+        "content": {
+          "kind": "text",
+          "text": "Your kind are vermin."
+        },
+        "categories": [
+          "hate"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "hate": true
+      },
+      "rationale": "Synthetic contract probe with explicit provisional labels; a fixture response is not model inference.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "parent",
+      "group": "context",
+      "tags": [
+        "context"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "parent",
+        "content": {
+          "kind": "text",
+          "text": "Try me."
+        },
+        "categories": [
+          "threat"
+        ],
+        "context": {
+          "languageHint": "en",
+          "parentText": "I will hurt you.",
+          "replyTarget": "parent_author"
+        }
+      },
+      "labels": {
+        "threat": true
+      },
+      "rationale": "Synthetic contract probe with explicit provisional labels; a fixture response is not model inference.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "unsupported-fr",
+      "group": "coverage",
+      "tags": [
+        "coverage"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "unsupported-fr",
+        "content": {
+          "kind": "text",
+          "text": "Bonjour."
+        },
+        "categories": [
+          "harassment"
+        ],
+        "context": {
+          "languageHint": "fr"
+        }
+      },
+      "labels": {
+        "harassment": false
+      },
+      "rationale": "Synthetic contract probe with explicit provisional labels; a fixture response is not model inference.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "partial-category",
+      "group": "coverage",
+      "tags": [
+        "coverage"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "partial-category",
+        "content": {
+          "kind": "text",
+          "text": "An ordinary note."
+        },
+        "categories": [
+          "harassment",
+          "profanity"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "harassment": false,
+        "profanity": false
+      },
+      "rationale": "Synthetic contract probe with explicit provisional labels; a fixture response is not model inference.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "unknown-language",
+      "group": "coverage",
+      "tags": [
+        "coverage"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "unknown-language",
+        "content": {
+          "kind": "text",
+          "text": "Hello."
+        },
+        "categories": [
+          "harassment"
+        ],
+        "context": {
+          "languageHint": "und"
+        }
+      },
+      "labels": {
+        "harassment": false
+      },
+      "rationale": "Synthetic contract probe with explicit provisional labels; a fixture response is not model inference.",
+      "review": {
+        "status": "provisional"
+      }
+    }
+  ]
+}

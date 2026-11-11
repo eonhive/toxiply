@@ -1,0 +1,264 @@
+{
+  "direct-abuse": {
+    "findings": [
+      {
+        "category": "toxicity",
+        "score": 0.8,
+        "evidenceIds": [
+          "e1"
+        ]
+      },
+      {
+        "category": "harassment",
+        "score": 0.8,
+        "evidenceIds": [
+          "e1"
+        ]
+      }
+    ],
+    "evidence": [
+      {
+        "id": "e1",
+        "code": "model.source_span",
+        "source": "text",
+        "start": 0,
+        "end": 16,
+        "quote": "You are an idiot"
+      }
+    ]
+  },
+  "quoted-report": {
+    "findings": [
+      {
+        "category": "toxicity",
+        "score": 0,
+        "evidenceIds": []
+      },
+      {
+        "category": "harassment",
+        "score": 0,
+        "evidenceIds": []
+      }
+    ],
+    "evidence": []
+  },
+  "criticism": {
+    "findings": [
+      {
+        "category": "toxicity",
+        "score": 0,
+        "evidenceIds": []
+      },
+      {
+        "category": "harassment",
+        "score": 0,
+        "evidenceIds": []
+      }
+    ],
+    "evidence": []
+  },
+  "direct-threat": {
+    "findings": [
+      {
+        "category": "threat",
+        "score": 0.8,
+        "evidenceIds": [
+          "e1"
+        ]
+      }
+    ],
+    "evidence": [
+      {
+        "id": "e1",
+        "code": "model.source_span",
+        "source": "text",
+        "start": 3,
+        "end": 18,
+        "quote": "I will hurt you"
+      }
+    ]
+  },
+  "implied-threat": {
+    "findings": [
+      {
+        "category": "threat",
+        "score": 0.8,
+        "evidenceIds": [
+          "e1"
+        ]
+      }
+    ],
+    "evidence": [
+      {
+        "id": "e1",
+        "code": "model.source_span",
+        "source": "text",
+        "start": 29,
+        "end": 47,
+        "quote": "The knife is ready"
+      }
+    ]
+  },
+  "scam": {
+    "findings": [
+      {
+        "category": "spam_scam",
+        "score": 0.8,
+        "evidenceIds": [
+          "e1"
+        ]
+      }
+    ],
+    "evidence": [
+      {
+        "id": "e1",
+        "code": "model.source_span",
+        "source": "text",
+        "start": 16,
+        "end": 37,
+        "quote": "Send me your password"
+      }
+    ]
+  },
+  "education": {
+    "findings": [
+      {
+        "category": "spam_scam",
+        "score": 0,
+        "evidenceIds": []
+      }
+    ],
+    "evidence": []
+  },
+  "endorsed": {
+    "findings": [
+      {
+        "category": "toxicity",
+        "score": 0.8,
+        "evidenceIds": [
+          "e1",
+          "e2"
+        ]
+      },
+      {
+        "category": "harassment",
+        "score": 0.8,
+        "evidenceIds": [
+          "e1",
+          "e2"
+        ]
+      }
+    ],
+    "evidence": [
+      {
+        "id": "e1",
+        "code": "model.source_span",
+        "source": "text",
+        "start": 11,
+        "end": 27,
+        "quote": "you are an idiot"
+      },
+      {
+        "id": "e2",
+        "code": "model.source_span",
+        "source": "text",
+        "start": 34,
+        "end": 41,
+        "quote": "I agree"
+      }
+    ]
+  },
+  "sexual": {
+    "findings": [
+      {
+        "category": "sexual_risk",
+        "score": 0.8,
+        "evidenceIds": [
+          "e1"
+        ]
+      }
+    ],
+    "evidence": [
+      {
+        "id": "e1",
+        "code": "model.source_span",
+        "source": "text",
+        "start": 0,
+        "end": 13,
+        "quote": "Send me nudes"
+      }
+    ]
+  },
+  "hate": {
+    "findings": [
+      {
+        "category": "hate",
+        "score": 0.8,
+        "evidenceIds": [
+          "e1"
+        ]
+      }
+    ],
+    "evidence": [
+      {
+        "id": "e1",
+        "code": "model.source_span",
+        "source": "text",
+        "start": 0,
+        "end": 20,
+        "quote": "Your kind are vermin"
+      }
+    ]
+  },
+  "parent": {
+    "findings": [
+      {
+        "category": "threat",
+        "score": 0.8,
+        "evidenceIds": [
+          "e1"
+        ]
+      }
+    ],
+    "evidence": [
+      {
+        "id": "e1",
+        "code": "model.source_span",
+        "source": "text",
+        "start": 0,
+        "end": 6,
+        "quote": "Try me"
+      }
+    ]
+  },
+  "unsupported-fr": {
+    "findings": [
+      {
+        "category": "harassment",
+        "score": 0,
+        "evidenceIds": []
+      }
+    ],
+    "evidence": []
+  },
+  "partial-category": {
+    "findings": [
+      {
+        "category": "harassment",
+        "score": 0,
+        "evidenceIds": []
+      }
+    ],
+    "evidence": []
+  },
+  "unknown-language": {
+    "findings": [
+      {
+        "category": "harassment",
+        "score": 0,
+        "evidenceIds": []
+      }
+    ],
+    "evidence": []
+  }
+}

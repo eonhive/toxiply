@@ -12,7 +12,7 @@ npm run check
 npm run eval:all
 ```
 
-`check` typechecks source/examples, builds, runs all tests, executes the unconfigured/native/lexical/contextual/spam-scam examples, and runs all public diagnostics. CI repeats it on Node 22 and 24. `eval:all` includes the lexical/native/spam-scam diagnostics, paired comparisons and the review workflow. Legacy diagnostics require complete coverage; the review workflow explicitly reports intentional partial/unsupported coverage without counting it benign. Failed/invalid execution fails the harness; classification mismatches remain findings.
+`check` typechecks source/examples, builds, runs all tests, executes the deterministic examples plus the explicitly configured model example, and runs all public diagnostics. The model example reports NOT_RUN without configuration. CI repeats checks on Node 22 and 24. `eval:all` includes lexical/native/spam-scam diagnostics, paired comparisons, review tooling and a clearly identified canned model-adapter diagnostic. Legacy diagnostics require complete coverage; review tooling reports intentional partial/unsupported coverage without counting it benign. Failed/invalid execution fails the harness; classification mismatches remain findings.
 
 ```js
 import { createAnalyzer, nativeTextAnalyzer, SCHEMA_VERSION } from '@eonhive/toxiply';
@@ -60,7 +60,9 @@ require actual review; filling metadata cannot create independent validation.
 Review per-category confusion/precision/recall, FP/FN IDs, criticism/reporting/threat/evasion
 slices, unsupported coverage and source-span audits for **both** analyzers. Inspect cases
 against the original hashed dataset; structural span validity is not semantic correctness.
-Keep nonpublic datasets/reports ignored or outside Git. Nothing uploads content.
+Keep nonpublic datasets/reports ignored or outside Git. These default review commands
+upload nothing; explicitly selected model clients transmit inputs under their configured
+privacy boundary.
 
 [T3 baseline and remaining gaps](docs/T3_BASELINE.md) records public development results
 and exact verification. No reviewed/held-out corpus is claimed, labels/scoring remain
@@ -91,10 +93,28 @@ proposes one future attribution experiment without implementing or promoting it.
 | `createEnglishProfanityAnalyzer()` | Separate, opt-in 12-token English literal-presence signal | Exact `en`; no semantic context, severity, author-intent, obfuscation, or comprehensive profanity classification |
 | `createEnglishSpamScamAnalyzer()` | Separate, opt-in deterministic combinations of spam/scam wording in current text | Exact `en`; no context/author attribution, URL safety, reputation, calibration or production validation |
 | `createEnglishSpamScamAttributionAnalyzer()` | Separate opt-in T6B candidate excluding narrowly framed reports/warnings before T6A scoring | Exact `en`; no external semantic context or general attribution; provisional development evidence only |
+| `createModelTextAnalyzer(options)` | Optional typed model client with strict category/context/provenance/evidence validation | Caller-declared profile only; no bundled or independently validated model; explicit endpoint/client required |
 
 The native analyzer does **not** advertise `profanity` or `spam_scam`. Mixed requests return `partial` with unavailable categories omitted and listed in `missingCapabilities`; unsupported-only requests produce no findings. The separate literal detector has [its own specification](docs/ENGLISH_PROFANITY.md). Spam/scam is available only through the optional factory below. No adapter implements pixels, OCR, speech recognition, audio, video, persistent actor history, policy, routing, or enforcement.
 
 Native content scoring is the audited extraction already present in this repository, with rule-level evidence instrumentation. Its scores and internal subtype/severity/targeting behavior remain compatible with the frozen legacy diagnostic. This is functional heuristic analysis, not a trained semantic model or a production-accuracy claim. Product criticism, literal animals, reported abuse, sarcasm, implied threats and obfuscation remain known error areas.
+
+## Optional model-backed analysis — T7A
+
+`createModelTextAnalyzer(options)` uses the existing `createAnalyzer()` path. Supply
+model ID/version, a `ModelInferenceClient`, evaluated category/language/context declarations,
+timeout and response-byte limits. `createChatCompletionsClient()` provides an optional
+built-in-fetch transport to an explicitly approved local or HTTPS endpoint. It rejects
+redirects and validates strict structured output, exact source quotes and UTF-16 spans.
+Default analysis and every deterministic analyzer remain unchanged. No model is invoked
+or downloaded automatically, and no endpoint is mandatory.
+
+See [complete configuration, runnable example, protocol, costs and privacy limits](docs/MODEL_TEXT_ANALYZER.md).
+Run `npm run example:model` with explicit configuration; without it, live inference is
+NOT_RUN. `npm run eval:model-adapter` is deterministic canned-fixture replay, not trained
+model-quality measurement. No live model was configured or validated for this change.
+Real source quotes can still be semantically irrelevant; structural validity is not
+accuracy or prompt-injection resistance. All scores remain uncalibrated.
 
 ## Opt-in English spam/scam indicators
 
@@ -197,7 +217,7 @@ Strict validation rejects unknown fields, wrong versions, non-text request shape
 | `context.quotedText` | 4,000 |
 | Combined parent and quote | 6,000 |
 
-The core never truncates, persists, fetches or logs input. Native heuristics normalize a working copy only; evidence always refers to original fields. Local custom analyzers are trusted code; the host owns their execution limits. Unsupported context is removed before invoking adapters that declare no context support, and the result reports partial coverage.
+Core validation and deterministic analyzers never truncate, persist, fetch or log input. The explicitly selected model client transmits selected text/context to its configured endpoint; see its privacy limits above. Native heuristics normalize a working copy only; evidence always refers to original fields. Local custom analyzers are trusted code; the host owns their execution limits. Unsupported context is removed before invoking adapters that declare no context support, and the result reports partial coverage.
 
 ## Evaluation and provenance
 

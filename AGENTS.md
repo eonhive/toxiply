@@ -17,6 +17,14 @@ SignalRank, PrimeRoute, OpportunityIQ, policies, review, routing, actions and
 persistence. Never import Flaggr packages or copy private customer data here.
 No database, HTTP server, Python or mandatory network/model provider is required.
 
+T7A additionally permits explicitly configured model inference through the optional
+typed client. Keep endpoint configuration out of AnalysisRequest, never follow content
+URLs/redirects, and enforce deadlines/response bounds. Keep model responses untrusted:
+require exact source quotes/spans, identity and complete declared coverage. Never
+invent evidence or harmless fallback scores. Canned adapter replay and loopback mock
+servers test integration, not trained model quality. Live inference/accuracy is NOT_RUN
+without explicit approved configuration; do not silently use environment credentials.
+
 Preserve the 0.2.0 V1 request/result schema, public exports, five native categories,
 source-relative UTF-16 evidence, explicit coverage/status and uncalibrated confidence.
 The contextual analyzer remains an opt-in candidate. Changing heuristics, schemas

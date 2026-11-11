@@ -1,5 +1,25 @@
 # Independent Toxiply core
 
+## T7A optional model adapter boundary
+
+`src/model/model-text-analyzer.ts` implements the existing TextAnalyzer with explicit
+model/client/capability configuration. `protocol.ts` supplies a typed client and strict
+structured response. `chat-completions-client.ts` supplies an optional bounded fetch
+transport to one approved endpoint. These are in-process library modules, not a new
+server, provider marketplace, inference orchestrator or application persistence layer.
+No network runs by default. Built-in fetch is used only after explicit selection.
+
+Core V1 validation/filtering precedes inference. The adapter applies an abortable
+deadline, byte limits, identity/coverage checks and exact source-quote/UTF-16 validation;
+the core independently validates its final TextAnalysis. Unsupported capability remains
+missing, and failed/incomplete output yields existing failure metadata without findings.
+All deterministic analyzers/schemas are unchanged. V1's one provenance pair uses a
+stable non-secret configuration fingerprint; full model configuration remains external.
+
+Category/language/context declarations attest caller configuration, not validated model
+competence. Canned fixture diagnostics/local mock servers test adapter mechanics, not
+model quality. [Exact protocol, privacy and limits](../MODEL_TEXT_ANALYZER.md).
+
 ## T6B optional spam/scam attribution
 
 `createEnglishSpamScamAttributionAnalyzer()` wraps the unchanged T6A analyzer with
@@ -63,7 +83,7 @@ A positive finding without a valid contributing trace fails execution. The finit
 
 Runtime request/result schemas, generated Draft 2020-12 artifacts and inferred types remain the contract source of truth. Structural schemas are portable; runtime refinements enforce aggregate context, uniqueness, reference/status consistency and original-request span/category checks.
 
-`npm run check` typechecks, builds, runs contract/category/context/error/evaluation regressions, executes six examples and runs public diagnostics on CI's Node 22/24 matrix. `npm run eval:all` runs native, lexical, paired attribution, review and both spam/scam diagnostics. `eval/compare-legacy.mjs` reads caller-authorized frozen legacy reports locally; no private fixture or runtime dependency is shipped.
+`npm run check` typechecks, builds, runs contract/category/context/error/evaluation regressions, executes six deterministic examples and a model example (NOT_RUN without explicit configuration), and runs public diagnostics on CI's Node 22/24 matrix. `npm run eval:all` includes canned model-adapter replay alongside unchanged native/lexical/review/spam diagnostics. `eval/compare-legacy.mjs` reads caller-authorized frozen legacy reports locally; no private fixture or runtime dependency is shipped.
 
 The 40-case private comparison preserves content/category/severity behavior and records known attribution warnings. The new 32-case public diagnostic reports measured errors with pending human labels. Compatibility, regression correctness and production accuracy are distinct. Held-out independent quality evaluation, calibration, media/language expansion, Flaggr integration, deployment and publication remain outside this task.
 
