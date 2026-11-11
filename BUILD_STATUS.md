@@ -35,8 +35,8 @@ documentation targets PASS. Local verification uses Node 22.22.2 / npm 10.9.7;
 CI's Node 22/24 outcome is recorded on the PR separately.
 
 The concurrent 44-case draft caused three hash/count assertions to fail during an
-intermediate coverage run. The user selected this chat's original 48-case version;
-its original hash and labels were restored, and final focused/full checks above pass.
+intermediate coverage run. Reconciliation retained the original 48-case diagnostic,
+with its original hash and labels, and final focused/full checks above pass.
 The other draft and raw logs remain ignored under `.local/t6a/`.
 Independent human review, held-out evaluation, calibration,
 private legacy rerun, Flaggr integration, deployment and publication remain NOT_RUN.
