@@ -1,5 +1,33 @@
 # Toxiply core decisions
 
+## T-031 — Optional bounded model inference without V1 changes
+
+**Status:** implemented for review · **Date:** 2026-11-11
+
+T7A explicitly authorizes `createModelTextAnalyzer(options)` with one typed client and
+an optional fetch-based chat-completions transport. Caller-supplied model/client identity,
+declared categories/languages/context and execution limits are required. No model/default
+endpoint or global provider registry is introduced. The reference transport posts only
+to an explicitly approved HTTPS or opted-in literal-loopback endpoint, refuses redirects,
+bounds decompressed response bytes, and shares the adapter deadline/abort signal.
+
+Require exact model/request/language/context echoes, complete category scores, evidence
+references and literal source-quote/UTF-16 consistency. Reject incomplete/malformed output
+without fallback scores. Source content stays untrusted data. Neither valid spans nor
+capability declarations establish model accuracy or injection immunity.
+
+V1 stays unchanged: `model_text` carries a stable `model-json-v1+` configuration hash,
+with full non-secret model/client configuration retained out of band. Arbitrary model
+names and weights/prompt digests need a separately versioned future provenance contract.
+No secrets are fingerprinted. Identity echoes are consistency checks, not authentication.
+All prior analyzers, T6B v2, frozen labels and confidence metadata remain unchanged.
+
+Reuse existing evaluators with explicit canned responses and provisional synthetic
+data. Isolated HTTP/mock tests are deterministic adapter evidence only. No live endpoint
+was configured: real model quality/comparison, independent review and held-out evaluation
+remain NOT_RUN. [Protocol, privacy, limits and verification](MODEL_TEXT_ANALYZER.md).
+No mandatory model/network runtime, Flaggr changes, automatic actions or publication.
+
 ## T-030 — Conservative attribution review repairs
 
 **Status:** implemented for review · **Date:** 2026-11-11
@@ -11,7 +39,7 @@ than treating them as safe reports/warnings. Bump the composite to
 `spam-scam-attribution-en-v2`; preserve all contracts, frozen scorers and dataset labels.
 Add synthetic regressions and keep previous development metrics unchanged. This repair
 does not claim general attribution/conditional-language understanding or promote the
-candidate. PR #11 was already merged externally; this follow-up remains unmerged.
+candidate. PR #11 was already merged externally; PR #12 subsequently merged the v2 fix.
 
 ## T-029 — Separately versioned spam/scam attribution candidate
 

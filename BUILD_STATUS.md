@@ -1,5 +1,41 @@
 # Build status
 
+## Phase T7A: optional model text adapter — 2026-11-11
+
+Verified main: `9c76279`, merged PR #12, T6B candidate `spam-scam-attribution-en-v2`.
+Baseline `npm ci`, `npm run check` (316/316 tests, no skips) and explicit
+`npm run eval:all` PASS, exit 0, Node 22.22.2 / npm 10.9.7. No baseline failures.
+Existing analyzer, V1 schema, confidence, package metadata, dependency and frozen label
+behavior is retained. Added one optional typed model analyzer and built-in-fetch
+chat-completions transport, explicit endpoint example and canned synthetic diagnostic.
+No model/provider/endpoint is mandatory; no network or model invocation by default.
+
+Focused adapter/local mock endpoint tests PASS 57/57, no skips. Across the three new
+runtime modules: 100% lines, 95.24% branches, 93.33% functions (not full-library coverage
+or model accuracy). An initial integration assertion expected 15 instead of the actual
+16 UTF-16 units in its witness; fixed the assertion without changing response fixtures.
+The initial build also caught a TypeScript category-union mismatch; corrected the
+membership check. No existing labels or scorers changed to make tests pass.
+
+The 14-case provisional adapter diagnostic records 11 completed, 1 partial and 2
+unsupported, 9 structurally valid witnesses, no execution failures. Canned replay
+reproduces 8 fixture TP/3 TN/0 FP/0 FN; these are not real provider quality measurements.
+Live model inference/comparison, calibration, independent review and held-out model
+evaluation are NOT_RUN: no approved live configuration supplied. Exact protocol,
+provenance hash limitations, privacy and [diagnostic hashes](docs/MODEL_TEXT_ANALYZER.md)
+are documented.
+
+Final `npm ci`, `npm run check` (373/373 tests, no skips, build/typechecks, six
+deterministic examples plus the model example's explicit NOT_RUN path), explicit
+`npm run eval:all`, and `npm pack --dry-run --json`: PASS, exit 0. Package inspection
+PASS: 85 files; evaluation datasets, tests, dependencies and private artifacts excluded.
+Existing native/contextual and T6B paired reports remain byte-identical to baseline;
+the canned adapter report repeats identically. Frozen analyzer/schema/dataset/lockfile
+diffs are empty. Documentation target and whitespace checks PASS. Raw logs and fixture
+reports remain ignored under `.local/t7a/`. Isolated mock endpoint integration (including
+the runnable example) PASS; real model inference/quality remains NOT_RUN. No Flaggr,
+publication, deployment or automatic merge was performed. CI outcome is recorded on PR.
+
 ## PR #11 review repairs — 2026-11-11
 
 PR #11 was already merged at `260fb37` before this review request. A separate follow-up

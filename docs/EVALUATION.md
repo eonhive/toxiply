@@ -1,5 +1,24 @@
 # Text evaluation and compatibility baseline
 
+## T7A adapter execution, not trained model quality
+
+`npm run eval:model-adapter` reuses the existing versioned dataset/evaluator with
+explicit canned synthetic model responses. Fourteen requests yield 11 completed,
+1 partial-category and 2 unsupported-language results; 9 source witnesses are valid.
+The 11 assessed whole cases reproduce 8 fixture positives/3 negatives without errors.
+The report labels this `CANNED_FIXTURE_REPLAY_NOT_MODEL_QUALITY`, liveModel NOT_RUN;
+its perfect fixture rates are not model accuracy. Provisional labels/hashes and exact
+scope are in [the T7A report](MODEL_TEXT_ANALYZER.md). No old dataset/label changes.
+
+Tests exercise strict separate category mapping, context/quotation/data separation,
+UTF-16 spans, malformed/incomplete responses, deadlines/network/redirect/size failures
+and confidential errors. The isolated local chat server is a mock, not trained inference.
+Live-model comparisons, independent review/held-out evidence and calibration are NOT_RUN
+because no live configuration or approved model corpus was supplied. Future actual
+model comparisons must use mutually assessed categories/context and preserve all frozen
+heuristic references; unsupported results never become benign scores. Include these new
+exposed synthetic fixtures in reference/leakage audits, not T5 held-out validation.
+
 ## T6B spam/scam attribution experiment
 
 Review repair `spam-scam-attribution-en-v2` fixes reproduced missed solicitations in

@@ -8,6 +8,11 @@ export { analyze, createAnalyzer } from './analyze.js';
 export { createEnglishProfanityAnalyzer } from './text/english-profanity.js';
 export { createEnglishSpamScamAnalyzer } from './text/english-spam-scam.js';
 export { createEnglishSpamScamAttributionAnalyzer } from './text/english-spam-scam-attribution.js';
+export { createModelTextAnalyzer } from './model/model-text-analyzer.js';
+export { createChatCompletionsClient } from './model/chat-completions-client.js';
+export type { ModelTextAnalyzerOptions } from './model/model-text-analyzer.js';
+export type { ChatCompletionsClientOptions } from './model/chat-completions-client.js';
+export type { ModelInferenceClient, ModelInferenceInput, ModelInferenceLimits } from './model/protocol.js';
 export { nativeTextAnalyzer } from './native-text-analyzer.js';
 export { contextualTextAnalyzer } from './contextual-text-analyzer.js';
 export {

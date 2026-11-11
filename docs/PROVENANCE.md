@@ -1,5 +1,17 @@
 # Native extraction provenance and validation
 
+## T7A independent adapter and fixture provenance
+
+The typed model adapter, fetch transport, tests, example and canned diagnostic are
+independently authored here using Zod and Node/platform APIs. No provider SDK, model
+weights, external corpus, private Flaggr implementation or customer data was copied.
+The reference follows the documented chat-completions/JSON-schema protocol; see
+[T7A sources and limits](MODEL_TEXT_ANALYZER.md). All labels/responses are explicitly
+synthetic provisional development fixtures, not actual model or reviewer predictions.
+No model is installed, validated, licensed for redistribution or published by T7A.
+Model usage rights and endpoint retention remain caller responsibilities. Existing
+native source provenance, deterministic algorithms, schemas and package license persist.
+
 ## T6B independently authored attribution experiment
 
 The separate spam/scam attribution wrapper, tests, synthetic contrasts and paired

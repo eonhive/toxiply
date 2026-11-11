@@ -33,6 +33,8 @@
     "eval:spam-scam": "npm run build && node eval/run-spam-scam.mjs",
     "example:spam-attribution": "npm run build && node examples/spam-attribution.mjs",
     "eval:spam-attribution": "npm run build && node eval/run-spam-attribution.mjs",
+    "example:model": "npm run build && node examples/model-text.mjs",
+    "eval:model-adapter": "npm run build && node eval/run-model-adapter.mjs",
     "eval:text": "npm run build && node eval/run.mjs",
     "example:native": "npm run build && node examples/native-text.mjs",
     "example:contextual": "npm run build && node examples/contextual-text.mjs",
@@ -42,8 +44,8 @@
     "eval:review": "npm run build && node eval/run-review.mjs compare",
     "dataset:validate": "npm run build && node eval/run-review.mjs validate",
     "dataset:import": "npm run build && node eval/run-review.mjs import",
-    "eval:all": "npm run eval:text && npm run eval:native && npm run eval:quality && npm run eval:review && npm run eval:spam-scam && npm run eval:spam-attribution",
-    "check": "npm run typecheck && npm test && npm run example && npm run example:native && npm run example:profanity && npm run example:contextual && npm run example:spam-scam && npm run example:spam-attribution && npm run eval:all"
+    "eval:all": "npm run eval:text && npm run eval:native && npm run eval:quality && npm run eval:review && npm run eval:spam-scam && npm run eval:spam-attribution && npm run eval:model-adapter",
+    "check": "npm run typecheck && npm test && npm run example && npm run example:native && npm run example:profanity && npm run example:contextual && npm run example:spam-scam && npm run example:spam-attribution && npm run example:model && npm run eval:all"
   },
   "repository": {
     "type": "git",

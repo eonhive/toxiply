@@ -1,9 +1,22 @@
 # Next steps
 
-Review follow-up: T6B v2 repairs conditional disclosure and denied-report exemptions
-found after PR #11 merged. Inspect the eight new synthetic regressions and unchanged
-frozen diagnostic labels/metrics. Keep this fix opt-in and its follow-up PR unmerged
-until review; independent validation and broader grammar remain separate work.
+T7A adds an explicitly configured [model text adapter](docs/MODEL_TEXT_ANALYZER.md),
+bounded reference transport, runnable example and deterministic fixture diagnostic.
+It preserves merged PR #12's T6B v2 and every existing V1/deterministic capability.
+No live model or independent model accuracy result is claimed. Stop at the T7A PR.
+
+Next bounded phase: approve and freeze one real endpoint/model/weight/client profile,
+evaluate declared categories/languages/context and source evidence on eligible reviewed
+inputs against unchanged heuristics, and record actual errors/latency/cost. Do not assume
+model superiority, promote defaults or treat canned fixture metrics as model quality.
+Rights, privacy, independent review and held-out freeze records remain separate gates.
+No mandatory provider, new infrastructure, Flaggr integration or production action.
+Historical T6A/T6B plans below are retained as earlier records; PR #12 is now merged.
+
+Review follow-up: merged PR #12's T6B v2 repairs conditional disclosure and denied-report
+exemptions found after PR #11 merged. Its eight synthetic regressions and unchanged
+diagnostic labels/metrics remain the baseline. Independent validation and broader
+grammar remain separate work; T7A does not modify this analyzer.
 
 T6B now implements a separate opt-in [spam/scam attribution candidate](docs/T6B_SPAM_ATTRIBUTION.md)
 under explicit user scope. It fixes four T6A development quote/warning false alarms;
