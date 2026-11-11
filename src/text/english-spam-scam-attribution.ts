@@ -14,11 +14,13 @@ const FRAME = /\b(?:(?:the|a|this)\s+(?:(?:scam|phishing)\s+)?message\s+(?:read|
 const ENDORSEMENT = /\b(?:(?:i|we)\s+(?:agree|endorse|approve)|i\s+mean\s+it|do\s+what\s+it\s+says|follow\s+(?:that|these|those)\s+instructions|that\s+is\s+(?:true|correct))\b/i;
 const NEGATED_SECRET = /(?<![\p{L}\p{M}\p{N}_])(?:never|do[ \t]+not|don['’]t)[ \t]+((?:send|tell|give|reply[ \t]+with)[ \t]+(?:(?:me|us)[ \t]+)?(?:your[ \t]+)?(?:password|verification[ \t]+code|one[- ]time[ \t]+(?:code|password)|otp|recovery[ \t]+phrase|seed[ \t]+phrase))(?![\p{L}\p{M}\p{N}_])/giu;
 const TRAINING = /\btraining[ \t]+(?:slide|example):[ \t]*([^.!?\r\n]{1,240})[.!?][ \t]+do[ \t]+not[ \t]+follow[ \t]+(?:that|this)[ \t]+instruction\b/gi;
+const DENIED_FRAME = /\b(?:not|no|never|isn['’]t|wasn['’]t)(?:\s+(?:an?|the|this|that))?\s*$/i;
+const CONDITIONAL_ADVICE = /\b(?:unless|except)\b/i;
 
 export function createEnglishSpamScamAttributionAnalyzer(): TextAnalyzer {
   const baseline = createEnglishSpamScamAnalyzer();
   const descriptor = { ...baseline.descriptor,
-    id: 'english-spam-scam-attribution', version: 'spam-scam-attribution-en-v1' };
+    id: 'english-spam-scam-attribution', version: 'spam-scam-attribution-en-v2' };
   Object.freeze(descriptor);
   return { descriptor, async analyze(request: AnalysisRequest): Promise<TextAnalysis> {
     const original = request.content.text;
@@ -26,7 +28,9 @@ export function createEnglishSpamScamAttributionAnalyzer(): TextAnalyzer {
     const excluded: Span[] = [];
     for (const quote of quotes) {
       const prefix = original.slice(Math.max(0, quote.start - 120), quote.start);
-      if (FRAME.test(prefix) && !endorsed(original, quote)) excluded.push(quote);
+      const frame = FRAME.exec(prefix);
+      if (frame && !DENIED_FRAME.test(prefix.slice(0, frame.index))
+        && !endorsed(original, quote)) excluded.push(quote);
     }
     for (const match of original.matchAll(NEGATED_SECRET)) {
       // Restrict this rule to clause-initial advice outside any parsed quotation.
@@ -34,10 +38,15 @@ export function createEnglishSpamScamAttributionAnalyzer(): TextAnalyzer {
       if (!/(?:^|[.!?;:\r\n])[ \t]*$/u.test(original.slice(0, match.index))) continue;
       const span = { start: match.index, end: match.index + match[0].length };
       if (quotes.some((quote) => overlaps(quote, span)) || endorsed(original, span)) continue;
+      // An exception can turn apparent safety advice into a disclosure request
+      // for the sender. Ambiguous conditional advice keeps baseline scoring.
+      const suffix = original.slice(span.end, span.end + 160).split(/[.!?\r\n\u2028\u2029]/u)[0]!;
+      if (CONDITIONAL_ADVICE.test(suffix)) continue;
       const instruction = match[1]!;
       excluded.push({ start: span.end - instruction.length, end: span.end });
     }
     for (const match of original.matchAll(TRAINING)) {
+      if (DENIED_FRAME.test(original.slice(Math.max(0, match.index - 120), match.index))) continue;
       const span = { start: match.index, end: match.index + match[0].length };
       if (quotes.some((quote) => overlaps(quote, span)) || endorsed(original, span)) continue;
       const body = match[1]!;

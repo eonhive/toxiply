@@ -2,6 +2,12 @@
 
 ## T6B spam/scam attribution experiment
 
+Review repair `spam-scam-attribution-en-v2` fixes reproduced missed solicitations in
+conditional credential advice and denied reporting frames. Eight new synthetic
+regression probes preserve actual source spans. Both frozen diagnostic reports remain
+identical apart from the candidate version; original labels and hashes are unchanged.
+These tests are development evidence, not a new independent quality dataset.
+
 `npm run eval:spam-attribution` reuses the paired review evaluator on frozen T6A and
 a new 24-case provisional public synthetic challenge. T6A remains 15/23/5/5 TP/TN/FP/FN;
 the candidate records 15/27/1/5. Challenge results are 14/0/10/0 versus 14/8/2/0.

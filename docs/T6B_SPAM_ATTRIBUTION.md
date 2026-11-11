@@ -8,7 +8,7 @@ Notes: Vibe coded with Codex.
 
 The user explicitly authorized this bounded implementation while independent review
 continues separately. `createEnglishSpamScamAttributionAnalyzer()` selects
-`english-spam-scam-attribution` / `spam-scam-attribution-en-v1`. It wraps the unchanged
+`english-spam-scam-attribution` / `spam-scam-attribution-en-v2`. It wraps the unchanged
 T6A `spam-scam-en-v1` scorer. T6A remains available and is not automatically replaced.
 No V1 schema, package version, existing analyzer, default, dependency or Flaggr change.
 This is deterministic heuristic development, not a trained AI model or validated detector.
@@ -34,6 +34,23 @@ The candidate excludes only these current-text spans before applying T6A scoring
   of 1–240 units, a sentence terminator and `Do not follow that/this instruction`.
   Only that example body is excluded. A training keyword without the explicit
   disclaimer does not exempt text. Parsed quotations are handled by the quote rule.
+
+Review correction v2 retains baseline scoring when a reporting/training frame is
+immediately preceded by listed denial (`not`, `no`, `never`, `isn't`, `wasn't`, with
+an optional article/determiner). `This is not a scam message: "..."` is not accepted
+as reporting. A negated credential request also keeps baseline scoring if `unless`
+or `except` appears in the following 160 units before a sentence/line ending.
+Those exceptions can permit disclosure to the sender. Benign `even if` warnings
+retain their existing treatment. This is a conservative finite guard; other ways of
+denying a frame or expressing exceptions, or exceptions beyond the window, remain
+limitations. Ambiguous advice can still produce false alarms.
+
+PR #11 shipped v1. Review probes reproduced two false-negative families: conditional
+credential advice under an impersonation claim, and denied reporting frames. Eight
+synthetic regression probes cover these repairs and ambiguous denied training.
+They are development tests, not independently reviewed evaluation. Existing diagnostic
+labels/hashes and the measurements below remain unchanged; only candidate provenance
+changes to v2. V1 is identifiable in older results; it is not a new selectable export.
 
 An exclusion is blocked by listed endorsement in the preceding/following 160 units:
 `I/we agree/endorse/approve`, `I mean it`, `do what it says`, `follow that/these/those

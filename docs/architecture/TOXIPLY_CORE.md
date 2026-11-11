@@ -6,7 +6,9 @@
 bounded current-text attribution. A detached length-preserving working copy excludes
 recognized reported examples and negated credential requests; actual remaining T6A
 cue spans reference original input. Any witness crossing an excluded range falls back
-to baseline execution. The separate composite version is `spam-scam-attribution-en-v1`.
+to baseline execution. The separate composite version is `spam-scam-attribution-en-v2`.
+The review correction blocks denied reporting/training frames and trailing
+`unless`/`except` disclosure exceptions from receiving an exemption.
 This adds no external context support, new category/language, orchestration, state or
 dependency. V1 contracts, T6A, native/contextual/profanity analyzers and default behavior
 remain unchanged. [Grammar, paired development evidence and limitations](../T6B_SPAM_ATTRIBUTION.md)

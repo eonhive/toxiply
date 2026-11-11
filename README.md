@@ -142,6 +142,9 @@ Run `npm run example:spam-attribution` and `npm run eval:spam-attribution` (also
 with TP/FN unchanged at 15/5. A new 24-case provisional contrast set records 14 TP,
 8 TN, 2 FP, 0 FN. These are development findings, not independent accuracy evidence.
 See [T6B's exact grammar, comparison and limits](docs/T6B_SPAM_ATTRIBUTION.md).
+The v2 review repair prevents listed denied reporting frames and `unless`/`except`
+disclosure exceptions from receiving a warning/report exemption. T6A and the public
+contracts remain unchanged; ambiguous and unrecognized phrasing remain limitations.
 
 ## Opt-in attribution candidate
 
