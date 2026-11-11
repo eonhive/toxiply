@@ -1,5 +1,14 @@
 # Native extraction provenance and validation
 
+## T6B independently authored attribution experiment
+
+The separate spam/scam attribution wrapper, tests, synthetic contrasts and paired
+runner are independently authored here using existing Toxiply modules, Zod and Node
+built-ins. No Flaggr/private implementation, customer corpus or operational material
+was read or transferred. All new labels are provisional development annotations.
+Existing datasets, scorers, dependencies, V1 contracts and licensing are unchanged.
+See [T6B](T6B_SPAM_ATTRIBUTION.md); no independent reviewer or held-out result is asserted.
+
 Updated: 2026-10-30. Scope: owner-directed migration of EonHive's deterministic content modules into the independent Toxiply library. Package publication remains disabled (`private: true`, `UNLICENSED`); this extraction does not grant an open-source license or settle future distribution rights.
 
 ## Source audit

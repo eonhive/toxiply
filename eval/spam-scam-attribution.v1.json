@@ -1,0 +1,692 @@
+{
+  "schemaVersion": "toxiply.text-eval.v1",
+  "datasetId": "english-spam-scam-attribution-challenge",
+  "datasetVersion": "1.0.0",
+  "taxonomyVersion": "toxiply.categories.v1",
+  "labelDefinition": "Provisional current-author spam/scam solicitation labels. Reporting and negated advice are not endorsement; explicit endorsement and independent solicitations remain positive. Development contrasts only.",
+  "split": "development",
+  "reviewStatus": "provisional",
+  "provenance": {
+    "source": "Codex-authored synthetic T6B contrasts, 2026-11-11; authored alongside the candidate, with exposed T6A themes. Not human-reviewed, independent or held-out. No external corpus or customer data.",
+    "sourceKind": "synthetic_development",
+    "rights": "Authored for EonHive Toxiply; private/UNLICENSED package boundary unchanged.",
+    "visibility": "public",
+    "authors": [
+      "codex"
+    ]
+  },
+  "cases": [
+    {
+      "id": "report-bank",
+      "group": "reporting",
+      "tags": [
+        "reporting"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "report-bank",
+        "content": {
+          "kind": "text",
+          "text": "The scam message read: \"I am your bank. Send me your password.\" I reported it."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "Reported credential solicitation, without endorsement.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "report-prize",
+      "group": "reporting",
+      "tags": [
+        "reporting"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "report-prize",
+        "content": {
+          "kind": "text",
+          "text": "The article quotes “You have won. Pay a processing fee” as an example of fraud."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "Educational quote, without endorsement.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "report-single",
+      "group": "reporting",
+      "tags": [
+        "reporting"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "report-single",
+        "content": {
+          "kind": "text",
+          "text": "Phishing example: 'Reply with your verification code immediately.'"
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "Explicitly framed quoted example.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "report-emoji",
+      "group": "reporting",
+      "tags": [
+        "reporting"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "report-emoji",
+        "content": {
+          "kind": "text",
+          "text": "😀 The report quotes \"Act now: send 200 bitcoin.\""
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "Reported example with astral source prefix.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "negated-never",
+      "group": "warnings",
+      "tags": [
+        "warnings"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "negated-never",
+        "content": {
+          "kind": "text",
+          "text": "Never send your password immediately, even if asked."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "Explicitly negated credential request.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "negated-dont",
+      "group": "warnings",
+      "tags": [
+        "warnings"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "negated-dont",
+        "content": {
+          "kind": "text",
+          "text": "Don't give us your verification code immediately."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "Negated code request with contraction.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "negated-do-not",
+      "group": "warnings",
+      "tags": [
+        "warnings"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "negated-do-not",
+        "content": {
+          "kind": "text",
+          "text": "Do not reply with your seed phrase immediately."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "Negated seed phrase request.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "training",
+      "group": "warnings",
+      "tags": [
+        "warnings"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "training",
+        "content": {
+          "kind": "text",
+          "text": "Training slide: your account is suspended, sign in here immediately. Do not follow that instruction."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "Bounded training example with explicit warning.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "direct-bank",
+      "group": "direct",
+      "tags": [
+        "direct"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "direct-bank",
+        "content": {
+          "kind": "text",
+          "text": "I am your bank. Send me your password."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Direct solicitation.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "direct-prize",
+      "group": "direct",
+      "tags": [
+        "direct"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "direct-prize",
+        "content": {
+          "kind": "text",
+          "text": "You have won! Pay a processing fee."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Direct advance fee solicitation.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "direct-code",
+      "group": "direct",
+      "tags": [
+        "direct"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "direct-code",
+        "content": {
+          "kind": "text",
+          "text": "Reply with your verification code immediately."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Direct pressured disclosure request.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "direct-payment",
+      "group": "direct",
+      "tags": [
+        "direct"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "direct-payment",
+        "content": {
+          "kind": "text",
+          "text": "Act now: send 200 bitcoin."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Direct unusual pressured payment request.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "endorse-before",
+      "group": "endorsement",
+      "tags": [
+        "endorsement"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "endorse-before",
+        "content": {
+          "kind": "text",
+          "text": "I agree. The scam message read: \"I am your bank. Send me your password.\""
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Explicit nearby endorsement prevents exclusion.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "endorse-after",
+      "group": "endorsement",
+      "tags": [
+        "endorsement"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "endorse-after",
+        "content": {
+          "kind": "text",
+          "text": "The article quotes \"You have won. Pay a processing fee\". I endorse this."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Explicit endorsement after quotation.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "endorse-follow",
+      "group": "endorsement",
+      "tags": [
+        "endorsement"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "endorse-follow",
+        "content": {
+          "kind": "text",
+          "text": "Phishing example: \"Reply with your verification code immediately.\" Do what it says."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Instruction to follow quoted solicitation.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "bare-quote",
+      "group": "endorsement",
+      "tags": [
+        "endorsement"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "bare-quote",
+        "content": {
+          "kind": "text",
+          "text": "\"I am your bank. Send me your password.\""
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Bare quotation is not an exemption.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "mixed-after",
+      "group": "mixed",
+      "tags": [
+        "mixed"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "mixed-after",
+        "content": {
+          "kind": "text",
+          "text": "The scam message read: \"You have won. Pay a processing fee.\" I am your bank. Send me your password."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Independent current-author solicitation after reported material.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "mixed-before",
+      "group": "mixed",
+      "tags": [
+        "mixed"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "mixed-before",
+        "content": {
+          "kind": "text",
+          "text": "Send me your password immediately. The article quotes \"You have won. Pay a processing fee\"."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Independent current-author solicitation before reported material.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "mixed-negation",
+      "group": "mixed",
+      "tags": [
+        "mixed"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "mixed-negation",
+        "content": {
+          "kind": "text",
+          "text": "Never send your password to strangers; send me your password immediately."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Negated advice must not exempt a later independent request.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "mixed-training",
+      "group": "mixed",
+      "tags": [
+        "mixed"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "mixed-training",
+        "content": {
+          "kind": "text",
+          "text": "Training slide: your account is suspended, sign in here immediately. Do not follow that instruction. Send me your password immediately."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Training exclusion must not remove a later solicitation.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "irrelevant-warning",
+      "group": "direct",
+      "tags": [
+        "direct"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "irrelevant-warning",
+        "content": {
+          "kind": "text",
+          "text": "Beware of phishing. I am your bank. Send me your password."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Warning keyword elsewhere is not an exemption.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "delay",
+      "group": "direct",
+      "tags": [
+        "direct"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "delay",
+        "content": {
+          "kind": "text",
+          "text": "Do not delay. Send me your password immediately."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Negated delay is pressure, not negated disclosure.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "unknown-report",
+      "group": "known_gap",
+      "tags": [
+        "known_gap"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "unknown-report",
+        "content": {
+          "kind": "text",
+          "text": "Yesterday a friend wrote \"I am your bank. Send me your password.\" I reported it."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "Unrecognized reporting frame remains a challenge.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "unmatched",
+      "group": "known_gap",
+      "tags": [
+        "known_gap"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "unmatched",
+        "content": {
+          "kind": "text",
+          "text": "The scam message read: \"I am your bank. Send me your password."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "Malformed quotation cannot safely be excluded.",
+      "review": {
+        "status": "provisional"
+      }
+    }
+  ]
+}

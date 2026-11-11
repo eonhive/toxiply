@@ -90,6 +90,7 @@ proposes one future attribution experiment without implementing or promoting it.
 | `contextualTextAnalyzer` | Separate opt-in candidate using the same five categories with narrow report/criticism attribution | Provisional development evidence only; no general author-intent understanding or default replacement |
 | `createEnglishProfanityAnalyzer()` | Separate, opt-in 12-token English literal-presence signal | Exact `en`; no semantic context, severity, author-intent, obfuscation, or comprehensive profanity classification |
 | `createEnglishSpamScamAnalyzer()` | Separate, opt-in deterministic combinations of spam/scam wording in current text | Exact `en`; no context/author attribution, URL safety, reputation, calibration or production validation |
+| `createEnglishSpamScamAttributionAnalyzer()` | Separate opt-in T6B candidate excluding narrowly framed reports/warnings before T6A scoring | Exact `en`; no external semantic context or general attribution; provisional development evidence only |
 
 The native analyzer does **not** advertise `profanity` or `spam_scam`. Mixed requests return `partial` with unavailable categories omitted and listed in `missingCapabilities`; unsupported-only requests produce no findings. The separate literal detector has [its own specification](docs/ENGLISH_PROFANITY.md). Spam/scam is available only through the optional factory below. No adapter implements pixels, OCR, speech recognition, audio, video, persistent actor history, policy, routing, or enforcement.
 
@@ -121,6 +122,26 @@ Run `npm run example:spam-scam` and `npm run eval:spam-scam`. The separate 48-ca
 provisional synthetic diagnostic reports 15 TP / 23 TN / 5 FP / 5 FN, with 51 valid
 source spans. This is development evidence only, not independent validation or an
 enforcement threshold. [Exact rules, comparison report, limits and T6B proposal](docs/ENGLISH_SPAM_SCAM.md).
+
+## Opt-in spam/scam attribution candidate
+
+For spam/scam reporting and educational warnings, T6B supplies a separate optional
+`createEnglishSpamScamAttributionAnalyzer()` factory. T6A remains unchanged:
+
+```js
+import { createAnalyzer, createEnglishSpamScamAttributionAnalyzer } from '@eonhive/toxiply';
+const spamCandidate = createAnalyzer(createEnglishSpamScamAttributionAnalyzer());
+// Same V1 spam_scam request, with exact languageHint: 'en'.
+```
+
+It excludes narrowly framed quotations, negated credential advice and explicit training
+examples. Bare quotes and warning keywords are not blanket exemptions; independent
+requests and listed endorsement retain scoring. Semantic context remains unsupported.
+Run `npm run example:spam-attribution` and `npm run eval:spam-attribution` (also in
+`check`/`eval:all`). On the unchanged 48-case provisional diagnostic, FPs decrease 5→1
+with TP/FN unchanged at 15/5. A new 24-case provisional contrast set records 14 TP,
+8 TN, 2 FP, 0 FN. These are development findings, not independent accuracy evidence.
+See [T6B's exact grammar, comparison and limits](docs/T6B_SPAM_ATTRIBUTION.md).
 
 ## Opt-in attribution candidate
 

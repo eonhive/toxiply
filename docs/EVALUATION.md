@@ -1,5 +1,16 @@
 # Text evaluation and compatibility baseline
 
+## T6B spam/scam attribution experiment
+
+`npm run eval:spam-attribution` reuses the paired review evaluator on frozen T6A and
+a new 24-case provisional public synthetic challenge. T6A remains 15/23/5/5 TP/TN/FP/FN;
+the candidate records 15/27/1/5. Challenge results are 14/0/10/0 versus 14/8/2/0.
+No new FP/FN/category regressions appear on either development set. Semantic span
+accuracy is unmeasured; structural evidence remains valid. Existing diagnostic bytes
+and labels are unchanged. See [hashes, group errors, exact semantics and limits](T6B_SPAM_ATTRIBUTION.md).
+The candidate remains opt-in; human-reviewed/held-out results are NOT_RUN. Include the
+new exposed dataset in future reference/leakage audits; it is not T5 validation data.
+
 Updated: 2026-11-11 · Native/lexical/spam-scam diagnostics and review tooling; human review pending
 
 ## Commands and interpretation
