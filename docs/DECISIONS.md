@@ -1,5 +1,18 @@
 # Toxiply core decisions
 
+## T-030 — Conservative attribution review repairs
+
+**Status:** implemented for review · **Date:** 2026-11-11
+
+Review of merged PR #11 reproduced new misses for conditional disclosure advice and
+denied scam-reporting frames. Narrow the candidate's exemptions with explicit denial
+and trailing `unless`/`except` guards. Retain ambiguous cases under T6A scoring rather
+than treating them as safe reports/warnings. Bump the composite to
+`spam-scam-attribution-en-v2`; preserve all contracts, frozen scorers and dataset labels.
+Add synthetic regressions and keep previous development metrics unchanged. This repair
+does not claim general attribution/conditional-language understanding or promote the
+candidate. PR #11 was already merged externally; this follow-up remains unmerged.
+
 ## T-029 — Separately versioned spam/scam attribution candidate
 
 **Status:** implemented for review · **Date:** 2026-11-11

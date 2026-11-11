@@ -1,5 +1,10 @@
 # Next steps
 
+Review follow-up: T6B v2 repairs conditional disclosure and denied-report exemptions
+found after PR #11 merged. Inspect the eight new synthetic regressions and unchanged
+frozen diagnostic labels/metrics. Keep this fix opt-in and its follow-up PR unmerged
+until review; independent validation and broader grammar remain separate work.
+
 T6B now implements a separate opt-in [spam/scam attribution candidate](docs/T6B_SPAM_ATTRIBUTION.md)
 under explicit user scope. It fixes four T6A development quote/warning false alarms;
 satire, unrecognized reporting and existing misses remain. T6A is unchanged. Review

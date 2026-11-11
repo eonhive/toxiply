@@ -1,5 +1,29 @@
 # Build status
 
+## PR #11 review repairs — 2026-11-11
+
+PR #11 was already merged at `260fb37` before this review request. A separate follow-up
+repairs two reproduced false-negative families: conditional credential advice under
+an impersonation claim, and denied scam-reporting frames. The candidate now reports
+`spam-scam-attribution-en-v2`. Added eight synthetic regression probes, including
+conservative denied-training behavior; existing labels, datasets and T6A are unchanged.
+
+The five initial reproduction tests FAIL on v1 as expected. An intermediate overly
+broad conditional guard failed two old regressions; narrowing it to `unless`/`except`
+preserved benign `even if` warnings. The corrected 38-test focused run PASS; the final
+run includes the additional denied-training probe. Both frozen paired reports remain
+identical except candidate provenance. Independent review/held-out validation,
+calibration and Flaggr integration remain NOT_RUN.
+
+Final verification on Node 22.22.2 / npm 10.9.7: `npm ci`, `npm run check` (316/316
+tests, no skips, build/typechecks, six examples), explicit `npm run eval:all`, and
+`npm pack --dry-run --json` PASS, exit 0. Focused tests PASS 39/39; candidate-only
+coverage 98.17% lines / 89.58% branches / 77.78% functions. This is not full-library
+coverage or accuracy. Package inspection PASS: 73 files, no eval/tests/private inputs.
+Repeated paired output is deterministic, T6A output is byte-identical, frozen source/
+schema/dataset/lockfile diffs are empty, and documentation links/whitespace PASS.
+Evidence/logs are ignored in `.local/t6b-review/`. Stop at the unmerged follow-up PR.
+
 ## Phase T6B: optional spam/scam attribution — 2026-11-11
 
 Base: merged T6A/docs `02438a7`. Baseline `npm ci`, `npm run check` (277/277 tests)

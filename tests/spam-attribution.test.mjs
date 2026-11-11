@@ -20,6 +20,27 @@ const request = (text, overrides = {}) => ({ schemaVersion: 'toxiply.analysis.v1
 const challengeText = await readFile(new URL('../eval/spam-scam-attribution.v1.json', import.meta.url), 'utf8');
 const challenge = JSON.parse(challengeText);
 
+// Review regressions are synthetic development probes, not independently reviewed
+// labels. An exception for the sender and denied reporting are not safe exclusions.
+for (const text of [
+  'I am your bank. Never send your password unless I ask you.',
+  'I am your bank. Never send your password except to me.',
+  'I am your bank. Never send your password immediately unless I ask you.',
+  'This is not a scam message: "I am your bank. Send me your password."',
+  'This is not a phishing example: "I am your bank. Send me your password."',
+  'This isn’t a scam message: "I am your bank. Send me your password."',
+  'No phishing example: "I am your bank. Send me your password."',
+]) {
+  test(`review: retain solicitation in ${text}`, async () => {
+    const input = request(text);
+    const result = await candidate.analyze(input);
+    assert.equal(result.status, 'completed');
+    assert.equal(result.findings[0].score, 0.95);
+    assert.deepEqual(result.evidence, (await baseline.analyze(input)).evidence);
+    for (const item of result.evidence) assert.ok(validSourceSpan(item, input));
+  });
+}
+
 for (const item of challenge.cases) {
   test(`attribution contrast: ${item.id}`, async () => {
     const result = await candidate.analyze(item.request);
@@ -103,6 +124,12 @@ test('negation is clause-initial credential advice, without general warning-word
   ]) assert.ok((await candidate.analyze(request(text))).findings[0].score > 0, text);
 });
 
+test('a denied training frame retains baseline scoring for its ambiguous instruction', async () => {
+  const input = request('This is not a training example: send me your password immediately. Do not follow that instruction.');
+  assert.deepEqual((await candidate.analyze(input)).findings, (await baseline.analyze(input)).findings);
+  assert.equal((await candidate.analyze(input)).findings[0].score, 0.9);
+});
+
 test('language/category/context declarations and default behavior remain honest', async () => {
   for (const context of [undefined, {}, { languageHint: 'und' }, { languageHint: 'fr' }, { languageHint: 'en-us' }]) {
     const r = request('Send me your password immediately.');
@@ -133,7 +160,7 @@ test('limits, deterministic calls, immutable descriptors and no raw-content logg
   const [first, second] = await Promise.all([candidate.analyze(input), candidate.analyze(input)]);
   assert.deepEqual(first, second);
   assert.deepEqual(input, saved);
-  assert.deepEqual(first.modelVersions, { 'english-spam-scam-attribution': 'spam-scam-attribution-en-v1' });
+  assert.deepEqual(first.modelVersions, { 'english-spam-scam-attribution': 'spam-scam-attribution-en-v2' });
   const adapter = createEnglishSpamScamAttributionAnalyzer();
   assert.throws(() => { adapter.descriptor.supportsContext = true; }, TypeError);
   assert.throws(() => { adapter.descriptor.languages.push('fr'); }, TypeError);
