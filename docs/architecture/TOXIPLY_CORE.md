@@ -1,5 +1,17 @@
 # Independent Toxiply core
 
+## T6B optional spam/scam attribution
+
+`createEnglishSpamScamAttributionAnalyzer()` wraps the unchanged T6A analyzer with
+bounded current-text attribution. A detached length-preserving working copy excludes
+recognized reported examples and negated credential requests; actual remaining T6A
+cue spans reference original input. Any witness crossing an excluded range falls back
+to baseline execution. The separate composite version is `spam-scam-attribution-en-v1`.
+This adds no external context support, new category/language, orchestration, state or
+dependency. V1 contracts, T6A, native/contextual/profanity analyzers and default behavior
+remain unchanged. [Grammar, paired development evidence and limitations](../T6B_SPAM_ATTRIBUTION.md)
+define the experiment; no promotion or production validation is claimed.
+
 Updated: 2026-11-11 · Status: Phase 2 text engine; T3–T5 evaluation; T6A optional spam/scam
 
 ## Boundary and execution
@@ -49,7 +61,7 @@ A positive finding without a valid contributing trace fails execution. The finit
 
 Runtime request/result schemas, generated Draft 2020-12 artifacts and inferred types remain the contract source of truth. Structural schemas are portable; runtime refinements enforce aggregate context, uniqueness, reference/status consistency and original-request span/category checks.
 
-`npm run check` typechecks, builds, runs contract/category/context/error/evaluation regressions, executes five examples and runs public diagnostics on CI's Node 22/24 matrix. `npm run eval:all` runs native, lexical, paired attribution, review and spam/scam diagnostics. `eval/compare-legacy.mjs` reads caller-authorized frozen legacy reports locally; no private fixture or runtime dependency is shipped.
+`npm run check` typechecks, builds, runs contract/category/context/error/evaluation regressions, executes six examples and runs public diagnostics on CI's Node 22/24 matrix. `npm run eval:all` runs native, lexical, paired attribution, review and both spam/scam diagnostics. `eval/compare-legacy.mjs` reads caller-authorized frozen legacy reports locally; no private fixture or runtime dependency is shipped.
 
 The 40-case private comparison preserves content/category/severity behavior and records known attribution warnings. The new 32-case public diagnostic reports measured errors with pending human labels. Compatibility, regression correctness and production accuracy are distinct. Held-out independent quality evaluation, calibration, media/language expansion, Flaggr integration, deployment and publication remain outside this task.
 

@@ -1,5 +1,31 @@
 # Build status
 
+## Phase T6B: optional spam/scam attribution — 2026-11-11
+
+Base: merged T6A/docs `02438a7`. Baseline `npm ci`, `npm run check` (277/277 tests)
+and explicit `npm run eval:all` PASS on Node 22.22.2 / npm 10.9.7.
+Added a separately versioned opt-in candidate, source-grounded attribution, example,
+24 provisional synthetic contrasts and paired reporting through the existing evaluator.
+Original T6A module, diagnostic hash/labels, all prior analyzers and V1 contracts remain
+unchanged. No Flaggr access, provider, network dependency, state or default promotion.
+
+Development comparison: frozen 48 cases change 15/23/5/5 TP/TN/FP/FN to 15/27/1/5;
+new 24 cases change 14/0/10/0 to 14/8/2/0. Zero observed new FP/FN on either set.
+Structural witnesses: candidate 42 and 33 checked, none invalid. Semantic evidence
+accuracy remains unmeasured. [Report/limits](docs/T6B_SPAM_ATTRIBUTION.md).
+Focused regressions PASS 31/31; candidate-only coverage 97.96% lines, 88.10% branches,
+77.78% functions. This is test coverage, not accuracy or full-library coverage.
+Final `npm ci`, `npm run check` and explicit `npm run eval:all`: PASS, exit 0.
+Check includes 308/308 tests (no skips), typechecks/build, six examples and all public
+diagnostics. `npm pack --dry-run --json`: PASS, 73 files, no eval/tests/private artifacts.
+Existing T6A and native/contextual paired JSON reports are byte-identical to baseline;
+new paired JSON repeats identically. Frozen scorer/schema/dataset/lockfile diff, new
+dataset hash, documentation targets and whitespace checks PASS. Logs are ignored in
+`.local/t6b/`. A local package-inspection attempt ran before package output existed;
+the final inspection above was rerun after successful completion. No product test failed.
+Independent human review, held-out validation, calibration, private legacy parity and
+integration remain NOT_RUN. No merge, publication or deployment is performed.
+
 ## Phase T6A: optional content-level spam/scam — 2026-11-11
 
 Base: T5 `a7fef7f`. Before edits, `npm ci`, `npm run check` and explicit

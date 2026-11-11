@@ -1,5 +1,22 @@
 # Toxiply core decisions
 
+## T-029 — Separately versioned spam/scam attribution candidate
+
+**Status:** implemented for review · **Date:** 2026-11-11
+
+The user explicitly authorizes T6B implementation while independent validation continues.
+Add `createEnglishSpamScamAttributionAnalyzer()` / `spam-scam-attribution-en-v1` as a
+separate opt-in wrapper around frozen T6A. Exclude only bounded, explicitly framed
+quotes, clause-initial negated credential requests and training examples with a direct
+disclaimer. Preserve listed endorsement and independent solicitations, original UTF-16
+evidence, unsupported semantic context, exact English coverage and uncalibrated scores.
+Keep public V1 contracts, default behavior and every existing analyzer unchanged.
+
+Reuse paired evaluation on the unchanged T6A dataset and a separately hashed synthetic
+contrast set. All labels stay provisional; independent review is not invented or made
+a prerequisite for this authorized local experiment. No default promotion, enforcement,
+Flaggr changes, publication or deployment. [Exact grammar and evidence](T6B_SPAM_ATTRIBUTION.md).
+
 Updated: 2026-11-11 · Scope: independent repository, Phases 1–2, T3–T5 evaluation and T6A
 
 ## T-013 — Independent content boundary

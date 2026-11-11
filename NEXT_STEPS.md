@@ -1,5 +1,14 @@
 # Next steps
 
+T6B now implements a separate opt-in [spam/scam attribution candidate](docs/T6B_SPAM_ATTRIBUTION.md)
+under explicit user scope. It fixes four T6A development quote/warning false alarms;
+satire, unrecognized reporting and existing misses remain. T6A is unchanged. Review
+the paired gains and regressions before any promotion; stop at the focused PR.
+Independent review/held-out validation continues separately and remains unperformed.
+The next bounded proposal is independently reviewed endorsement/reporting contrasts,
+followed by one versioned reporting-grammar experiment. No other quality change is
+authorized by this proposal. Historical T6A planning below describes its earlier state.
+
 Updated: 2026-11-11
 
 Phase T6A adds the optional [English spam/scam surface analyzer](docs/ENGLISH_SPAM_SCAM.md)
