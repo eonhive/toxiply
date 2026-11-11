@@ -1,6 +1,6 @@
 # Text evaluation and compatibility baseline
 
-Updated: 2026-11-01 · Native/lexical diagnostics and review tooling; human review pending
+Updated: 2026-11-11 · Native/lexical/spam-scam diagnostics and review tooling; human review pending
 
 ## Commands and interpretation
 
@@ -16,7 +16,7 @@ npm run check
 npm run eval:all
 ```
 
-`eval:native` runs the 32-case native diagnostic; `eval:text` retains the existing 36-case lexical-profanity diagnostic. `eval:all` also runs paired attribution and coverage-aware review reports. Reports contain exact UTF-8 dataset SHA-256, provenance, algorithm versions, confusion counts, per-group metrics, mismatch IDs and evidence. Native reports also contain per-category metrics. Rates with zero denominators are `null`.
+`eval:native` runs the 32-case native diagnostic; `eval:text` retains the existing 36-case lexical-profanity diagnostic. `eval:all` also runs paired attribution, coverage-aware review and the new `eval:spam-scam` report. Reports contain exact UTF-8 dataset SHA-256, provenance, algorithm versions, confusion counts, per-group metrics, mismatch IDs and evidence. Native reports also contain per-category metrics. Rates with zero denominators are `null`.
 
 Mismatches are diagnostic findings, not command failures. Incomplete, unsupported, failed, malformed, wrong-coverage or version-inconsistent execution fails the harness instead of being counted benign. Tests verify metric/error handling separately from algorithm behavior. No examples, labels or rules were retuned to produce a quality pass.
 
@@ -98,6 +98,25 @@ Algorithm: `english-literal-profanity` / `literal-en-v1`.
 This dataset asks about surface profanity, including quoted/reporting text, not author endorsement. It has 26 provisional positives / 10 negatives; precision 100%, recall 53.8%, false-positive rate 0%, false-negative rate 46.2% on these labels only. A zero lexical signal does not establish profanity-free text. The absence of false positives in this development set establishes no production precision. Do not compare this label definition directly to the native harm-attribution labels.
 
 ## Remaining evidence
+
+T6A adds a separately versioned [English spam/scam synthetic diagnostic and comparison
+report](ENGLISH_SPAM_SCAM.md#synthetic-diagnostic-and-comparison-report). The 48 public
+same-author development cases use existing `toxiply.text-eval.v1`, version `1.0.0`,
+provisional labels and SHA-256
+`94280d4d105f9ad240b3cfeb4fbb12a788da2ca1ef32044da28e600b937a87c7`.
+Algorithm `english-spam-scam` / `spam-scam-en-v1` records 15 TP / 23 TN / 5 FP / 5 FN,
+48 completed, 51 source spans checked, 0 invalid. No gold semantic spans are supplied.
+Per-group errors and exact IDs include quoted warnings, negated advice, satire,
+obfuscation and unlisted wording. The native baseline is unsupported on all 48 cases;
+its quality denominator is zero, rates null and no paired accuracy gain is claimed.
+
+Run `npm run eval:spam-scam`, or build then `node eval/run-spam-scam.mjs` for pure JSON.
+The runner reuses the existing coverage-aware evaluator and fails on incomplete or
+invalid candidate execution. Rule presence is not author intent; labels intentionally
+retain that distinction. Neither the new corpus nor its measured errors enter T5's
+held-out evaluation. Include this exposed dataset in future manual leakage audits and
+as an explicit compatible `--reference` when using the review CLI; its built-in
+reference list remains unchanged. Independent review/held-out validation are NOT_RUN.
 
 Phase T3 adds [versioned review/import infrastructure](TEXT_EVALUATION_DATASETS.md)
 and a [baseline-versus-candidate audit report](T3_BASELINE.md). Existing diagnostic
