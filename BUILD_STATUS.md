@@ -1,5 +1,46 @@
 # Build status
 
+## Phase T6A: optional content-level spam/scam — 2026-11-11
+
+Base: T5 `a7fef7f`. Before edits, `npm ci`, `npm run check` and explicit
+`npm run eval:all` PASS (exit 0) on Node 22.22.2 / npm 10.9.7, with 249/249 tests,
+four examples and existing public diagnostics. No baseline failure was observed.
+
+Added only the opt-in `createEnglishSpamScamAnalyzer()` / `spam-scam-en-v1`, finite
+multi-cue current-text rules, original UTF-16 witnesses, usage example, regressions and
+a separately versioned 48-case synthetic development diagnostic. Exact `en` is required;
+semantic context is unsupported. V1 contracts, existing native/contextual/lexical
+analyzers, default unsupported behavior, dependencies and private/UNLICENSED metadata
+remain unchanged. No Flaggr access/modification, network lookup, service or persistence.
+
+Provisional diagnostic: 15 TP / 23 TN / 5 FP / 5 FN; 48 completed; 51 source witnesses,
+0 invalid. Native is unsupported on all 48: no assessed baseline or paired accuracy
+improvement. Warnings, quotes and satire remain known FPs; lexical/evasion/companion-cue
+gaps remain FNs. No labels were tuned. [Exact semantics, hash, group report and T6B
+proposal](docs/ENGLISH_SPAM_SCAM.md) distinguish development findings from independent
+review. T5's missing independent corpus/reviewer/rights/freeze records remain missing.
+
+Focused new tests PASS 28/28 (exit 0). The first 23-test run passed 22: its maximum-input
+test expected trailing punctuation inside the secret-request span. Corrected only the
+test fixture to end at the matched phrase; implementation and diagnostic labels unchanged.
+Final `npm ci`, `npm run check`, explicit `npm run eval:all` and
+`npm pack --dry-run --json` PASS (exit 0). Check passes 277/277 tests, typecheck/build,
+five examples and all public diagnostics. Focused new tests with Node coverage PASS
+28/28: the new analyzer has 100% lines/functions and 97.62% branches; this is test
+coverage, not accuracy. Package inspection PASS: 69 files (four generated files for
+the new module), no evaluation datasets/tests/private artifacts. All four existing
+lexical/native/paired/review JSON reports are byte-identical to their saved baselines.
+Frozen modules/schemas/datasets/lockfile have no diff; whitespace and updated local
+documentation targets PASS. Local verification uses Node 22.22.2 / npm 10.9.7;
+CI's Node 22/24 outcome is recorded on the PR separately.
+
+The concurrent 44-case draft caused three hash/count assertions to fail during an
+intermediate coverage run. The user selected this chat's original 48-case version;
+its original hash and labels were restored, and final focused/full checks above pass.
+The other draft and raw logs remain ignored under `.local/t6a/`.
+Independent human review, held-out evaluation, calibration,
+private legacy rerun, Flaggr integration, deployment and publication remain NOT_RUN.
+
 ## Phase T5: independent validation readiness — 2026-11-01
 
 Based on merged T4 `ba8d08b`. `npm ci`, `npm run check` and explicit `npm run eval:all`

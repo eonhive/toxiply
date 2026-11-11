@@ -12,7 +12,7 @@ npm run check
 npm run eval:all
 ```
 
-`check` typechecks source/examples, builds, runs all tests, executes the unconfigured/native/lexical/contextual examples, and runs all public diagnostics. CI repeats it on Node 22 and 24. `eval:all` includes the lexical/native diagnostics, paired comparisons and the review workflow. Legacy diagnostics require complete coverage; the review workflow explicitly reports intentional partial/unsupported coverage without counting it benign. Failed/invalid execution fails the harness; classification mismatches remain findings.
+`check` typechecks source/examples, builds, runs all tests, executes the unconfigured/native/lexical/contextual/spam-scam examples, and runs all public diagnostics. CI repeats it on Node 22 and 24. `eval:all` includes the lexical/native/spam-scam diagnostics, paired comparisons and the review workflow. Legacy diagnostics require complete coverage; the review workflow explicitly reports intentional partial/unsupported coverage without counting it benign. Failed/invalid execution fails the harness; classification mismatches remain findings.
 
 ```js
 import { createAnalyzer, nativeTextAnalyzer, SCHEMA_VERSION } from '@eonhive/toxiply';
@@ -89,10 +89,38 @@ proposes one future attribution experiment without implementing or promoting it.
 | `nativeTextAnalyzer` | Deterministic heuristic `toxicity`, `harassment`, `hate`, `threat`, `sexual_risk`; parent/quote/target context | Exact `en` or explicitly unknown `und`; no translation or language detection; known quote/criticism/evasion errors |
 | `contextualTextAnalyzer` | Separate opt-in candidate using the same five categories with narrow report/criticism attribution | Provisional development evidence only; no general author-intent understanding or default replacement |
 | `createEnglishProfanityAnalyzer()` | Separate, opt-in 12-token English literal-presence signal | Exact `en`; no semantic context, severity, author-intent, obfuscation, or comprehensive profanity classification |
+| `createEnglishSpamScamAnalyzer()` | Separate, opt-in deterministic combinations of spam/scam wording in current text | Exact `en`; no context/author attribution, URL safety, reputation, calibration or production validation |
 
-The native analyzer does **not** advertise `profanity` or `spam_scam`. Mixed requests return `partial` with unavailable categories omitted and listed in `missingCapabilities`; unsupported-only requests produce no findings. The separate literal detector is implemented and has its own diagnostic; see [its exact specification](docs/ENGLISH_PROFANITY.md). Neither adapter implements spam/scam, pixels, OCR, speech recognition, audio, video, persistent actor history, policy, routing, or enforcement.
+The native analyzer does **not** advertise `profanity` or `spam_scam`. Mixed requests return `partial` with unavailable categories omitted and listed in `missingCapabilities`; unsupported-only requests produce no findings. The separate literal detector has [its own specification](docs/ENGLISH_PROFANITY.md). Spam/scam is available only through the optional factory below. No adapter implements pixels, OCR, speech recognition, audio, video, persistent actor history, policy, routing, or enforcement.
 
 Native content scoring is the audited extraction already present in this repository, with rule-level evidence instrumentation. Its scores and internal subtype/severity/targeting behavior remain compatible with the frozen legacy diagnostic. This is functional heuristic analysis, not a trained semantic model or a production-accuracy claim. Product criticism, literal animals, reported abuse, sarcasm, implied threats and obfuscation remain known error areas.
+
+## Opt-in English spam/scam indicators
+
+```js
+import { createAnalyzer, createEnglishSpamScamAnalyzer } from '@eonhive/toxiply';
+
+const spam = createAnalyzer(createEnglishSpamScamAnalyzer());
+const result = await spam.analyze({
+  schemaVersion: 'toxiply.analysis.v1', requestId: 'spam-1',
+  content: { kind: 'text', text: 'Your account is suspended. Sign in here immediately.' },
+  categories: ['spam_scam'], context: { languageHint: 'en' },
+});
+// result.status === 'completed'; score 0.9; three source-relative cue spans.
+```
+
+Positive means a documented combination of suspicious surface wording within 240
+UTF-16 units, not proven fraud or malicious intent. A bare URL, brand, price, urgent
+word or ordinary discount is insufficient. Scores are uncalibrated; zero is not safety.
+An absent language hint is unsupported `und`. Parent/quote/reply-target context is
+not evaluated and produces partial coverage. Quotes, educational warnings, negation
+and satire can match; obfuscation and unlisted wording can be missed. No URL fetch,
+reputation query, external model or automatic action occurs.
+
+Run `npm run example:spam-scam` and `npm run eval:spam-scam`. The separate 48-case
+provisional synthetic diagnostic reports 15 TP / 23 TN / 5 FP / 5 FN, with 51 valid
+source spans. This is development evidence only, not independent validation or an
+enforcement threshold. [Exact rules, comparison report, limits and T6B proposal](docs/ENGLISH_SPAM_SCAM.md).
 
 ## Opt-in attribution candidate
 
@@ -157,4 +185,4 @@ A local comparison against 40 frozen private legacy fixtures matches all content
 
 See [evaluation methods and findings](docs/EVALUATION.md), [source provenance and compatibility](docs/PROVENANCE.md), [architecture](docs/architecture/TOXIPLY_CORE.md), and [decisions](docs/DECISIONS.md). This change transfers no further private implementation, fixture, customer data, credential, or operational report. Source provenance for the existing extraction is recorded separately; public repository visibility and a private npm package do not grant a redistribution license.
 
-The Phase 2 engine and opt-in candidate are preserved. Phases T3/T4 add evaluation and offline annotation infrastructure only; real independent review, analyzer changes/promotion, Flaggr integration, media, deployment and publication remain separate tasks.
+The Phase 2 engine and opt-in attribution candidate are preserved. Phases T3–T5 add evaluation, offline annotation and readiness work; T6A adds only the separate optional English spam/scam analyzer. Real independent review continues separately. Analyzer promotion, Flaggr integration, media, deployment and publication remain separate tasks.

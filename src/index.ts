@@ -6,6 +6,7 @@
  */
 export { analyze, createAnalyzer } from './analyze.js';
 export { createEnglishProfanityAnalyzer } from './text/english-profanity.js';
+export { createEnglishSpamScamAnalyzer } from './text/english-spam-scam.js';
 export { nativeTextAnalyzer } from './native-text-analyzer.js';
 export { contextualTextAnalyzer } from './contextual-text-analyzer.js';
 export {

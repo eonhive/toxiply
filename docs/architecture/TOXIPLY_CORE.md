@@ -1,6 +1,6 @@
 # Independent Toxiply core
 
-Updated: 2026-11-01 · Status: Phase 2 text engine; T3/T4 offline evaluation infrastructure
+Updated: 2026-11-11 · Status: Phase 2 text engine; T3–T5 evaluation; T6A optional spam/scam
 
 ## Boundary and execution
 
@@ -9,6 +9,16 @@ One TypeScript library runs in process with no Flaggr runtime imports, database,
 `analyze()` remains unconfigured. `createAnalyzer(nativeTextAnalyzer)` selects the already-audited text/conversation/language/fusion extraction. A separate `createEnglishProfanityAnalyzer()` supplies narrowly specified lexical presence, without implying that the native analyzer supports profanity. Custom analyzers use the same local interface.
 
 `createAnalyzer(contextualTextAnalyzer)` selects a separately versioned attribution experiment. `src/contextual/attribution.ts` recognizes narrow reporting/product syntax and produces a length-preserving working copy for the frozen scoring rules. `src/contextual-text-analyzer.ts` checks returned witnesses against excluded ranges and falls back to the baseline for an artificial cross-mask match. Original input and the existing native algorithm remain unchanged. This candidate does not provide new categories, language support, calibrated confidence or a new public schema. See [its bounded grammar and limitations](../CONTEXTUAL_ATTRIBUTION.md).
+
+T6A adds `createAnalyzer(createEnglishSpamScamAnalyzer())` as another optional single
+adapter. `src/text/english-spam-scam.ts` matches finite current-text cue combinations
+within 240 UTF-16 units and returns original contributing spans. Only `spam_scam`
+and exact `en` are supported; absent `languageHint` stays unsupported `und`.
+`supportsContext: false` invokes existing context stripping/partial coverage. No combined
+registry, orchestration, network provider, persistence or application-owned system is
+introduced. Version `spam-scam-en-v1` describes uncalibrated surface indicators with
+known quote/negation/satire false positives and lexical/evasion misses. See
+[rules, evidence semantics and development results](../ENGLISH_SPAM_SCAM.md).
 
 ```text
 strict bounded V1 request
@@ -39,7 +49,7 @@ A positive finding without a valid contributing trace fails execution. The finit
 
 Runtime request/result schemas, generated Draft 2020-12 artifacts and inferred types remain the contract source of truth. Structural schemas are portable; runtime refinements enforce aggregate context, uniqueness, reference/status consistency and original-request span/category checks.
 
-`npm run check` typechecks, builds, runs contract/category/context/error/evaluation regressions, executes four examples and runs public diagnostics on CI's Node 22/24 matrix. `npm run eval:all` runs native, lexical and paired attribution diagnostics. `eval/compare-legacy.mjs` reads caller-authorized frozen legacy reports locally; no private fixture or runtime dependency is shipped.
+`npm run check` typechecks, builds, runs contract/category/context/error/evaluation regressions, executes five examples and runs public diagnostics on CI's Node 22/24 matrix. `npm run eval:all` runs native, lexical, paired attribution, review and spam/scam diagnostics. `eval/compare-legacy.mjs` reads caller-authorized frozen legacy reports locally; no private fixture or runtime dependency is shipped.
 
 The 40-case private comparison preserves content/category/severity behavior and records known attribution warnings. The new 32-case public diagnostic reports measured errors with pending human labels. Compatibility, regression correctness and production accuracy are distinct. Held-out independent quality evaluation, calibration, media/language expansion, Flaggr integration, deployment and publication remain outside this task.
 

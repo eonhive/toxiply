@@ -1,6 +1,6 @@
 # Toxiply core decisions
 
-Updated: 2026-11-01 · Scope: independent repository, Phases 1–2 and T3–T5 evaluation
+Updated: 2026-11-11 · Scope: independent repository, Phases 1–2, T3–T5 evaluation and T6A
 
 ## T-013 — Independent content boundary
 
@@ -161,3 +161,33 @@ Complete the [readiness/onboarding report](T5_VALIDATION_READINESS.md), verify u
 baseline behavior and stop. The single proposed victim-report experiment requires later
 independent contrast review and a separate implementation decision; no analyzer change
 or promotion follows from this preparation task.
+
+## T-028 — Optional versioned English spam/scam surface indicators
+
+**Status:** implemented for review · **Date:** 2026-11-11
+
+T6A explicitly authorizes a separate `createEnglishSpamScamAnalyzer()` factory,
+`english-spam-scam` / `spam-scam-en-v1`, through the existing one-analyzer execution
+path. Only `spam_scam` and exact `en` are supported; absent hints remain unsupported
+`und`. Set `supportsContext: false` and preserve the core's partial-context behavior.
+Keep 0.2.0 V1 contracts/identifiers, default analysis, native/contextual/lexical analyzers,
+dependencies and private/UNLICENSED package metadata unchanged.
+
+Positive means an implemented combination of suspicious surface cues in a 240-unit
+UTF-16 window, not verified fraud, identity, unsolicited delivery or author intent.
+Return every contributing cue as original-text evidence and use fixed uncalibrated
+scores (maximum across matched rules). A lone link, brand, currency/amount, urgent
+word or ordinary discount is insufficient. Do not suppress arbitrary quotes or claim
+semantic context support; quote, warning, negation, satire and evasion errors are explicit.
+No URL fetching, reputation, credential checks, tenant history, policy or action occurs.
+
+Reuse the existing versioned dataset format, comparator, confusion metrics and source
+audit for a separately hashed 48-case public synthetic development diagnostic.
+All labels remain provisional; native's unsupported `spam_scam` results have no quality
+denominator. Keep existing diagnostic bytes and T5 independent-validation gates intact.
+Document exact [rules, findings and limitations](ENGLISH_SPAM_SCAM.md).
+
+**Reason:** Independent human validation continues separately and does not block bounded
+local feature development. A new optional content-only capability does not implement
+T5's deferred attribution experiment or authorize promotion, production enforcement,
+Flaggr changes, additional infrastructure, merging or publication.
