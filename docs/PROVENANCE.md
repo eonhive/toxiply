@@ -87,3 +87,22 @@ Tests use explicitly fictional declarations in temporary files, not actual human
 Original datasets, heuristics, contracts, dependencies and licensing are unchanged.
 See [handoff rules](TEXT_ANNOTATION_REVIEW.md) for permission/independence obligations
 and [verification](T4_REVIEW_WORKFLOW.md) for actual checks and remaining NOT_RUN gates.
+
+## Phase T6A optional English spam/scam capability
+
+The new finite English cue grammar, optional analyzer factory, example, tests and
+48-case development diagnostic were independently authored here with Codex on
+2026-11-11. No Flaggr implementation, customer text, private dataset, model asset or
+external source was accessed/copied. The diagnostic's `1.0.0` bytes hash to
+`94280d4d105f9ad240b3cfeb4fbb12a788da2ca1ef32044da28e600b937a87c7`;
+its source kind is public synthetic development and every label is provisional.
+Same-author examples and known errors do not establish independent quality evidence.
+
+The new factory alone is added to public exports. Existing source modules, V1 schemas,
+analyzer versions, data files, dependencies and distribution metadata are unchanged.
+Evaluation reuses repository-only T3 tools and is excluded from npm package contents.
+There is no network lookup, persistence, Flaggr integration, policy, action or promotion.
+[The T6A specification/report](ENGLISH_SPAM_SCAM.md) separates structurally valid
+source evidence from semantic attribution and records the known quote/negation/evasion
+errors. Actual independent review and held-out validation remain unperformed; this
+separate feature does not assert that T5's missing records have been supplied.

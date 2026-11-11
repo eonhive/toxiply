@@ -29,6 +29,8 @@
     "test": "npm run build && node --test tests/*.test.mjs",
     "example": "npm run build && node examples/text.mjs",
     "example:profanity": "npm run build && node examples/profanity.mjs",
+    "example:spam-scam": "npm run build && node examples/spam-scam.mjs",
+    "eval:spam-scam": "npm run build && node eval/run-spam-scam.mjs",
     "eval:text": "npm run build && node eval/run.mjs",
     "example:native": "npm run build && node examples/native-text.mjs",
     "example:contextual": "npm run build && node examples/contextual-text.mjs",
@@ -38,8 +40,8 @@
     "eval:review": "npm run build && node eval/run-review.mjs compare",
     "dataset:validate": "npm run build && node eval/run-review.mjs validate",
     "dataset:import": "npm run build && node eval/run-review.mjs import",
-    "eval:all": "npm run eval:text && npm run eval:native && npm run eval:quality && npm run eval:review",
-    "check": "npm run typecheck && npm test && npm run example && npm run example:native && npm run example:profanity && npm run example:contextual && npm run eval:all"
+    "eval:all": "npm run eval:text && npm run eval:native && npm run eval:quality && npm run eval:review && npm run eval:spam-scam",
+    "check": "npm run typecheck && npm test && npm run example && npm run example:native && npm run example:profanity && npm run example:contextual && npm run example:spam-scam && npm run eval:all"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,1364 @@
+{
+  "schemaVersion": "toxiply.text-eval.v1",
+  "datasetId": "english-spam-scam-diagnostic",
+  "datasetVersion": "1.0.0",
+  "taxonomyVersion": "toxiply.categories.v1",
+  "labelDefinition": "Provisional current-message spam/scam solicitation labels: deceptive credential, prize, investment or payment requests, or unsolicited/repetitive promotional solicitation. Normal promotions, warnings, reported quotations and satire are negative. Labels describe intended solicitation in synthetic examples, not merely rule presence; ambiguity and missed/quoted cues remain findings.",
+  "split": "development",
+  "reviewStatus": "provisional",
+  "provenance": {
+    "source": "Codex-authored synthetic public development examples on 2026-11-11, developed alongside the optional analyzer. No private/customer data, independent human review, representative sampling or held-out evaluation.",
+    "sourceKind": "synthetic_development",
+    "rights": "Authored for this repository under its existing private/UNLICENSED package boundary; no external dataset copied.",
+    "visibility": "public",
+    "authors": [
+      "codex"
+    ]
+  },
+  "cases": [
+    {
+      "id": "phishing-1",
+      "group": "phishing",
+      "tags": [
+        "phishing"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "phishing-1",
+        "content": {
+          "kind": "text",
+          "text": "Your account is suspended. Sign in here immediately to restore access."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Account jeopardy, login instruction and pressure form a suspicious solicitation.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "phishing-2",
+      "group": "phishing",
+      "tags": [
+        "phishing"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "phishing-2",
+        "content": {
+          "kind": "text",
+          "text": "URGENT: your account will be closed; verify your account at https://example.invalid/login."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "A closure claim pressures account verification; the URL itself is not the label.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "prize-1",
+      "group": "prize",
+      "tags": [
+        "prize"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "prize-1",
+        "content": {
+          "kind": "text",
+          "text": "You have won a holiday prize! Pay a processing fee to release it."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "An unsolicited win claim requests an advance fee.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "prize-2",
+      "group": "prize",
+      "tags": [
+        "prize"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "prize-2",
+        "content": {
+          "kind": "text",
+          "text": "You were selected as a winner. Send us your verification code to claim it."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "An award claim asks for a private authentication code.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "payment-1",
+      "group": "payment",
+      "tags": [
+        "payment"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "payment-1",
+        "content": {
+          "kind": "text",
+          "text": "Act now: send 200 in bitcoin to prevent further trouble."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Pressure combines a money transfer instruction and unusual payment medium.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "payment-2",
+      "group": "payment",
+      "tags": [
+        "payment"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "payment-2",
+        "content": {
+          "kind": "text",
+          "text": "This is your CEO. Send us gift cards for the emergency purchase."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "An authority claim requests a gift-card transfer.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "credential-1",
+      "group": "credentials",
+      "tags": [
+        "credentials"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "credential-1",
+        "content": {
+          "kind": "text",
+          "text": "I am your bank. Send me your password for verification."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "A bank impersonation claim requests a password transfer.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "credential-2",
+      "group": "credentials",
+      "tags": [
+        "credentials"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "credential-2",
+        "content": {
+          "kind": "text",
+          "text": "Reply with your one-time code immediately."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Urgency accompanies a request to disclose an authentication secret.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "credential-3",
+      "group": "credentials",
+      "tags": [
+        "credentials"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "credential-3",
+        "content": {
+          "kind": "text",
+          "text": "😀 This is IT support. Give us your recovery phrase."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Support impersonation requests a secret, with an astral-character offset probe.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "financial-1",
+      "group": "financial",
+      "tags": [
+        "financial"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "financial-1",
+        "content": {
+          "kind": "text",
+          "text": "Guaranteed returns! Deposit 500 to activate your investment."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "A guaranteed-return promise is paired with an investment payment instruction.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "financial-2",
+      "group": "financial",
+      "tags": [
+        "financial"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "financial-2",
+        "content": {
+          "kind": "text",
+          "text": "Double your money. Transfer funds for access to the opportunity."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "An implausible return promise solicits transferred funds.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "promo-1",
+      "group": "promotional",
+      "tags": [
+        "promotional"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "promo-1",
+        "content": {
+          "kind": "text",
+          "text": "This unsolicited message brings an exclusive deal: buy now."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Explicit unsolicited outreach combines promotion and solicitation.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "promo-2",
+      "group": "promotional",
+      "tags": [
+        "promotional"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "promo-2",
+        "content": {
+          "kind": "text",
+          "text": "Limited time offer! Limited time offer! Limited time offer! Order now."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Repeated promotional language solicits an order within one message.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "promo-3",
+      "group": "promotional",
+      "tags": [
+        "promotional"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "promo-3",
+        "content": {
+          "kind": "text",
+          "text": "Cold outreach: special discount on our plan. Contact me."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Unsolicited outreach, promotion and direct solicitation are combined.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "announcement-1",
+      "group": "announcements",
+      "tags": [
+        "announcements"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "announcement-1",
+        "content": {
+          "kind": "text",
+          "text": "Our new release is available today. See the product page for details."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "A normal product announcement is not inherently spam.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "announcement-2",
+      "group": "announcements",
+      "tags": [
+        "announcements"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "announcement-2",
+        "content": {
+          "kind": "text",
+          "text": "We added a feature requested by customers. The launch starts in one hour."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "A launch deadline does not establish deceptive pressure.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "support-1",
+      "group": "support",
+      "tags": [
+        "support"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "support-1",
+        "content": {
+          "kind": "text",
+          "text": "Customer support can help reset your password through the official app."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "Routine recovery advice does not request secret disclosure.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "support-2",
+      "group": "support",
+      "tags": [
+        "support"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "support-2",
+        "content": {
+          "kind": "text",
+          "text": "We will never ask you to send a password. Please open your settings."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "A support warning discourages sharing credentials.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "support-3",
+      "group": "support",
+      "tags": [
+        "support"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "support-3",
+        "content": {
+          "kind": "text",
+          "text": "Your account is locked. Sign in to the official app when convenient."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "An ordinary recovery conversation lacks a pressure cue.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "legit-payment-1",
+      "group": "legitimate_payments",
+      "tags": [
+        "legitimate_payments"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "legit-payment-1",
+        "content": {
+          "kind": "text",
+          "text": "Please pay the invoice by Friday using our usual bank transfer details."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "An ordinary invoice discussion is not inherently a scam.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "legit-payment-2",
+      "group": "legitimate_payments",
+      "tags": [
+        "legitimate_payments"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "legit-payment-2",
+        "content": {
+          "kind": "text",
+          "text": "Urgent: transfer 200 to the agreed bank account for the venue booking."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "An urgent payment reference alone does not prove a scam.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "legit-payment-3",
+      "group": "legitimate_payments",
+      "tags": [
+        "legitimate_payments"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "legit-payment-3",
+        "content": {
+          "kind": "text",
+          "text": "Can I pay with bitcoin at the store?"
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "A question about a payment method lacks pressure or impersonation.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "warning-1",
+      "group": "education",
+      "tags": [
+        "education"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "warning-1",
+        "content": {
+          "kind": "text",
+          "text": "Phishing messages often contain fake login links. Check the official website."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "Educational discussion has no malicious instruction.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "warning-2",
+      "group": "education",
+      "tags": [
+        "education"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "warning-2",
+        "content": {
+          "kind": "text",
+          "text": "Never send your password immediately, even if a stranger insists."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "Negated credential-transfer advice is a warning, not solicitation.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "warning-3",
+      "group": "education",
+      "tags": [
+        "education"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "warning-3",
+        "content": {
+          "kind": "text",
+          "text": "Training slide: your account is suspended, sign in here immediately. Do not follow that instruction."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "A training example quotes the suspicious combination without endorsing it.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "quote-1",
+      "group": "quoted_examples",
+      "tags": [
+        "quoted_examples"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "quote-1",
+        "content": {
+          "kind": "text",
+          "text": "The scam message read: \"I am your bank. Send me your password.\" I reported it."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "Reported speech does not endorse the quoted request.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "quote-2",
+      "group": "quoted_examples",
+      "tags": [
+        "quoted_examples"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "quote-2",
+        "content": {
+          "kind": "text",
+          "text": "The article quotes \"You have won. Pay a processing fee\" as an example of fraud."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "An educational quotation does not solicit a fee.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "quote-3",
+      "group": "quoted_examples",
+      "tags": [
+        "quoted_examples"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "quote-3",
+        "content": {
+          "kind": "text",
+          "text": "The report mentions a suspicious prize message without repeating its instructions."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "A report without a solicitation is benign.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "satire-1",
+      "group": "satire_urgency",
+      "tags": [
+        "satire_urgency"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "satire-1",
+        "content": {
+          "kind": "text",
+          "text": "Urgent: the office cake disappears in five minutes!"
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "Harmless urgency has no unsafe request.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "satire-2",
+      "group": "satire_urgency",
+      "tags": [
+        "satire_urgency"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "satire-2",
+        "content": {
+          "kind": "text",
+          "text": "Satire: I am your CEO. Send us gift cards for my imaginary moon yacht."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "An explicit joke is not a genuine payment solicitation.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "link-1",
+      "group": "ordinary_links",
+      "tags": [
+        "ordinary_links"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "link-1",
+        "content": {
+          "kind": "text",
+          "text": "Documentation is at https://example.invalid/docs."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "A URL alone carries no spam/scam implication.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "link-2",
+      "group": "ordinary_links",
+      "tags": [
+        "ordinary_links"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "link-2",
+        "content": {
+          "kind": "text",
+          "text": "Bank information: https://example.invalid/bank. Thanks for reading."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "A brand-like word and link alone are insufficient.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "discount-1",
+      "group": "normal_promotions",
+      "tags": [
+        "normal_promotions"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "discount-1",
+        "content": {
+          "kind": "text",
+          "text": "Special discount: 20% off our annual plan this week. Order now."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "One ordinary discount and action do not establish spam.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "discount-2",
+      "group": "normal_promotions",
+      "tags": [
+        "normal_promotions"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "discount-2",
+        "content": {
+          "kind": "text",
+          "text": "Limited time offer for newsletter subscribers: buy now for 10% off."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "A single ordinary promotion does not establish unsolicited/repeated spam.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "discount-3",
+      "group": "normal_promotions",
+      "tags": [
+        "normal_promotions"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "discount-3",
+        "content": {
+          "kind": "text",
+          "text": "Exclusive deal. Special discount. Buy one get one free. Order now."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "Distinct offer phrases are not repeated identical promotional language.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "isolation-1",
+      "group": "isolated_cues",
+      "tags": [
+        "isolated_cues"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "isolation-1",
+        "content": {
+          "kind": "text",
+          "text": "Immediately."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "Urgency alone is insufficient.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "isolation-2",
+      "group": "isolated_cues",
+      "tags": [
+        "isolated_cues"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "isolation-2",
+        "content": {
+          "kind": "text",
+          "text": "The price is $500."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "A currency symbol and price alone are insufficient.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "isolation-3",
+      "group": "isolated_cues",
+      "tags": [
+        "isolated_cues"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "isolation-3",
+        "content": {
+          "kind": "text",
+          "text": "I am your bank."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "An identity claim alone is insufficient.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "isolation-4",
+      "group": "isolated_cues",
+      "tags": [
+        "isolated_cues"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "isolation-4",
+        "content": {
+          "kind": "text",
+          "text": "We discuss guaranteed returns in this economics class."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "A return phrase without a transfer instruction is insufficient.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "isolation-5",
+      "group": "isolated_cues",
+      "tags": [
+        "isolated_cues"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "isolation-5",
+        "content": {
+          "kind": "text",
+          "text": "Limited time offer! Limited time offer! Limited time offer!"
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "Repeated promotion without a call to action is insufficient.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "gap-1",
+      "group": "evasion_gaps",
+      "tags": [
+        "evasion_gaps"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "gap-1",
+        "content": {
+          "kind": "text",
+          "text": "I am your bank. Send me your p@ssword."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Obfuscated password spelling still expresses a malicious request.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "gap-2",
+      "group": "evasion_gaps",
+      "tags": [
+        "evasion_gaps"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "gap-2",
+        "content": {
+          "kind": "text",
+          "text": "Your mailbox expires tonight. Authenticate at the enclosed portal or lose access."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Synonymous phishing wording is a positive label outside the finite grammar.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "gap-3",
+      "group": "evasion_gaps",
+      "tags": [
+        "evasion_gaps"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "gap-3",
+        "content": {
+          "kind": "text",
+          "text": "Guaranteed yield of ten percent daily. Remit savings to unlock the plan."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "An implausible investment solicitation uses unrecognized wording.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "gap-4",
+      "group": "evasion_gaps",
+      "tags": [
+        "evasion_gaps"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "gap-4",
+        "content": {
+          "kind": "text",
+          "text": "Hello stranger, our miracle pills cure everything. Buy today at the attached link."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Unsolicited deceptive promotion can lack the implemented literal cues.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "gap-5",
+      "group": "evasion_gaps",
+      "tags": [
+        "evasion_gaps"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "gap-5",
+        "content": {
+          "kind": "text",
+          "text": "Send me your password."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "A bare secret-transfer request remains suspicious even without authority or urgency.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "boundary-1",
+      "group": "boundaries",
+      "tags": [
+        "boundaries"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "boundary-1",
+        "content": {
+          "kind": "text",
+          "text": "😀 YOUR ACCOUNT IS SUSPENDED. SIGN IN HERE IMMEDIATELY."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": true
+      },
+      "rationale": "Capitalization and emoji do not remove a phishing solicitation.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "boundary-2",
+      "group": "boundaries",
+      "tags": [
+        "boundaries"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "boundary-2",
+        "content": {
+          "kind": "text",
+          "text": "Your account_is_suspended record is marked urgent; sign in here is a test label."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "An identifier substring is not an actual account-suspension cue.",
+      "review": {
+        "status": "provisional"
+      }
+    },
+    {
+      "id": "boundary-3",
+      "group": "boundaries",
+      "tags": [
+        "boundaries"
+      ],
+      "request": {
+        "schemaVersion": "toxiply.analysis.v1",
+        "requestId": "boundary-3",
+        "content": {
+          "kind": "text",
+          "text": "The token éurgent appears near send 200 bitcoin in a parser example."
+        },
+        "categories": [
+          "spam_scam"
+        ],
+        "context": {
+          "languageHint": "en"
+        }
+      },
+      "labels": {
+        "spam_scam": false
+      },
+      "rationale": "A word embedded in a larger Unicode token is not independent urgency.",
+      "review": {
+        "status": "provisional"
+      }
+    }
+  ]
+}
