@@ -1,5 +1,17 @@
 # Native extraction provenance and validation
 
+## T7B benchmark preparation and T7A review
+
+The runner/configuration/tests were independently authored with repository modules,
+Zod and Node built-ins. No model weights, external/provider corpus, Flaggr/customer
+data or private source was accessed/transferred. The owner explicitly selected
+runner-only work because no approved real configuration exists. Existing synthetic
+T7A fixtures are reused unchanged; mock authorization records are fictional test-only
+declarations for loopback fixtures, never actual approval or independent evaluation.
+The monotonic deadline repair versions the adapter as model-json-v2 without changing
+strict output validation, deterministic algorithms, schemas, labels or dependencies.
+See [actual scope and NOT_RUN limits](MODEL_BENCHMARK.md). No license/publication change.
+
 ## T7A independent adapter and fixture provenance
 
 The typed model adapter, fetch transport, tests, example and canned diagnostic are

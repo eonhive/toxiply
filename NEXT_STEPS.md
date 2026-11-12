@@ -1,9 +1,23 @@
 # Next steps
 
+T7B is preparation-only: the owner confirmed no approved model configuration and asked
+for the runner. [Benchmark instructions](docs/MODEL_BENCHMARK.md) define all missing
+model/checkpoint/quantization/license/use/privacy/endpoint/profile/client/prompt/runtime
+and dataset/reference records. Local mock execution works; real-model reliability,
+quality, latency, tokens/costs and independent validation remain NOT_RUN.
+
+Next bounded phase: provide and freeze one actually approved English model/client
+profile and rights-approved development inputs, execute the existing runner, then
+triage measured schema/identity/UTF-16/attribution failures before proposing changes.
+Do not download weights, call a provider, retrain, promote defaults or modify Flaggr
+without that explicit scope/authorization. Stop at the focused, unmerged T7B PR.
+The T7A review's late-result deadline repair is included with model-json-v2 provenance;
+strict model output validation, V1 and all deterministic baselines remain unchanged.
+
 T7A adds an explicitly configured [model text adapter](docs/MODEL_TEXT_ANALYZER.md),
 bounded reference transport, runnable example and deterministic fixture diagnostic.
 It preserves merged PR #12's T6B v2 and every existing V1/deterministic capability.
-No live model or independent model accuracy result is claimed. Stop at the T7A PR.
+No live model or independent model accuracy result is claimed. T7A PR #13 is now merged.
 
 Next bounded phase: approve and freeze one real endpoint/model/weight/client profile,
 evaluate declared categories/languages/context and source evidence on eligible reviewed

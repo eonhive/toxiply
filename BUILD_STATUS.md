@@ -1,5 +1,43 @@
 # Build status
 
+## Phase T7B: benchmark preparation and T7A review — 2026-11-11
+
+Base: actual main `b2a60c8`, merged PR #13. Baseline `npm ci`, `npm run check`
+(373/373 tests) and explicit `npm run eval:all` PASS, exit 0, Node 22.22.2 / npm 10.9.7.
+The owner confirmed no approved model configuration; runner-only scope applies.
+
+Review reproduced late results accepted after a custom client blocked the event loop.
+The new regression FAILS on T7A as expected, then PASS after monotonic deadline checks.
+The adapter now reports model-json-v2 provenance and a safe timeout abort reason; no
+category/evidence/identity validation is relaxed. Existing deterministic algorithms,
+V1, labels and dependencies remain unchanged. No provider call or weight download.
+
+Added a strict private configuration, optional runner/CLI and existing-evaluator paired
+comparisons. Frozen dataset/reference hashes, call budgets, approval/privacy/runtime
+records and explicit execution are required. Model calls are cached across all five
+baselines. Canned mock replay: 14 requested, 12 invoked, 11 completed, 1 partial,
+2 unsupported, no failed/timeout calls, 9 valid/0 invalid observed spans. Common-category
+cases: native/contextual 10 each, spam analyzers 2 each, profanity 0. These are not real
+model-quality or performance results. Model-server CPU/GPU/RAM, token/cost telemetry and
+unannotated evidence relevance remain null. [Exact report and limits](docs/MODEL_BENCHMARK.md).
+
+Focused benchmark tests PASS 15/15; T7A adapter/endpoint tests PASS 58/58. Benchmark-only
+coverage: 99.72% lines / 92.59% branches / 97.73% functions across config/runner/CLI;
+not full-library coverage, real-model reliability or accuracy.
+
+Final verification on Node 22.22.2 / npm 10.9.7: `npm ci`, `npm run check` (389/389
+tests, no skips; typechecks/build, existing examples and all evaluations), explicit
+`npm run eval:all`, and `npm pack --dry-run --json` PASS. Package inspection PASS:
+85 files; benchmark/evaluation/test/private inputs and model artifacts excluded.
+The T7A canned diagnostic is unchanged except model-json-v2 provenance; the T6B paired
+report is byte-identical. The compact mock benchmark summary repeats identically;
+private timing/resource fields are deliberately not expected to be deterministic.
+Frozen analyzer/schema/label/lockfile diffs are empty. Documentation targets and
+whitespace checks PASS. This phase adds no actual model accuracy/performance result.
+Live-model execution/comparison, actual provider output failures, independent review,
+held-out validation, calibration, real-model resource/cost/latency studies and Flaggr
+integration are NOT_RUN. Logs/private mock reports stay ignored in `.local/t7b/`.
+
 ## Phase T7A: optional model text adapter — 2026-11-11
 
 Verified main: `9c76279`, merged PR #12, T6B candidate `spam-scam-attribution-en-v2`.

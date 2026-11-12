@@ -1,5 +1,21 @@
 # Independent Toxiply core
 
+## T7B optional benchmark boundary
+
+Repository-only `eval/model-benchmark-config.mjs`, `model-benchmark.mjs` and
+`run-model-benchmark.mjs` bind explicit model/use/privacy/runtime records and frozen
+dataset/reference hashes. They reuse T7A and the existing evaluator/private writer;
+there is no new server, framework, public schema or runtime router. Inference is cached
+once per case; deterministic baselines are offline comparisons, not runtime routing.
+Private immutable plans/reports remain outside public/package contents. Default/mock
+commands cannot select a real provider. No approved configuration was supplied.
+
+Merged T7A review also added monotonic deadline checks after inference and validation,
+with a safe deadline abort reason distinct from cleanup and `model-json-v2` provenance.
+This rejects late results after a blocking client returns but cannot preempt trusted
+synchronous code. Strict category/identity/UTF-16/quote validation and all deterministic
+algorithms are unchanged. [Benchmark contract, privacy and limitations](../MODEL_BENCHMARK.md).
+
 ## T7A optional model adapter boundary
 
 `src/model/model-text-analyzer.ts` implements the existing TextAnalyzer with explicit

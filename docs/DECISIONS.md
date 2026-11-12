@@ -1,5 +1,29 @@
 # Toxiply core decisions
 
+## T-032 — Hash-bound optional benchmarking and deadline review repair
+
+**Status:** implemented for review; live benchmark NOT_RUN · **Date:** 2026-11-11
+
+The owner confirmed no approved model configuration and selected runner-only work.
+T7B reuses T7A, private immutable artifacts and the existing dataset/paired evaluators.
+Require explicit model/checkpoint/quantization/license/use/privacy records, endpoint,
+profile, prompt/client/runtime revisions, dataset/reference hashes and case/byte/time
+limits. Default/CI commands never select live inference; live runs require private
+configuration and `run --execute`. Declarations do not establish actual approvals.
+
+Invoke once per applicable case and cache results across all five deterministic
+baselines. Report status/scores, source audits, failure/deadline counts, matched-category
+quality, client-side p50/p95 and client-process observations. Unavailable model-server
+resources, tokens/costs and unannotated semantic evidence relevance stay null. Preserve
+strict T7A validation, V1, all deterministic algorithms and existing labels.
+
+Review of merged PR #13 reproduced acceptance of an expired result after event-loop
+blocking. Add monotonic post-inference/post-validation checks and distinguish deadline
+abort from normal cleanup; provenance becomes `model-json-v2+<hash>`. This strengthens
+deadline handling without changing model output validation. No model framework, router,
+provider access, weight download, training, Flaggr change, enforcement or publication.
+[Configuration/procedure and exact limits](MODEL_BENCHMARK.md).
+
 ## T-031 — Optional bounded model inference without V1 changes
 
 **Status:** implemented for review · **Date:** 2026-11-11
@@ -16,7 +40,8 @@ references and literal source-quote/UTF-16 consistency. Reject incomplete/malfor
 without fallback scores. Source content stays untrusted data. Neither valid spans nor
 capability declarations establish model accuracy or injection immunity.
 
-V1 stays unchanged: `model_text` carries a stable `model-json-v1+` configuration hash,
+V1 stays unchanged: `model_text` originally carried a `model-json-v1+` configuration hash
+(v2 after the T-032 deadline repair),
 with full non-secret model/client configuration retained out of band. Arbitrary model
 names and weights/prompt digests need a separately versioned future provenance contract.
 No secrets are fingerprinted. Identity echoes are consistency checks, not authentication.

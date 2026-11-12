@@ -25,6 +25,13 @@ invent evidence or harmless fallback scores. Canned adapter replay and loopback 
 servers test integration, not trained model quality. Live inference/accuracy is NOT_RUN
 without explicit approved configuration; do not silently use environment credentials.
 
+T7B benchmarks belong only in eval/. Pin authorization/model/checkpoint/license,
+quantization, client/prompt/runtime and dataset/reference hashes before explicit live
+execution. Keep private manifests/reports outside Git or ignored. Reuse strict T7A and
+existing paired metrics; cache model calls and compare only jointly assessed labels.
+Mock timings/labels are not model performance or accuracy. Unavailable telemetry and
+unreviewed evidence relevance stay null; do not estimate them or invent approval records.
+
 Preserve the 0.2.0 V1 request/result schema, public exports, five native categories,
 source-relative UTF-16 evidence, explicit coverage/status and uncalibrated confidence.
 The contextual analyzer remains an opt-in candidate. Changing heuristics, schemas
