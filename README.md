@@ -116,6 +116,23 @@ model-quality measurement. No live model was configured or validated for this ch
 Real source quotes can still be semantically irrelevant; structural validity is not
 accuracy or prompt-injection resistance. All scores remain uncalibrated.
 
+T7B adds an optional [hash-bound model benchmark](docs/MODEL_BENCHMARK.md):
+
+```sh
+npm run benchmark:model
+npm run benchmark:model -- mock
+```
+
+The default reports NOT_RUN; mock mode uses canned responses only. A genuine run
+requires an approved private model/checkpoint/license/endpoint/runtime manifest,
+an exact dataset/reference hash binding and explicit `run --execute`. It reuses T7A,
+records client-side latency and failures, and compares only jointly assessed categories
+against existing analyzers without rerunning model calls. Unknown server resource,
+token, cost and semantic evidence metrics remain null. No real configuration was
+supplied: **live-model execution and real-model quality/performance are NOT_RUN**.
+The T7A review also fixed acceptance of late results after event-loop blocking; adapter
+provenance is now `model-json-v2+<hash>`, with output validation and V1 unchanged.
+
 ## Opt-in English spam/scam indicators
 
 ```js

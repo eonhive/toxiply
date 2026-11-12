@@ -47,9 +47,9 @@ export function createModelTextAnalyzer(options: ModelTextAnalyzerOptions): Text
   // V1 accepts one restricted analyzer identifier/version, not arbitrary provider
   // names. Hash non-secret model/client/capability metadata; retain the original
   // configuration out of band to interpret stored provenance. No schema changes.
-  const fingerprint = createHash('sha256').update(JSON.stringify({ adapter: 'model-json-v1', ...config,
+  const fingerprint = createHash('sha256').update(JSON.stringify({ adapter: 'model-json-v2', ...config,
     clientId: client.id, clientVersion: client.version })).digest('hex').slice(0, 48);
-  const descriptor = { id: 'model_text', version: `model-json-v1+${fingerprint}`,
+  const descriptor = { id: 'model_text', version: `model-json-v2+${fingerprint}`,
     categories: [...config.categories], languages: [...config.languages], supportsContext: config.supportsContext };
   Object.freeze(descriptor.categories);
   Object.freeze(descriptor.languages);
@@ -57,6 +57,15 @@ export function createModelTextAnalyzer(options: ModelTextAnalyzerOptions): Text
   return { descriptor, async analyze(input: AnalysisRequest): Promise<TextAnalysis> {
     let timer: ReturnType<typeof setTimeout> | undefined;
     const controller = new AbortController();
+    const deadlineAt = performance.now() + config.timeoutMs;
+    const checkDeadline = () => {
+      // Timers cannot preempt a blocking client or synchronous validation. Once
+      // control returns, never accept an already-expired result as completed.
+      if (performance.now() >= deadlineAt) {
+        controller.abort('model_deadline_exceeded');
+        throw new Error();
+      }
+    };
     try {
       const request = analysisRequestSchema.parse(input);
       const language = request.context?.languageHint ?? 'und';
@@ -65,12 +74,13 @@ export function createModelTextAnalyzer(options: ModelTextAnalyzerOptions): Text
       if (!config.languages.includes(language) || request.categories.some(c => !config.categories.some(supported => supported === c))
         || (hasContext && !config.supportsContext)) throw new Error();
       const deadline = new Promise<never>((_, reject) => {
-        timer = setTimeout(() => { controller.abort(); reject(new Error()); }, config.timeoutMs);
+        timer = setTimeout(() => { controller.abort('model_deadline_exceeded'); reject(new Error()); }, config.timeoutMs);
       });
       const raw = await Promise.race([deadline, client.infer({
         modelId: config.modelId, modelVersion: config.modelVersion, instructions: MODEL_INSTRUCTIONS,
         request: structuredClone(request), responseSchema: z.toJSONSchema(modelOutputSchema),
       }, { signal: controller.signal, maxResponseBytes: config.maxResponseBytes })]);
+      checkDeadline();
       if (typeof raw !== 'string' || Buffer.byteLength(raw, 'utf8') > config.maxResponseBytes) throw new Error();
       const output = modelOutputSchema.parse(JSON.parse(raw));
       if (output.modelId !== config.modelId || output.modelVersion !== config.modelVersion
@@ -85,6 +95,7 @@ export function createModelTextAnalyzer(options: ModelTextAnalyzerOptions): Text
           || source.slice(evidence.start, evidence.end) !== evidence.quote || !evidence.quote.trim()
           || splitsPair(source, evidence.start) || splitsPair(source, evidence.end)) throw new Error();
       }
+      checkDeadline();
       return { findings: output.findings, evidence: output.evidence.map(({ quote: _quote, ...span }) => span) };
     } catch {
       // Do not expose provider errors, Zod input excerpts, response text or secrets.

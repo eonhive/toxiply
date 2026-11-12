@@ -1,5 +1,24 @@
 # Text evaluation and compatibility baseline
 
+## T7B benchmark preparation — live NOT_RUN
+
+The owner confirmed no approved real-model configuration. The [optional benchmark
+runner](MODEL_BENCHMARK.md) is mock-tested only, with explicit private provenance and
+dataset/reference binding for future approved execution. It caches each model result
+and reuses existing paired evaluation across all five deterministic baselines. Use
+`paired.categories` for common-category TP/TN/FP/FN/precision/recall; marginal per-engine
+reports have different denominators. Missing context/language/category or failed calls
+never become benign classifications. Source-span audits of rejected output are separate
+from accepted evidence/optional annotation alignment; unannotated relevance remains null.
+
+Per-case client-side durations and nearest-rank p50/p95 include failed invocation time.
+Client CPU/RSS/heap observations are not model-server resources; tokens/costs/GPU remain
+null with explicit reasons. Mock timings/perfect canned labels are not real performance
+or accuracy. Existing datasets/labels remain unchanged. T7A deadline repair changes
+adapter provenance to model-json-v2 while preserving output validation/diagnostic counts.
+Real-model reliability, independent/held-out results, calibration and live comparisons
+remain NOT_RUN. `eval:model-benchmark` in `eval:all` always runs canned mock inference.
+
 ## T7A adapter execution, not trained model quality
 
 `npm run eval:model-adapter` reuses the existing versioned dataset/evaluator with

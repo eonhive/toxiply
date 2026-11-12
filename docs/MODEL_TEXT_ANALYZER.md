@@ -12,6 +12,13 @@ result validation. No model is invoked by importing the package or calling defau
 `analyze()`. All existing deterministic analyzers, including T6B v2, remain unchanged.
 This package ships no model weights, trained classifier or mandatory inference service.
 
+T7B adds a separate [private benchmark runner](MODEL_BENCHMARK.md), not another inference
+framework. The review of merged PR #13 repaired acceptance of expired results after a
+client blocked the event loop: monotonic checks now reject late results after inference
+and validation, and deadline aborts use the safe reason `model_deadline_exceeded`.
+Normal cleanup aborts remain distinct. Adapter provenance is now `model-json-v2+<hash>`;
+strict output validation and V1 are unchanged. Live benchmarking remains NOT_RUN.
+
 ## Select an explicit client and capability profile
 
 ```js
@@ -180,7 +187,7 @@ Only fixture tests are deterministic; no production calibration or accuracy is c
 
 V1 permits at most one restricted analyzer ID/version pair and cannot directly expose
 arbitrary provider IDs, prompt provenance or weight digests. `modelVersions.model_text`
-is `model-json-v1+` plus the first 48 hex SHA-256 characters over adapter version,
+is `model-json-v2+` plus the first 48 hex SHA-256 characters over adapter version,
 non-secret model/client ID+version, declared capabilities and execution limits.
 The same configuration has a stable fingerprint; changes produce distinct provenance.
 It does not attest model identity, weights, server honesty or hidden generation settings.

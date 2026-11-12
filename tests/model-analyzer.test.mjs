@@ -134,6 +134,18 @@ test('deadline aborts even a client ignoring cancellation; late rejection is han
   assert.equal(signal.aborted, true);
 });
 
+test('expired deadline rejects a resolved client after event-loop blocking', async () => {
+  let signal;
+  const e = engine({ timeoutMs: 1, client: client(async (message, limits) => {
+    signal = limits.signal;
+    const until = performance.now() + 15;
+    while (performance.now() < until) { /* Synthetic blocking client. */ }
+    return JSON.stringify(fixtureResponse(message));
+  }) });
+  assert.equal((await e.analyze(input())).status, 'failed');
+  assert.equal(signal.reason, 'model_deadline_exceeded');
+});
+
 test('unsupported language/categories and invalid requests do not invoke the model; default stays unconfigured', async () => {
   let calls = 0;
   const e = engine({ client: client(async message => { calls++; return JSON.stringify(fixtureResponse(message)); }) });
@@ -172,7 +184,7 @@ test('configuration is strict, detached and fingerprinted; no credentials/endpoi
   assert.deepEqual(first.descriptor, second.descriptor);
   assert.notEqual(first.descriptor.version, adapter({ modelVersion: 'different' }).descriptor.version);
   assert.notEqual(first.descriptor.version, adapter({ supportsContext: false }).descriptor.version);
-  assert.match(first.descriptor.version, /^model-json-v1\+[a-f0-9]{48}$/);
+  assert.match(first.descriptor.version, /^model-json-v2\+[a-f0-9]{48}$/);
   assert.throws(() => { first.descriptor.categories.push('profanity'); }, TypeError);
   assert.throws(() => { first.descriptor.supportsContext = false; }, TypeError);
 });
