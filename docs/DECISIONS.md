@@ -1,5 +1,16 @@
 # Toxiply core decisions
 
+## T-033 — Benchmark accounting retains original inference limits
+
+**Status:** implemented for review · **Date:** 2026-11-11
+
+Review of merged PR #14 reproduced audit-cap and timeout-count errors when a custom
+client mutated its passed byte-limit/signal properties. Snapshot the original values
+before inference and use them for audit bounds, deadline observation and listener
+cleanup. Preserve strict T7A behavior, V1, report shape, all scorers and frozen labels.
+Add three synthetic regressions, not new accuracy evidence. No provider/model run,
+telemetry fabrication, publication or merge. [Accounting limits](MODEL_BENCHMARK.md).
+
 ## T-032 — Hash-bound optional benchmarking and deadline review repair
 
 **Status:** implemented for review; live benchmark NOT_RUN · **Date:** 2026-11-11

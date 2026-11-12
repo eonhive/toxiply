@@ -71,16 +71,19 @@ export async function runModelBenchmark({ configText, datasetText, referenceText
   const cleanups = new Map();
   const instrumented = { id:client.id, version:client.version, async infer(input, limits) {
     const sourceRequest = structuredClone(input.request);
+    // Retain the original policy values before handing the mutable arguments to
+    // a client. Client-side mutations must not alter auditing or deadline counts.
+    const { signal, maxResponseBytes } = limits;
     const observation = { requestId:input.request.requestId, timeout:false, transportFailed:false,
       schemaCompliant:null, observedSpans:null, validSpans:null, invalidSpans:null };
     invocations.set(input.request.requestId, observation);
-    const onAbort = () => { if (limits.signal.reason === 'model_deadline_exceeded') observation.timeout = true; };
-    limits.signal.addEventListener('abort', onAbort);
-    cleanups.set(input.request.requestId, () => limits.signal.removeEventListener('abort', onAbort));
+    const onAbort = () => { if (signal.reason === 'model_deadline_exceeded') observation.timeout = true; };
+    signal.addEventListener('abort', onAbort);
+    cleanups.set(input.request.requestId, () => signal.removeEventListener('abort', onAbort));
     try {
       const raw = await client.infer(input, limits);
       // Keep only bounded audit counts. Never retain/log response text or quotes.
-      if (!limits.signal.aborted) Object.assign(observation, auditResponse(raw, sourceRequest, limits.maxResponseBytes));
+      if (!signal.aborted) Object.assign(observation, auditResponse(raw, sourceRequest, maxResponseBytes));
       return raw;
     } catch { observation.transportFailed = true; throw new Error('Benchmark inference failed.'); }
   } };

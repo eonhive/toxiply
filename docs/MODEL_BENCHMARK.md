@@ -6,6 +6,17 @@ Notes: Vibe coded with Codex.
 -->
 # T7B: first real-model benchmark preparation
 
+Review of merged PR #14 found that a client mutating its passed limits object could
+change benchmark audit bounds or hide a deadline event, although T7A still rejected
+failed inference correctly. The wrapper now snapshots the original byte limit and
+abort signal before calling the client, just as it already snapshots source text.
+Both response auditing and deadline listener cleanup use those original values.
+Three synthetic regression tests cover raised/lowered limits and replaced signals.
+This is an accounting repair, not a model/score/validation or report-schema change.
+Previously recorded runs using clients that mutate these arguments need rerunning;
+the standard canned replay remains unchanged. Custom clients remain trusted code,
+not sandboxed by these snapshots. Real-model execution is still NOT_RUN.
+
 Outcome: **runner implemented and mock-tested; real-model execution NOT_RUN**.
 The owner explicitly confirmed that no approved model configuration is available and
 requested runner-only work. No weights were downloaded, external provider contacted,

@@ -119,6 +119,48 @@ test('response audits retain their own source snapshot when a client mutates sup
   assert.equal(report.responseAudit.invalidSpans,1);
 });
 
+test('client cannot enlarge the configured response audit budget by mutating limits', async () => {
+  const {config,datasetText}=setup([original.cases[0]]);
+  config.execution.maxResponseBytes=1;
+  const report=await run(config,datasetText,clientWith(async (input,limits)=>{
+    limits.maxResponseBytes=1048576;
+    return JSON.stringify(fixtureResponse(input));
+  }));
+  assert.equal(report.calls.failed,1);
+  assert.equal(report.responseAudit.unauditedCalls,1);
+  assert.equal(report.responseAudit.cases[0].schemaCompliant,null);
+  assert.equal(report.responseAudit.cases[0].observedSpans,null);
+  assert.equal(report.responseAudit.validSpans,0);
+});
+
+test('client cannot suppress a valid response audit by lowering its passed limit', async () => {
+  const {config,datasetText}=setup([original.cases[0]]);
+  const report=await run(config,datasetText,clientWith(async (input,limits)=>{
+    limits.maxResponseBytes=1;
+    return JSON.stringify(fixtureResponse(input));
+  }));
+  assert.equal(report.model.statusCounts.completed,1);
+  assert.equal(report.responseAudit.unauditedCalls,0);
+  assert.equal(report.responseAudit.validSpans,1);
+});
+
+test('client cannot hide a deadline by replacing the passed abort signal', async () => {
+  const {config,datasetText}=setup([original.cases[0]]);
+  config.execution.timeoutMs=5;
+  const report=await run(config,datasetText,clientWith(async (input,limits)=>{
+    limits.signal=new AbortController().signal;
+    await new Promise(resolve=>setTimeout(resolve,40));
+    return JSON.stringify(fixtureResponse(input));
+  }));
+  assert.equal(report.calls.failed,1);
+  assert.equal(report.calls.timeouts,1);
+  assert.equal(report.responseAudit.cases[0].timeout,true);
+  assert.equal(report.responseAudit.unauditedCalls,1);
+  const frozen=JSON.stringify(report);
+  await new Promise(resolve=>setTimeout(resolve,50));
+  assert.equal(JSON.stringify(report),frozen);
+});
+
 test('unrelated but literal evidence is exposed by supplied annotations without pretending semantic certainty', async () => {
   const item=structuredClone(original.cases[0]);item.evidenceSpans=[{category:'harassment',source:'text',start:0,end:16}];
   const {config,datasetText}=setup([item]);
