@@ -1,5 +1,27 @@
 # Build status
 
+## T7B merged-main verification — 2026-11-11
+
+Verified actual main `815c5a6`, including merged T7B PR #14 and review repair PR #15.
+The optional benchmark runner, private configuration and comparison workflow already
+exist; this follow-up only refreshes status documentation. No runtime, schema, scorer,
+label, dependency or package-content change is needed.
+
+Fresh verification on Node 22.22.2 / npm 10.9.7: focused benchmark/CLI tests PASS 18/18;
+`npm ci`, `npm run check` (392/392 tests, no failures or skips, including typechecks,
+build, examples and diagnostics), explicit `npm run eval:all`, and
+`npm pack --dry-run --json` all PASS, exit 0. Package inspection PASS: 85 files, no
+evaluation/test/private inputs or model weight artifacts. No fresh coverage measurement
+was taken; the prior scoped coverage result below is unchanged historical evidence.
+
+The canned benchmark still records 14 requested / 12 invoked, 11 completed, 1 partial,
+2 unsupported, no failed/timeout calls, and 9 valid / 0 invalid observed spans.
+These synthetic results verify integration, not real-model accuracy or performance.
+Live-model execution, real-provider failure tests, independent/held-out validation and
+actual model latency/resource/token/cost studies remain NOT_RUN: no approved model
+configuration was supplied. [Required inputs and runnable procedure](docs/MODEL_BENCHMARK.md)
+are already documented. Fresh logs remain ignored in `.local/t7b-main-verification/`.
+
 ## PR #14 review: preserve benchmark limit snapshots — 2026-11-11
 
 Base: merged PR #14, `248a0de`. Review reproduced two reporting issues: a custom client
