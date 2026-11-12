@@ -1,5 +1,23 @@
 # Build status
 
+## PR #14 review: preserve benchmark limit snapshots — 2026-11-11
+
+Base: merged PR #14, `248a0de`. Review reproduced two reporting issues: a custom client
+could change audit bounds by mutating its byte limit, and replace its signal to hide
+timeout counts/listener cleanup. T7A inference rejection itself remained correct.
+Snapshot the original values before invoking the client. Three regressions FAIL on
+merged code and PASS with the repair. No model/runtime/schema/scorer/label change.
+
+Focused benchmark/CLI tests PASS 18/18. Coverage over config/runner/CLI is 99.72% lines,
+92.59% branches, 97.73% functions; not full-library coverage or accuracy.
+Final `npm ci`, `npm run check` (392/392 tests, no skips; typechecks/build/examples),
+explicit `npm run eval:all`, and `npm pack --dry-run --json` PASS, exit 0, on
+Node 22.22.2 / npm 10.9.7. Package inspection PASS: 85 files, no evaluation/test/private
+or model artifacts. Normal mock summary and model-adapter report are byte-identical
+to saved baseline. Runtime/schema/scorer/label/lockfile diffs are empty; documentation
+links and whitespace PASS. Real model/provider execution, independent/held-out validation
+and actual model performance studies remain NOT_RUN. Logs stay in `.local/t7b-review/`.
+
 ## Phase T7B: benchmark preparation and T7A review — 2026-11-11
 
 Base: actual main `b2a60c8`, merged PR #13. Baseline `npm ci`, `npm run check`

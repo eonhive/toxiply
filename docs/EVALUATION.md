@@ -2,6 +2,12 @@
 
 ## T7B benchmark preparation — live NOT_RUN
 
+PR #14 review repair snapshots inference limits before custom clients run. Mutating
+passed limits can no longer widen/suppress response auditing or hide timeout counts.
+Three regression probes reproduce the prior failures; normal canned diagnostic and
+quality denominators remain unchanged. This fixes measurement accounting only, with
+no new real-model quality/performance claim or output-validation relaxation.
+
 The owner confirmed no approved real-model configuration. The [optional benchmark
 runner](MODEL_BENCHMARK.md) is mock-tested only, with explicit private provenance and
 dataset/reference binding for future approved execution. It caches each model result

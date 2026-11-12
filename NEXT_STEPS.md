@@ -1,5 +1,10 @@
 # Next steps
 
+PR #14 was already merged before its review request. The review follow-up fixes
+benchmark audit bounds/deadline counts when a client mutates passed limits, with three
+new synthetic regression tests. Keep this repair's follow-up PR unmerged for review.
+No live model configuration has been approved; all earlier NOT_RUN limits still apply.
+
 T7B is preparation-only: the owner confirmed no approved model configuration and asked
 for the runner. [Benchmark instructions](docs/MODEL_BENCHMARK.md) define all missing
 model/checkpoint/quantization/license/use/privacy/endpoint/profile/client/prompt/runtime
