@@ -1,9 +1,10 @@
 # Next steps
 
-PR #14 was already merged before its review request. The review follow-up fixes
-benchmark audit bounds/deadline counts when a client mutates passed limits, with three
-new synthetic regression tests. Keep this repair's follow-up PR unmerged for review.
-No live model configuration has been approved; all earlier NOT_RUN limits still apply.
+T7B PR #14 and its review repair PR #15 are merged; actual main `815c5a6` passes fresh
+verification (392/392 tests and all evaluations). The repair preserves benchmark audit
+bounds/deadline counts when a client mutates passed limits, with three synthetic
+regression tests. No live model configuration has been approved; all earlier NOT_RUN
+limits still apply. The runner is ready without another implementation framework.
 
 T7B is preparation-only: the owner confirmed no approved model configuration and asked
 for the runner. [Benchmark instructions](docs/MODEL_BENCHMARK.md) define all missing
@@ -15,7 +16,8 @@ Next bounded phase: provide and freeze one actually approved English model/clien
 profile and rights-approved development inputs, execute the existing runner, then
 triage measured schema/identity/UTF-16/attribution failures before proposing changes.
 Do not download weights, call a provider, retrain, promote defaults or modify Flaggr
-without that explicit scope/authorization. Stop at the focused, unmerged T7B PR.
+without that explicit scope/authorization. Any next implementation must remain a
+focused reviewable PR; do not merge, publish or deploy automatically.
 The T7A review's late-result deadline repair is included with model-json-v2 provenance;
 strict model output validation, V1 and all deterministic baselines remain unchanged.
 
